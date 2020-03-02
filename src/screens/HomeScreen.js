@@ -11,10 +11,16 @@ const HomeScreen = ({ navigation }) => {
             style={[ styles.link ]}
             onPress={() => navigation.navigate('Sequences')}
          >
-            View Sequences
+            ENTER
          </Text>
       </View>
    )
+};
+
+HomeScreen.navigationOptions = () => {
+   return {
+      headerShown: false
+   }
 };
 
 const styles = EStyleSheet.create({

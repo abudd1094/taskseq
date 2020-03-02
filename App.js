@@ -44,7 +44,14 @@ export default function App(props) {
       return (
          <NavigationContainer>
             <Stack.Navigator>
-               <Stack.Screen name="Home" component={HomeScreen} />
+               <Stack.Screen
+                  name="Home"
+                  component={HomeScreen}
+                  options={{
+                     title: 'My home',
+                     headerShown: false
+                  }}
+               />
                <Stack.Screen name="Sequences" component={SequenceListScreen} />
             </Stack.Navigator>
          </NavigationContainer>

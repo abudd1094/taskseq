@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors } from "../styles";
 
 const SequenceListScreen = () => {
+   const [ state, useState ] = useState();
+
    return (
       <View style={styles.container}>
          <Text>Sequences</Text>
