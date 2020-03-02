@@ -1,16 +1,18 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, Spacing } from "../styles";
+import { Colors, Spacing, Typography } from "../styles";
 
 const HomeScreen = ({ navigation }) => {
    return (
       <View style={styles.container}>
-         <Text>Task Sequencer 1.0.0</Text>
+         <Text style={styles.title}>Task Sequencer 1.0.0</Text>
          <Text
-            style={styles.link}
-            onPress={() => navigation.navigate('Test')}
-         >Go to the test screen...</Text>
+            style={[ styles.link ]}
+            onPress={() => navigation.navigate('Sequences')}
+         >
+            View Sequences
+         </Text>
       </View>
    )
 };
@@ -21,6 +23,10 @@ const styles = EStyleSheet.create({
    },
    link: {
       ...Colors.blue
+   },
+   title: {
+      ...Typography.primaryFont,
+      ...Typography.h1
    }
 });
 

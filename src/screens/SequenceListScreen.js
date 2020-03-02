@@ -3,10 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors } from "../styles";
 
-const TestScreen = () => {
+const SequenceListScreen = () => {
    return (
       <View style={styles.container}>
-         <Text style={styles.link}>Test Screen</Text>
+         <Text>Sequences</Text>
       </View>
    )
 };
@@ -23,4 +23,4 @@ const styles = EStyleSheet.create({
    }
 });
 
-export default TestScreen;
+export default SequenceListScreen;
