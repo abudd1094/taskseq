@@ -1,14 +1,16 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors } from './src/styles';
+import { Colors, Spacing } from './src/styles';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Font from 'expo-font';
 
 import HomeScreen from './src/screens/HomeScreen';
 import SequenceListScreen from './src/screens/SequenceListScreen';
+import SequenceCreateScreen from './src/screens/SequenceCreateScreen';
+import SequenceScreen from './src/screens/SequenceScreen';
 
 export default function App(props) {
    const Stack = createStackNavigator();
@@ -48,11 +50,23 @@ export default function App(props) {
                   name="Home"
                   component={HomeScreen}
                   options={{
-                     title: 'My home',
                      headerShown: false
                   }}
                />
-               <Stack.Screen name="Sequences" component={SequenceListScreen} />
+               <Stack.Screen
+                  name="Sequences"
+                  component={SequenceListScreen}
+               />
+               <Stack.Screen
+                  name="CreateSequence"
+                  component={SequenceCreateScreen}
+                  options={{ title: 'New Sequence' }}
+               />
+               <Stack.Screen
+                  name="ViewSequence"
+                  component={SequenceScreen}
+                  options={{ title: 'New Sequence' }}
+               />
             </Stack.Navigator>
          </NavigationContainer>
       );
@@ -61,10 +75,7 @@ export default function App(props) {
 
 const styles = EStyleSheet.create({
    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center'
+      ...Spacing.container
    },
    link: {
       ...Colors.blue
