@@ -1,5 +1,5 @@
 import createDataContext from "./createDataContext";
-import { AsyncStorage } from 'react-native';
+
 
 const SequenceReducer = (state, action) => {
    switch (action.type) {

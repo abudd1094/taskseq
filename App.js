@@ -65,7 +65,7 @@ export default function App(props) {
                <Stack.Screen
                   name="ViewSequence"
                   component={SequenceScreen}
-                  options={{ title: 'New Sequence' }}
+                  options={{ title: 'Sequence#' }}
                />
             </Stack.Navigator>
          </NavigationContainer>
