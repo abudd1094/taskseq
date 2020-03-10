@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Button, Text, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 
 const Timer = ({ duration }) => {

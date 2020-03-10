@@ -4,6 +4,7 @@ import Timer from '../components/atoms/Timer';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Spacing, Typography } from '../styles';
 
+
 const SequenceScreen = () => {
    return (
       <View style={styles.container}>
@@ -18,13 +19,6 @@ const styles = EStyleSheet.create({
       ...Spacing.container,
       justifyContent: 'space-around',
       height: '50%'
-   },
-   link: {
-      ...Colors.blue
-   },
-   title: {
-      ...Typography.primaryFont,
-      ...Typography.h1
    }
 });
 
