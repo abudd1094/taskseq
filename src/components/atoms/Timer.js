@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, Button } from 'react-native';
+import EStyleSheet from "react-native-extended-stylesheet";
 
-const Timer = (duration) => {
-   const [ time, setTime ] = useState(60);
-   const [ timerOn, toggleTimer ] = useState(false);
+const Timer = ({ duration }) => {
+   const [ time, setTime ] = useState(50);
+   const [ timerOn, setTimer ] = useState(false);
 
-   function startCountdown() {
+   function decrementTime() {
       if (timerOn && time > 0) {
          setTimeout(() => {
             setTime(time - 1)
@@ -13,17 +14,40 @@ const Timer = (duration) => {
       }
    }
 
+   function startTimer(bool) {
+      setTimer(bool)
+   }
+
+   function setTimeToDuration() {
+      setTime(duration)
+   }
+
    useEffect(() => {
-      startCountdown()
+      setTimeToDuration()
+   }, [ duration ]);
+
+   useEffect(() => {
+      decrementTime()
    });
 
    return (
       <View>
-         <Text>{time}</Text>
+         <Text style={styles.timer}>{time}</Text>
+         <Button
+            title="start" onPress={() => {
+            startTimer(true)
+         }}
+         />
       </View>
    )
 };
 
-const styles = StyleSheet.create({});
+const styles = EStyleSheet.create({
+   timer: {
+      fontSize: 80,
+      textAlign: 'center',
+      margin: '3.5rem'
+   }
+});
 
 export default Timer;

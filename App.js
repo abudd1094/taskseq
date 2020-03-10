@@ -6,6 +6,7 @@ import { Colors, Spacing } from './src/styles';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Font from 'expo-font';
+import { Provider } from './src/context/SequenceContext';
 
 import HomeScreen from './src/screens/HomeScreen';
 import SequenceListScreen from './src/screens/SequenceListScreen';
@@ -44,31 +45,33 @@ export default function App(props) {
       return null;
    } else {
       return (
-         <NavigationContainer>
-            <Stack.Navigator>
-               <Stack.Screen
-                  name="Home"
-                  component={HomeScreen}
-                  options={{
-                     headerShown: false
-                  }}
-               />
-               <Stack.Screen
-                  name="Sequences"
-                  component={SequenceListScreen}
-               />
-               <Stack.Screen
-                  name="CreateSequence"
-                  component={SequenceCreateScreen}
-                  options={{ title: 'New Sequence' }}
-               />
-               <Stack.Screen
-                  name="ViewSequence"
-                  component={SequenceScreen}
-                  options={{ title: 'Sequence#' }}
-               />
-            </Stack.Navigator>
-         </NavigationContainer>
+         <Provider>
+            <NavigationContainer>
+               <Stack.Navigator>
+                  <Stack.Screen
+                     name="Home"
+                     component={HomeScreen}
+                     options={{
+                        headerShown: false
+                     }}
+                  />
+                  <Stack.Screen
+                     name="Sequences"
+                     component={SequenceListScreen}
+                  />
+                  <Stack.Screen
+                     name="CreateSequence"
+                     component={SequenceCreateScreen}
+                     options={{ title: 'New Sequence' }}
+                  />
+                  <Stack.Screen
+                     name="ViewSequence"
+                     component={SequenceScreen}
+                     options={{ title: 'Sequence#' }}
+                  />
+               </Stack.Navigator>
+            </NavigationContainer>
+         </Provider>
       );
    }
 }

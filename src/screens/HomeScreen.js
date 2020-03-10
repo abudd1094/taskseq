@@ -25,7 +25,8 @@ HomeScreen.navigationOptions = () => {
 
 const styles = EStyleSheet.create({
    container: {
-      ...Spacing.container
+      ...Spacing.container,
+      justifyContent: 'space-around'
    },
    link: {
       ...Colors.blue
