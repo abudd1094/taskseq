@@ -12,6 +12,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import SequenceListScreen from './src/screens/SequenceListScreen';
 import SequenceCreateScreen from './src/screens/SequenceCreateScreen';
 import SequenceScreen from './src/screens/SequenceScreen';
+import { db } from './src/api/sqlite';
 
 export default function App(props) {
    const Stack = createStackNavigator();
@@ -25,6 +26,23 @@ export default function App(props) {
             await Font.loadAsync({
                'chicago': require('./assets/fonts/Chicago.ttf'),
             });
+            console.log(db);
+
+            await db.transaction(function (tx) {
+               tx.executeSql(
+                  'CREATE TABLE testTable(duration INT)',
+                  [],
+                  function (tx, res) {
+                     console.log('statement success');
+                     console.log(res);
+                  },
+                  (tx, err) => {
+                     console.log('statement error')
+                     console.log(err)
+                  }
+               );
+            });
+
          } catch (e) {
             // We might want to provide this error information to an error reporting service
             console.warn(e);
