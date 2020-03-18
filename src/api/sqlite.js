@@ -1,3 +1,3 @@
 import * as SQLite from "expo-sqlite";
 
-export const db = SQLite.openDatabase("TaskSeqDB");
+export const db = SQLite.openDatabase("TaskSeqDB.db");

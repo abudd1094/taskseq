@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, Spacing } from './src/styles';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,7 +11,6 @@ import HomeScreen from './src/screens/HomeScreen';
 import SequenceListScreen from './src/screens/SequenceListScreen';
 import SequenceCreateScreen from './src/screens/SequenceCreateScreen';
 import SequenceScreen from './src/screens/SequenceScreen';
-import { db } from './src/api/sqlite';
 
 export default function App(props) {
    const Stack = createStackNavigator();
@@ -25,22 +23,6 @@ export default function App(props) {
             // Load fonts
             await Font.loadAsync({
                'chicago': require('./assets/fonts/Chicago.ttf'),
-            });
-            console.log(db);
-
-            await db.transaction(function (tx) {
-               tx.executeSql(
-                  'CREATE TABLE testTable(duration INT)',
-                  [],
-                  function (tx, res) {
-                     console.log('statement success');
-                     console.log(res);
-                  },
-                  (tx, err) => {
-                     console.log('statement error')
-                     console.log(err)
-                  }
-               );
             });
 
          } catch (e) {
