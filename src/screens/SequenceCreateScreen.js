@@ -35,7 +35,7 @@ const SequenceCreateScreen = () => {
    let fetchSql = 'SELECT seq, taskName, taskDuration FROM TaskTable';
    let deleteSql = 'DELETE FROM TaskTable WHERE seq="testseqtwo"';
 
-   const createSeq = async (column, table) => {
+   const createTask = async (column, table) => {
       await db.transaction(function (tx) {
          tx.executeSql(
             `${insertSql}`,
@@ -53,7 +53,7 @@ const SequenceCreateScreen = () => {
       })
    };
 
-   const deleteSeq = async () => {
+   const deleteTask = async () => {
       await db.transaction(function (tx) {
          tx.executeSql(
             `${deleteSql}`,
@@ -76,8 +76,8 @@ const SequenceCreateScreen = () => {
       <View>
          <Text>Create a task sequence:</Text>
          <Text>{seq}</Text>
-         <Button title="CREATE" onPress={createSeq} />
-         <Button title="DELETE" onPress={deleteSeq} />
+         <Button title="CREATE" onPress={createTask} />
+         <Button title="DELETE" onPress={deleteTask} />
       </View>
    )
 };

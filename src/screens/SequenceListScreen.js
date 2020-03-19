@@ -5,8 +5,8 @@ import { Colors } from "../styles";
 import { db } from "../api/sqlite";
 
 const SequenceListScreen = ({ navigation }) => {
-   const [ state, setState ] = useState();
    const [ count, setCount ] = React.useState(0);
+   const [ seqList, setSeqList ] = useState([]);
 
    useEffect(() => {
       console.log("seq list screen loaded");
@@ -21,7 +21,7 @@ const SequenceListScreen = ({ navigation }) => {
             [],
             function (tx, res) {
                console.log('data loaded');
-               console.log(res);
+               console.log(res.rows.item(0));
             },
             (tx, err) => {
                console.log('statement error');
