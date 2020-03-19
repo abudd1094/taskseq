@@ -1,13 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors } from "../styles";
+import { db } from "../api/sqlite";
 
 const SequenceListScreen = ({ navigation }) => {
    const [ state, setState ] = useState();
    const [ count, setCount ] = React.useState(0);
 
-   React.useLayoutEffect(() => {
+   useEffect(() => {
+      console.log("seq list screen loaded");
+      loadData();
+      console.log(db)
+   }, []);
+
+   const loadData = async () => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            `SELECT seq, taskName, taskDuration FROM TaskTable`,
+            [],
+            function (tx, res) {
+               console.log('data loaded');
+               console.log(res);
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      })
+   };
+
+   useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
             <TouchableOpacity onPress={() => navigation.navigate('CreateSequence')}>
