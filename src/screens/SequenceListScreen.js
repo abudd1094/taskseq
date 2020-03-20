@@ -11,17 +11,38 @@ const SequenceListScreen = ({ navigation }) => {
    useEffect(() => {
       console.log("seq list screen loaded");
       loadData();
-      console.log(db)
+      console.log(seqList)
    }, []);
 
    const loadData = async () => {
       await db.transaction(function (tx) {
          tx.executeSql(
-            `SELECT seq, taskName, taskDuration FROM TaskTable`,
+            `SELECT seq FROM TaskTable`,
             [],
             function (tx, res) {
                console.log('data loaded');
-               console.log(res.rows.item(0));
+               setSeqList(res.rows.item(0).seq);
+
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      })
+   };
+
+   let deleteSql = 'DELETE FROM TaskTable WHERE seq="testseqtwo"';
+
+   const deleteTask = async () => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            `${deleteSql}`,
+            [],
+            function (tx, res) {
+               let sqlTable = res.rows;
+               console.log('seq deleted');
+               console.log(res)
             },
             (tx, err) => {
                console.log('statement error');
@@ -45,6 +66,7 @@ const SequenceListScreen = ({ navigation }) => {
       <View style={styles.container}>
          <TouchableOpacity onPress={() => navigation.navigate('ViewSequence')}>
             <Text>View this Sequence</Text>
+            <Text>{seqList}</Text>
          </TouchableOpacity>
       </View>
    )
