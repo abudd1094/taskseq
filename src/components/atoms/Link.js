@@ -10,8 +10,14 @@ const Link = (text, name) => {
    )
 };
 
-const styles = EStyleSheet.create({#
-
+const styles = EStyleSheet.create({
+   container: {
+   flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderBottom: '1px solid black'
+   }
 });
 
 export default Link;

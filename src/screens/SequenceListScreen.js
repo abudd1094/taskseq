@@ -1,18 +1,16 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors } from "../styles";
 import { db } from "../api/sqlite";
 
 const SequenceListScreen = ({ navigation }) => {
    const [ count, setCount ] = React.useState(0);
-   const [ seqList, setSeqList ] = useState([]);
+   const [ seqList, setSeqList ] = useState(["initialSeq"]);
 
    useEffect(() => {
-      console.log("seq list screen loaded");
       loadData();
-      console.log(seqList)
-   }, []);
+   }, [seqList]);
 
    const loadData = async () => {
       await db.transaction(function (tx) {
@@ -21,7 +19,9 @@ const SequenceListScreen = ({ navigation }) => {
             [],
             function (tx, res) {
                console.log('data loaded');
-               setSeqList(res.rows.item(0).seq);
+               if (!seqList.includes(res.rows.item(0).seq)) {
+                  setSeqList([...seqList, res.rows.item(0).seq]);
+               }
 
             },
             (tx, err) => {
@@ -52,6 +52,8 @@ const SequenceListScreen = ({ navigation }) => {
       })
    };
 
+
+
    useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
@@ -64,10 +66,11 @@ const SequenceListScreen = ({ navigation }) => {
 
    return (
       <View style={styles.container}>
-         <TouchableOpacity onPress={() => navigation.navigate('ViewSequence')}>
-            <Text>View this Sequence</Text>
-            <Text>{seqList}</Text>
-         </TouchableOpacity>
+            <FlatList
+               data={seqList}
+               keyExtractor={(seq) => seq}
+               renderItem={({item}) => <TouchableOpacity onPress={() => navigation.navigate('ViewSequence', {currentSeq: item})}><Text>{item}</Text></TouchableOpacity>}
+            />
       </View>
    )
 };

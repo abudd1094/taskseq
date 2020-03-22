@@ -6,10 +6,12 @@ import { Colors, Spacing, Typography } from '../styles';
 import { db } from "../api/sqlite";
 
 
-const SequenceScreen = () => {
+const SequenceScreen = ({ route, navigation }) => {
+   const {currentSeq} = route.params;
+
    useEffect(() => {
       console.log("seq screen loaded")
-
+      console.log(currentSeq);
    }, []);
 
    const loadData = async () => {
@@ -17,7 +19,7 @@ const SequenceScreen = () => {
 
    return (
       <View style={styles.container}>
-         <Text>Sequence Screen</Text>
+         <Text>{currentSeq}</Text>
          <Timer duration="60" />
       </View>
    )
