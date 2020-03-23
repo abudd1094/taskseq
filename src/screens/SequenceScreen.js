@@ -14,7 +14,8 @@ const SequenceScreen = ({ route, navigation }) => {
       console.log(currentSeq);
    }, []);
 
-   const loadData = async () => {
+   const loadSeqData = async () => {
+
    };
 
    return (

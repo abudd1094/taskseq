@@ -15,14 +15,11 @@ const SequenceListScreen = ({ navigation }) => {
    const loadData = async () => {
       await db.transaction(function (tx) {
          tx.executeSql(
-            `SELECT seq FROM TaskTable`,
+            `SELECT DISTINCT seq FROM TaskTable`,
             [],
             function (tx, res) {
                console.log('data loaded');
-               if (!seqList.includes(res.rows.item(0).seq)) {
-                  setSeqList([...seqList, res.rows.item(0).seq]);
-               }
-
+               updateState(res.rows.item(0).seq)
             },
             (tx, err) => {
                console.log('statement error');
@@ -30,6 +27,12 @@ const SequenceListScreen = ({ navigation }) => {
             }
          );
       })
+   };
+
+   const updateState = newData => {
+      if (!seqList.includes(newData)) {
+         setSeqList([...seqList, newData]);
+      }
    };
 
    let deleteSql = 'DELETE FROM TaskTable WHERE seq="testseqtwo"';

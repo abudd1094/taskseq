@@ -3,3 +3,18 @@ export const container = {
    backgroundColor: '#fff',
    alignItems: 'center'
 };
+
+export const defaultMargin = {
+   marginTop: "1rem",
+   marginRight: "1rem",
+   marginBottom: "1rem",
+   marginLeft: "1rem"
+};
+
+export const defaultMarginBottom = {
+   marginBottom: "1rem"
+};
+
+export const flexBottom = {
+   alignSelf: "flex-end"
+};
