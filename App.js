@@ -67,7 +67,7 @@ export default function App(props) {
                   <Stack.Screen
                      name="ViewSequence"
                      component={SequenceScreen}
-                     options={{ title: 'Sequence#' }}
+                     options={({ route }) => ({ title: route.params.currentSeq })}
                   />
                </Stack.Navigator>
             </NavigationContainer>

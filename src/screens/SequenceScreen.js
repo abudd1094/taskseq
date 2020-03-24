@@ -9,9 +9,11 @@ import { db } from "../api/sqlite";
 const SequenceScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
 
+   const [seq, setSeq] = useState("");
+   const [tasks, setTasks] = useState([]);
+
    useEffect(() => {
-      console.log("seq screen loaded")
-      console.log(currentSeq);
+      setSeq(currentSeq);
    }, []);
 
    const loadSeqData = async () => {
@@ -20,7 +22,7 @@ const SequenceScreen = ({ route, navigation }) => {
 
    return (
       <View style={styles.container}>
-         <Text>{currentSeq}</Text>
+         <Text>{seq}</Text>
          <Timer duration="60" />
       </View>
    )
