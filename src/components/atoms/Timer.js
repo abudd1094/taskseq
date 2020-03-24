@@ -47,7 +47,6 @@ const styles = EStyleSheet.create({
    timer: {
       ...Typography.primaryFont,
       fontSize: 80,
-      margin: '3.5rem',
       textAlign: 'center',
    }
 });

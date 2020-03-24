@@ -93,7 +93,7 @@ const styles = EStyleSheet.create({
          marginRight: '1rem'
       },
       marginTop: {
-        marginTop: '1rem'
+        ...Spacing.defaultMarginTop
       },
       listItem: {
          ...Spacing.defaultMarginBottom

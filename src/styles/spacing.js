@@ -1,7 +1,7 @@
 export const container = {
    flex: 1,
    backgroundColor: '#fff',
-   alignItems: 'center'
+   alignItems: 'center',
 };
 
 export const defaultMargin = {
@@ -13,6 +13,10 @@ export const defaultMargin = {
 
 export const defaultMarginBottom = {
    marginBottom: "1rem"
+};
+
+export const defaultMarginTop = {
+   marginTop: "1rem"
 };
 
 export const flexBottom = {
