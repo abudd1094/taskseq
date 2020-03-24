@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors } from "../styles";
+import { Colors, Spacing } from "../styles";
 import { db } from "../api/sqlite";
 
 const SequenceListScreen = ({ navigation }) => {
@@ -55,8 +55,6 @@ const SequenceListScreen = ({ navigation }) => {
       })
    };
 
-
-
    useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
@@ -72,7 +70,8 @@ const SequenceListScreen = ({ navigation }) => {
             <FlatList
                data={seqList}
                keyExtractor={(seq) => seq}
-               renderItem={({item}) => <TouchableOpacity onPress={() => navigation.navigate('ViewSequence', {currentSeq: item})}><Text>{item}</Text></TouchableOpacity>}
+               style={styles.marginTop}
+               renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item})}><Text style={styles.listText}>{item}</Text></TouchableOpacity>}
             />
       </View>
    )
@@ -83,7 +82,7 @@ const styles = EStyleSheet.create({
          flex: 1,
          backgroundColor: '#fff',
          alignItems: 'center',
-         justifyContent: 'center'
+         justifyContent: 'center',
       },
       link: {
          ...Colors.blue
@@ -92,6 +91,16 @@ const styles = EStyleSheet.create({
          ...Colors.blue,
          fontSize: '1.5rem',
          marginRight: '1rem'
+      },
+      marginTop: {
+        marginTop: '1rem'
+      },
+      listItem: {
+         ...Spacing.defaultMarginBottom
+      },
+      listText: {
+         fontSize: 15,
+            ...Colors.blue
       }
    })
 ;

@@ -1,3 +1,3 @@
 export const blue = {
-   color: 'blue'
+   color: 'rgb(0,122,255)'
 };

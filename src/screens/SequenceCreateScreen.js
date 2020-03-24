@@ -11,7 +11,7 @@ const SequenceCreateScreen = () => {
    const [taskDuration, setTaskDuration] = useState(null);
 
    let sqlStatement = '';
-   let insertTestRow = 'INSERT INTO TaskTable (seq, taskName, taskDuration) VALUES("testSeq", "testTaskName", "60")';
+   let insertTestRow = 'INSERT INTO TaskTable (seq, taskName, taskDuration) VALUES("testSeq", "testTaskThree", "40")';
 
    useEffect(() => {
       console.log("seq create screen loaded");
