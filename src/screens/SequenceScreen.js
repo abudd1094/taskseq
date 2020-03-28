@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import Task from '../components/molecules/Task';
 import { Colors, Spacing, Typography } from '../styles';
@@ -17,6 +17,11 @@ const SequenceScreen = ({ route, navigation }) => {
       loadSeqData();
    }, []);
 
+   useEffect(() => {
+      console.log('tasks log');
+      console.log(tasks)
+   }, [tasks]);
+
    const formatSqlSelect = (seq) => {
       return "SELECT * FROM TaskTable WHERE seq=" + "'" + seq.toString() + "'";
    };
@@ -28,23 +33,22 @@ const SequenceScreen = ({ route, navigation }) => {
             [],
             function (tx, res) {
                setSeq(currentSeq);
-               console.log(res)
 
                for (let i = 0; i < res.rows.length; i++) {
-                  console.log('for loop iteration ' + i)
-                  console.log(res.rows.item(i))
-                  setTasks([...tasks, {taskName: res.rows.item(i).taskName, taskDuration: res.rows.item(i).taskDuration}]);
+                  console.log('in for loop');
+                  console.log(res.rows.item(i));
+                  console.log(!tasks.includes(res.rows.item(i)));
+                  if (!tasks.includes(res.rows.item(i))) {
+                     setTasks(prevState => [...prevState, res.rows.item(i)]);
+                  }
                }
-
-               console.log('post for loop state')
-               console.log(tasks)
             },
             (tx, err) => {
                console.log('statement error');
                console.log(err);
             }
          );
-      })
+      }, (err) => console.log(err), () => console.log('successful! woo!'));
    };
 
    useLayoutEffect(() => {
