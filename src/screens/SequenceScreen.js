@@ -64,7 +64,10 @@ const SequenceScreen = ({ route, navigation }) => {
    return (
       <View style={styles.container}>
          <Text style={[styles.title, styles.defaultMarginTop]}>{seq}</Text>
-         <Task style={styles.task} name="testyTask" duration="55" />
+         {tasks.length > 0 ?
+            <Task style={styles.task} name={tasks[0].taskName} duration={tasks[0].taskDuration} />
+            : null
+         }
       </View>
    )
 };
