@@ -1,16 +1,26 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, Spacing } from "../styles";
 import { db } from "../api/sqlite";
+import { Context } from '../context/SequenceContext';
 
 const SequenceListScreen = ({ navigation }) => {
    const [ count, setCount ] = React.useState(0);
    const [ seqList, setSeqList ] = useState(["initialSeq"]);
+   const { state, getSequences } = useContext(Context);
 
    useEffect(() => {
-      loadData();
-   }, [seqList]);
+      console.log('seq list screen')
+
+      getSequences().then(console.log(state))
+
+      const listener = navigation.addListener('didFocus', () => {
+         getSequences()
+      });
+
+      return listener;
+   }, [navigation]);
 
    const loadData = async () => {
       await db.transaction(function (tx) {
@@ -68,7 +78,7 @@ const SequenceListScreen = ({ navigation }) => {
    return (
       <View style={styles.container}>
             <FlatList
-               data={seqList}
+               data={state}
                keyExtractor={(seq) => seq}
                style={styles.marginTop}
                renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item})}><Text style={styles.listText}>{item}</Text></TouchableOpacity>}

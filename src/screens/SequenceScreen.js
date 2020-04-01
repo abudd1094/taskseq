@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import Task from '../components/molecules/Task';
 import { Colors, Spacing, Typography } from '../styles';
@@ -13,13 +13,23 @@ const SequenceScreen = ({ route, navigation }) => {
    const [seq, setSeq] = useState('');
    const [tasks, setTasks] = useState([]);
 
+   useLayoutEffect(() => {
+      navigation.setOptions({
+         headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('CreateSequence')}>
+               <Text style={styles.button}>Edit</Text>
+            </TouchableOpacity>
+         ),
+      });
+   }, [ navigation, setCount ]);
+
    useEffect(() => {
       loadSeqData();
    }, []);
 
    useEffect(() => {
-      console.log('tasks log');
-      console.log(tasks)
+      //console.log('tasks log');
+      //console.log(tasks)
    }, [tasks]);
 
    const formatSqlSelect = (seq) => {
@@ -35,9 +45,6 @@ const SequenceScreen = ({ route, navigation }) => {
                setSeq(currentSeq);
 
                for (let i = 0; i < res.rows.length; i++) {
-                  console.log('in for loop');
-                  console.log(res.rows.item(i));
-                  console.log(!tasks.includes(res.rows.item(i)));
                   if (!tasks.includes(res.rows.item(i))) {
                      setTasks(prevState => [...prevState, res.rows.item(i)]);
                   }
@@ -48,18 +55,8 @@ const SequenceScreen = ({ route, navigation }) => {
                console.log(err);
             }
          );
-      }, (err) => console.log(err), () => console.log('successful! woo!'));
+      }, (err) => console.log(err), () => console.log('successful!'));
    };
-
-   useLayoutEffect(() => {
-      navigation.setOptions({
-         headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('CreateSequence')}>
-               <Text style={styles.button}>Edit</Text>
-            </TouchableOpacity>
-         ),
-      });
-   }, [ navigation, setCount ]);
 
    return (
       <View style={styles.container}>
