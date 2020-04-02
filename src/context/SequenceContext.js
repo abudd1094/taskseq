@@ -11,7 +11,7 @@ const SequenceReducer = (state, action) => {
                return seqName;
             }
          })];
-      case 'add_sequence':
+      case 'create_sequence':
          return action.payload;
       default:
          return state;
@@ -37,13 +37,27 @@ const getSequences = dispatch => {
    };
 };
 
-const addSequence = dispatch => {
+export const createSequence = dispatch => {
    return async (title, content, callback) => {
+      const res =  await db.transaction(function (tx) {
+         tx.executeSql(
+            ``,
+            [],
+            function (tx, res) {
+               const formattedRes = res.rows._array;
+               console.log('seq created');
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      })
    };
 };
 
 export const { Context, Provider } = createDataContext(
    SequenceReducer,
-   { addSequence, getSequences },
+   { createSequence, getSequences },
    ["initialSeq"]
 );

@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { db } from "../api/sqlite";
 import { Spacing } from "../styles";
 import Input from '../components/atoms/Input';
+import TaskCreateInput from "../components/molecules/TaskCreateInput";
+import { Context } from "../context/SequenceContext";
+import { windowWidth } from "../styles/spacing";
 
 const SequenceCreateScreen = () => {
    const [seq, setSeq] = useState("");
    const [taskName, setTaskName] = useState("");
-   const [taskDuration, setTaskDuration] = useState(null);
+   const [taskDuration, setTaskDuration] = useState("");
+   const { state, createSequence } = useContext(Context);
 
    let sqlStatement = '';
-   let insertTestRow = 'INSERT INTO TaskTable (seq, taskName, taskDuration) VALUES("testSeq", "testTaskThree", "40")';
 
    useEffect(() => {
       console.log("seq create screen loaded");
-      console.log(db)
+      createSequence()
    }, []);
 
    const createTask = async (column, table) => {
@@ -36,7 +39,7 @@ const SequenceCreateScreen = () => {
       })
    };
 
-   const createSequence = async () => {
+   const createSequence2 = async () => {
       await db.transaction(function (tx) {
          tx.executeSql(
             `${sqlStatement}`,
@@ -44,7 +47,7 @@ const SequenceCreateScreen = () => {
             function (tx, res) {
                let sqlTable = res.rows;
                console.log('seq created');
-               console.log(res.rows.length)
+               console.log(res.rows.length);
             },
             (tx, err) => {
                console.log('statement error');
@@ -60,8 +63,11 @@ const SequenceCreateScreen = () => {
             <Input
                label="Sequence name:"
                value={seq}
-               onChangeText={text => setSeq(text)}
+               onChangeText={string => setSeq(string)}
                style={styles.defaultMarginBottom}
+            />
+            <TaskCreateInput
+               createTaskCallback={console.log('task callback fired')}
             />
          </View>
          <Button
@@ -75,8 +81,6 @@ const SequenceCreateScreen = () => {
 const styles = EStyleSheet.create({
    container: {
       flex: 1,
-      flexDirection: "column",
-      height: 100,
       justifyContent: "space-between"
    },
    defaultMargin: {
@@ -84,6 +88,15 @@ const styles = EStyleSheet.create({
    },
    defaultMarginBottom: {
       ...Spacing.defaultMarginBottom
+   },
+   inputContainer: {
+      flexDirection: 'row',
+   },
+   inputDuration: {
+      flex: 1
+   },
+   inputName: {
+      flex: 4
    }
 });
 

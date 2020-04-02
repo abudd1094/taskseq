@@ -4,7 +4,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 
 const Input = ({label, value, onChangeText}) => {
    return (
-      <View>
+      <View style={styles.container}>
          <Text>{label}</Text>
          <TextInput style={styles.input} value={value} onChangeText={onChangeText} />
       </View>
@@ -14,11 +14,11 @@ const Input = ({label, value, onChangeText}) => {
 const styles = EStyleSheet.create({
    input: {
       fontSize: 18,
-      borderWidth: 1,
+      borderBottomWidth: 1,
       borderColor: 'black',
       marginBottom: 15,
       padding: 5,
-      margin: 5
+      margin: 5,
    }
 });
 
