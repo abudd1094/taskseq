@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, Spacing } from "../styles";
 import { db } from "../api/sqlite";
@@ -10,34 +10,17 @@ const SequenceListScreen = ({ navigation }) => {
    const [ seqList, setSeqList ] = useState(["initialSeq"]);
    const { state, getSequences } = useContext(Context);
 
+
    useEffect(() => {
       console.log('seq list screen')
 
       getSequences().then(console.log(state))
-
       const listener = navigation.addListener('didFocus', () => {
          getSequences()
       });
 
       return listener;
    }, [navigation]);
-
-   const loadData = async () => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            `SELECT DISTINCT seq FROM TaskTable`,
-            [],
-            function (tx, res) {
-               console.log('data loaded');
-               updateState(res.rows.item(0).seq)
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      })
-   };
 
    const updateState = newData => {
       if (!seqList.includes(newData)) {
@@ -68,7 +51,7 @@ const SequenceListScreen = ({ navigation }) => {
    useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('CreateSequence')}>
+            <TouchableOpacity onPress={() => navigation.navigate('SequenceCreate')}>
                <Text style={styles.button}>+</Text>
             </TouchableOpacity>
          ),

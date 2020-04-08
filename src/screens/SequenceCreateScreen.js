@@ -1,61 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, FlatList, Text, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { db } from "../api/sqlite";
 import { Spacing } from "../styles";
 import Input from '../components/atoms/Input';
 import TaskCreateInput from "../components/molecules/TaskCreateInput";
 import { Context } from "../context/SequenceContext";
-import { windowWidth } from "../styles/spacing";
 
 const SequenceCreateScreen = () => {
    const [seq, setSeq] = useState("");
-   const [taskName, setTaskName] = useState("");
-   const [taskDuration, setTaskDuration] = useState("");
-   const { state, createSequence } = useContext(Context);
+   const [seqDefined, setSeqDefined] = useState(false);
+   const [taskName, setTaskName] = useState([]);
+   const [taskDuration, setTaskDuration] = useState([]);
+   const { state, SequenceCreate } = useContext(Context);
 
    let sqlStatement = '';
 
    useEffect(() => {
       console.log("seq create screen loaded");
-      createSequence()
    }, []);
-
-   const createTask = async (column, table) => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            `${sqlStatement}`,
-            [],
-            function (tx, res) {
-               let sqlTable = res.rows;
-               console.log('task created');
-               console.log(res.rows.length)
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      })
-   };
-
-   const createSequence2 = async () => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            `${sqlStatement}`,
-            [],
-            function (tx, res) {
-               let sqlTable = res.rows;
-               console.log('seq created');
-               console.log(res.rows.length);
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      })
-   };
 
    return (
       <View style={[styles.defaultMargin, styles.container]}>
@@ -63,16 +25,30 @@ const SequenceCreateScreen = () => {
             <Input
                label="Sequence name:"
                value={seq}
-               onChangeText={string => setSeq(string)}
+               onChangeText={string => {
+                  setSeq(string);
+                  setSeqDefined(false);
+               }}
                style={styles.defaultMarginBottom}
+               conditionalStyle={seqDefined ? styles.seqDefined : styles.seqUndefined}
             />
-            <TaskCreateInput
-               createTaskCallback={console.log('task callback fired')}
+            <FlatList
+               data={state || {}}
+               keyExtractor={(seq) => seq}
+               style={styles.marginTop}
+               renderItem={item => {
+                  <View>
+                     <Text>{item}</Text>
+                  </View>
+               }}
+            />
+            <Button
+               title="Set Sequence Name"
+               onPress={() => setSeqDefined(true)}
             />
          </View>
-         <Button
-            title="CREATE"
-            onPress={createSequence}
+         <TaskCreateInput
+            seq={seq}
          />
       </View>
    )
@@ -81,7 +57,7 @@ const SequenceCreateScreen = () => {
 const styles = EStyleSheet.create({
    container: {
       flex: 1,
-      justifyContent: "space-between"
+      justifyContent: "flex-start"
    },
    defaultMargin: {
       ...Spacing.defaultMargin
@@ -89,14 +65,11 @@ const styles = EStyleSheet.create({
    defaultMarginBottom: {
       ...Spacing.defaultMarginBottom
    },
-   inputContainer: {
-      flexDirection: 'row',
+   seqDefined: {
+      color: 'red'
    },
-   inputDuration: {
-      flex: 1
-   },
-   inputName: {
-      flex: 4
+   seqUndefined: {
+      color: 'black'
    }
 });
 

@@ -10,6 +10,7 @@ import { Provider } from './src/context/SequenceContext';
 import HomeScreen from './src/screens/HomeScreen';
 import SequenceListScreen from './src/screens/SequenceListScreen';
 import SequenceCreateScreen from './src/screens/SequenceCreateScreen';
+import SequenceEditScreen from './src/screens/SequenceEditScreen';
 import SequenceScreen from './src/screens/SequenceScreen';
 
 export default function App(props) {
@@ -60,9 +61,14 @@ export default function App(props) {
                      component={SequenceListScreen}
                   />
                   <Stack.Screen
-                     name="CreateSequence"
+                     name="SequenceCreate"
                      component={SequenceCreateScreen}
                      options={{ title: 'New Sequence' }}
+                  />
+                  <Stack.Screen
+                     name="SequenceEdit"
+                     component={SequenceEditScreen}
+                     options={{ title: 'Edit Sequence' }}
                   />
                   <Stack.Screen
                      name="ViewSequence"

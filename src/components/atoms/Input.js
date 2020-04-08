@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 
-const Input = ({label, value, onChangeText}) => {
+const Input = ({label, value, onChangeText, conditionalStyle}) => {
    return (
       <View style={styles.container}>
          <Text>{label}</Text>
-         <TextInput style={styles.input} value={value} onChangeText={onChangeText} />
+         <TextInput style={[styles.input, conditionalStyle]} value={value} onChangeText={onChangeText} />
       </View>
    )
 };

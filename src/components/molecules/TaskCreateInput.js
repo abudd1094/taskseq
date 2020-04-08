@@ -3,7 +3,7 @@ import { View, Text, Button } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import Input from "../atoms/Input";
 
-const TaskCreateInput = ({createTaskCallback}) => {
+const TaskCreateInput = ({contextCallback, seq}) => {
    const [taskName, setTaskName] = useState("");
    const [taskDuration, setTaskDuration] = useState("");
 
@@ -22,8 +22,8 @@ const TaskCreateInput = ({createTaskCallback}) => {
             style={[styles.inputDuration, styles.defaultMarginBottom]}
          />
          <Button
-            title="ADD TASK"
-            onPress={createTaskCallback}
+            title="Add Task"
+            onPress={() => contextCallback(seq, taskName, taskDuration)}
          />
       </View>
    )
@@ -31,7 +31,8 @@ const TaskCreateInput = ({createTaskCallback}) => {
 
 const styles = EStyleSheet.create({
    container: {
-      backgroundColor: 'grey'
+      borderColor: 'grey',
+      borderWidth: 1
    }
 });
 

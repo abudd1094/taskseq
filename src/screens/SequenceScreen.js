@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import Task from '../components/molecules/Task';
 import { Colors, Spacing, Typography } from '../styles';
@@ -11,12 +11,12 @@ const SequenceScreen = ({ route, navigation }) => {
 
    const [ count, setCount ] = React.useState(0);
    const [seq, setSeq] = useState('');
-   const [tasks, setTasks] = useState([]);
+   const [tasks, setTasks] = useState([{taskName: 'initialTask'}]);
 
    useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('CreateSequence')}>
+            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit', {currentSeq: currentSeq})}>
                <Text style={styles.button}>Edit</Text>
             </TouchableOpacity>
          ),
@@ -28,8 +28,8 @@ const SequenceScreen = ({ route, navigation }) => {
    }, []);
 
    useEffect(() => {
-      //console.log('tasks log');
-      //console.log(tasks)
+      console.log('tasks log');
+      console.log(tasks)
    }, [tasks]);
 
    const formatSqlSelect = (seq) => {
@@ -55,7 +55,7 @@ const SequenceScreen = ({ route, navigation }) => {
                console.log(err);
             }
          );
-      }, (err) => console.log(err), () => console.log('successful!'));
+      }, (err) => console.log(err), () => console.log('new length ' + tasks.length));
    };
 
    return (
@@ -65,6 +65,12 @@ const SequenceScreen = ({ route, navigation }) => {
             <Task style={styles.task} name={tasks[0].taskName} duration={tasks[0].taskDuration} />
             : null
          }
+         <FlatList
+            data={tasks}
+            keyExtractor={(task) => task.taskName}
+            style={{textAlign: 'center', marginTop: 20}}
+            renderItem={(task) => <Text>{task.taskName}</Text>}
+         />
       </View>
    )
 };
