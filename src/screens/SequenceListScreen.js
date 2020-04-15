@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, Spacing } from "../styles";
 import { db } from "../api/sqlite";
@@ -7,7 +7,7 @@ import { Context } from '../context/SequenceContext';
 
 const SequenceListScreen = ({ navigation }) => {
    const [ count, setCount ] = React.useState(0);
-   const { state, getAllSeq } = useContext(Context);
+   const { state, getAllSeq, deleteSeq } = useContext(Context);
 
 
    useEffect(() => {
@@ -37,6 +37,14 @@ const SequenceListScreen = ({ navigation }) => {
                keyExtractor={(seq) => seq}
                style={styles.marginTop}
                renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item})}><Text style={styles.listText}>{item}</Text></TouchableOpacity>}
+            />
+         <Button
+            title="DELETE TABLE"
+            onPress={() => deleteSeq("testTestTwo")}
+         />
+            <Button
+               title="log state"
+               onPress={() => console.log(state)}
             />
       </View>
    )

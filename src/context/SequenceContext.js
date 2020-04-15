@@ -18,7 +18,6 @@ const SequenceReducer = (state, action) => {
          return state;
       case 'delete_seq':
          console.log('seq deleted');
-         console.log(action.payload);
          return state;
       case 'get_all_seq':
          return action.payload.map(seq => seq.name);
