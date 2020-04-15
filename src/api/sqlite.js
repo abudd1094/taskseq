@@ -12,6 +12,16 @@ export const formatSqlSeqDelete = (seqName) => {
    return `DROP TABLE ${seqName}`;
 };
 
+// LOAD ALL SEQUENCES
+export const formatSqlAllSeqSelect = () => {
+   return `SELECT name FROM sqlite_master WHERE type='table' ORDER BY name`;
+};
+
+// RETURN ALL SEQ TASK ROWS
+export const formatSqlAllTaskSelect = (seqName) => {
+   return `SELECT * FROM ${seqName}`;
+};
+
 // CREATE TASK ROW
 export const formatSqlTaskInsert = (seqName, taskName, taskDuration, taskIndex) => {
    return `INSERT INTO ${seqName} (TaskName, TaskDuration, TaskIndex) VALUES (${taskName}, ${taskDuration}, ${taskIndex})`
@@ -20,11 +30,6 @@ export const formatSqlTaskInsert = (seqName, taskName, taskDuration, taskIndex) 
 // DELETE TASK ROW
 export const formatSqlTaskDelete = (seqName, taskName) => {
    return "DELETE FROM " + seqName + " WHERE TaskName=" + "'" + taskName.toString() + "'";
-};
-
-// RETURN ALL SEQ TASK ROWS
-export const formatSqlAllTaskSelect = (seqName) => {
-   return `SELECT * FROM ${seqName}`;
 };
 
 // RETURN SINGLE SEQ TASK ROW

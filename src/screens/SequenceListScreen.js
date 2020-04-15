@@ -7,46 +7,18 @@ import { Context } from '../context/SequenceContext';
 
 const SequenceListScreen = ({ navigation }) => {
    const [ count, setCount ] = React.useState(0);
-   const [ seqList, setSeqList ] = useState(["initialSeq"]);
-   const { state, getSequences } = useContext(Context);
+   const { state, getAllSeq } = useContext(Context);
 
 
    useEffect(() => {
-      console.log('seq list screen')
+      getAllSeq()
 
-      getSequences().then(console.log(state))
       const listener = navigation.addListener('didFocus', () => {
-         getSequences()
+         getAllSeq()
       });
 
       return listener;
    }, [navigation]);
-
-   const updateState = newData => {
-      if (!seqList.includes(newData)) {
-         setSeqList([...seqList, newData]);
-      }
-   };
-
-   let deleteSql = 'DELETE FROM TaskTable WHERE seq="testseqtwo"';
-
-   const deleteTask = async () => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            `${deleteSql}`,
-            [],
-            function (tx, res) {
-               let sqlTable = res.rows;
-               console.log('seq deleted');
-               console.log(res)
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      })
-   };
 
    useLayoutEffect(() => {
       navigation.setOptions({
