@@ -1,9 +1,10 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useContext } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import Task from '../components/molecules/Task';
 import { Colors, Spacing, Typography } from '../styles';
 import { db } from "../api/sqlite";
+import { Context } from "../context/SequenceContext";
 
 
 const SequenceScreen = ({ route, navigation }) => {
@@ -12,6 +13,7 @@ const SequenceScreen = ({ route, navigation }) => {
    const [ count, setCount ] = React.useState(0);
    const [seq, setSeq] = useState('');
    const [tasks, setTasks] = useState([{taskName: 'initialTask'}]);
+   const { state, getSeq } = useContext(Context);
 
    useLayoutEffect(() => {
       navigation.setOptions({
@@ -24,13 +26,8 @@ const SequenceScreen = ({ route, navigation }) => {
    }, [ navigation, setCount ]);
 
    useEffect(() => {
-      loadSeqData();
+      console.log(getSeq(currentSeq))
    }, []);
-
-   useEffect(() => {
-      console.log('tasks log');
-      console.log(tasks)
-   }, [tasks]);
 
    const formatSqlSelect = (seq) => {
       return "SELECT * FROM TaskTable WHERE seq=" + "'" + seq.toString() + "'";

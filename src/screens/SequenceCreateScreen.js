@@ -1,54 +1,42 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Button, FlatList, Text, View } from 'react-native';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { Button, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Spacing } from "../styles";
 import Input from '../components/atoms/Input';
-import TaskCreateInput from "../components/molecules/TaskCreateInput";
 import { Context } from "../context/SequenceContext";
 
-const SequenceCreateScreen = () => {
-   const [seq, setSeq] = useState("");
-   const [seqDefined, setSeqDefined] = useState(false);
-   const [taskName, setTaskName] = useState([]);
-   const [taskDuration, setTaskDuration] = useState([]);
-   const { state, SequenceCreate } = useContext(Context);
-
-   let sqlStatement = '';
+const SequenceCreateScreen = ({ navigation }) => {
+   const [ count, setCount ] = React.useState(0);
+   const [seqName, setSeqName] = useState("");
+   const { state, createSeq } = useContext(Context);
 
    useEffect(() => {
       console.log("seq create screen loaded");
    }, []);
 
+   useLayoutEffect(() => {
+      navigation.setOptions({
+         headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('Sequences')}>
+               <Text style={styles.button}>Back</Text>
+            </TouchableOpacity>
+         ),
+      });
+   }, [ navigation, setCount ]);
+
    return (
       <View style={[styles.defaultMargin, styles.container]}>
-         <View>
-            <Input
-               label="Sequence name:"
-               value={seq}
-               onChangeText={string => {
-                  setSeq(string);
-                  setSeqDefined(false);
-               }}
-               style={styles.defaultMarginBottom}
-               conditionalStyle={seqDefined ? styles.seqDefined : styles.seqUndefined}
-            />
-            <FlatList
-               data={state || {}}
-               keyExtractor={(seq) => seq}
-               style={styles.marginTop}
-               renderItem={item => {
-                  <View>
-                     <Text>{item}</Text>
-                  </View>
-               }}
-            />
-            <Button
-               title="Set Sequence Name"
-               onPress={() => setSeqDefined(true)}
-            />
-         </View>
-         <TaskCreateInput
-            seq={seq}
+         <Input
+            label="Sequence name: "
+            value={seqName}
+            onChangeText={string => {
+               setSeqName(string);
+            }}
+            style={styles.defaultMarginBottom}
+         />
+         <Button
+            title="Set Sequence Name"
+            onPress={() => createSeq(seqName).then(navigation.navigate('TaskCreate', {seqName: seqName}))}
          />
       </View>
    )

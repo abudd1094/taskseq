@@ -9,15 +9,19 @@ const SequenceListScreen = ({ navigation }) => {
    const [ count, setCount ] = React.useState(0);
    const { state, getAllSeq, deleteSeq } = useContext(Context);
 
+   useEffect(() => {
+
+   }, []);
 
    useEffect(() => {
       getAllSeq()
 
-      const listener = navigation.addListener('didFocus', () => {
+      const unsubscribe = navigation.addListener('focus', () => {
          getAllSeq()
       });
 
-      return listener;
+      console.log('navigation made');
+      return unsubscribe;
    }, [navigation]);
 
    useLayoutEffect(() => {
@@ -40,7 +44,7 @@ const SequenceListScreen = ({ navigation }) => {
             />
          <Button
             title="DELETE TABLE"
-            onPress={() => deleteSeq("testTestTwo")}
+            onPress={() => deleteSeq("Abc")}
          />
             <Button
                title="log state"

@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, Button } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import Input from "../atoms/Input";
+import { Context } from "../../context/SequenceContext";
 
-const TaskCreateInput = ({contextCallback, seq}) => {
+const TaskCreateInput = ({seqName}) => {
    const [taskName, setTaskName] = useState("");
    const [taskDuration, setTaskDuration] = useState("");
+   const [taskIndex, setTaskIndex] = useState("");
+   const { state, createTask } = useContext(Context);
+
 
    return (
       <View style={styles.container}>
@@ -18,12 +22,18 @@ const TaskCreateInput = ({contextCallback, seq}) => {
          <Input
             label="Task duration:"
             value={taskDuration}
-            onChangeText={string => setTaskDuration(string)}
+            onChangeText={number => setTaskDuration(number)}
+            style={[styles.inputDuration, styles.defaultMarginBottom]}
+         />
+         <Input
+            label="Task index:"
+            value={taskIndex}
+            onChangeText={number => setTaskIndex(number)}
             style={[styles.inputDuration, styles.defaultMarginBottom]}
          />
          <Button
             title="Add Task"
-            onPress={() => contextCallback(seq, taskName, taskDuration)}
+            onPress={() => createTask(seqName, taskName, taskDuration, taskIndex)}
          />
       </View>
    )

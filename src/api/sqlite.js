@@ -24,7 +24,7 @@ export const formatSqlAllTaskSelect = (seqName) => {
 
 // CREATE TASK ROW
 export const formatSqlTaskInsert = (seqName, taskName, taskDuration, taskIndex) => {
-   return `INSERT INTO ${seqName} (TaskName, TaskDuration, TaskIndex) VALUES (${taskName}, ${taskDuration}, ${taskIndex})`
+   return "INSERT INTO " + seqName + " (TaskName, TaskDuration, TaskIndex) VALUES (" + "'" + taskName + "', '" + taskDuration + "', '" + taskIndex + "')"
 };
 
 // DELETE TASK ROW

@@ -24,6 +24,9 @@ const SequenceReducer = (state, action) => {
       case 'get_seq_data':
          console.log('get seq data');
          console.log(action.payload);
+      case 'create_task':
+         console.log('task created');
+         console.log(action.payload);
       default:
          return state;
    }
@@ -66,7 +69,7 @@ const deleteSeq = dispatch => {
 };
 
 const getAllSeq = dispatch => {
-   return async (seqName, taskName, taskDuration) => {
+   return async () => {
       const res =  await db.transaction(function (tx) {
          tx.executeSql(
             formatSqlAllSeqSelect(),
@@ -85,7 +88,7 @@ const getAllSeq = dispatch => {
 };
 
 const getSeq = dispatch => {
-   return async (seqName, taskName, taskDuration) => {
+   return async (seqName) => {
       const res =  await db.transaction(function (tx) {
          tx.executeSql(
             formatSqlAllTaskSelect(seqName),
