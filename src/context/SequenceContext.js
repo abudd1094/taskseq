@@ -7,7 +7,6 @@ import {
    formatSqlTaskInsert,
    formatSqlTaskDelete,
    formatSqlAllTaskSelect,
-   formatSqlTaskSelect
 } from '../api/sqlite';
 
 const SequenceReducer = (state, action) => {
@@ -18,25 +17,27 @@ const SequenceReducer = (state, action) => {
          return state;
       case 'delete_seq':
          console.log('seq deleted');
-         return state;
+         break;
       case 'get_all_seq':
-         return action.payload.map(seq => seq.name);
+         console.log('GET ALL SEQUENCES')
+         console.log(action.payload)
+         return action.payload;
       case 'get_seq_data':
          console.log('get seq data');
-         console.log(action.payload);
-         return state;
+         console.log('DEBUG TESTS');
+         return action.payload;
       case 'create_task':
          console.log('task created');
          console.log(action.payload);
          return state;
       default:
-         return state;
+         return;
    }
 };
 
 const createSeq = dispatch => {
    return async (seqName) => {
-      const res = await db.transaction(function (tx) {
+      await db.transaction(function (tx) {
          tx.executeSql(
             formatSqlSeqCreate(seqName),
             [],
@@ -54,7 +55,7 @@ const createSeq = dispatch => {
 
 const deleteSeq = dispatch => {
    return async (seqName) => {
-      const res = await db.transaction(function (tx) {
+      await db.transaction(function (tx) {
          tx.executeSql(
             formatSqlSeqDelete(seqName),
             [],
@@ -72,7 +73,7 @@ const deleteSeq = dispatch => {
 
 const getAllSeq = dispatch => {
    return async () => {
-      const res =  await db.transaction(function (tx) {
+      await db.transaction(function (tx) {
          tx.executeSql(
             formatSqlAllSeqSelect(),
             [],
@@ -91,7 +92,7 @@ const getAllSeq = dispatch => {
 
 const getSeq = dispatch => {
    return async (seqName) => {
-      const res =  await db.transaction(function (tx) {
+      await db.transaction(function (tx) {
          tx.executeSql(
             formatSqlAllTaskSelect(seqName),
             [],

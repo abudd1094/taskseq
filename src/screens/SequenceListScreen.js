@@ -20,7 +20,6 @@ const SequenceListScreen = ({ navigation }) => {
          getAllSeq()
       });
 
-      console.log('navigation made');
       return unsubscribe;
    }, [navigation]);
 
@@ -38,9 +37,9 @@ const SequenceListScreen = ({ navigation }) => {
       <View style={styles.container}>
             <FlatList
                data={state}
-               keyExtractor={(seq) => seq}
+               keyExtractor={(item) => item.name}
                style={styles.marginTop}
-               renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item})}><Text style={styles.listText}>{item}</Text></TouchableOpacity>}
+               renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item.name})}><Text style={styles.listText}>{item.name}</Text></TouchableOpacity>}
             />
          <Button
             title="DELETE TABLE"
