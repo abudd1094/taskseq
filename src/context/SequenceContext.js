@@ -24,9 +24,11 @@ const SequenceReducer = (state, action) => {
       case 'get_seq_data':
          console.log('get seq data');
          console.log(action.payload);
+         return state;
       case 'create_task':
          console.log('task created');
          console.log(action.payload);
+         return state;
       default:
          return state;
    }
