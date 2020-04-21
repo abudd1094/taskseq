@@ -41,10 +41,6 @@ const SequenceListScreen = ({ navigation }) => {
                style={styles.marginTop}
                renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item.name})}><Text style={styles.listText}>{item.name}</Text></TouchableOpacity>}
             />
-         <Button
-            title="DELETE TABLE"
-            onPress={() => deleteSeq("Abc")}
-         />
             <Button
                title="log state"
                onPress={() => console.log(state)}

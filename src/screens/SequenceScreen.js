@@ -36,7 +36,7 @@ const SequenceScreen = ({ route, navigation }) => {
          <Text style={[styles.title, styles.defaultMarginTop]}>{currentSeq}</Text>
          <FlatList
             data={state}
-            keyExtractor={(item) => item.name}
+            keyExtractor={(item) => item.TaskName}
             style={styles.marginTop}
             renderItem={item => <Text>{item.item.TaskName}</Text>}
          />
