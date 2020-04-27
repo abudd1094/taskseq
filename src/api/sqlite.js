@@ -27,6 +27,11 @@ export const formatSqlTaskInsert = (seqName, taskName, taskDuration, taskIndex) 
    return "INSERT INTO " + seqName + " (TaskName, TaskDuration, TaskIndex) VALUES (" + "'" + taskName + "', '" + taskDuration + "', '" + taskIndex + "')"
 };
 
+// UPDATE TASK ROW
+export const formatSqlTaskUpdate = (seqName, taskName, columnToChange, newValue) => {
+   return "UPDATE " + seqName + " SET " + columnToChange + " = '" + newValue + "'" + " WHERE TaskName = " + "'" + taskName + "'"
+};
+
 // DELETE TASK ROW
 export const formatSqlTaskDelete = (seqName, taskName) => {
    return "DELETE FROM " + seqName + " WHERE TaskName=" + "'" + taskName.toString() + "'";

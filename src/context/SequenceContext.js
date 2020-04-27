@@ -6,7 +6,7 @@ import {
    formatSqlAllSeqSelect,
    formatSqlTaskInsert,
    formatSqlTaskDelete,
-   formatSqlAllTaskSelect,
+   formatSqlAllTaskSelect, formatSqlTaskUpdate,
 } from '../api/sqlite';
 
 const SequenceReducer = (state, action) => {
@@ -28,6 +28,10 @@ const SequenceReducer = (state, action) => {
          return action.payload;
       case 'create_task':
          console.log('task created');
+         console.log(action.payload);
+         return state;
+      case 'update_task':
+         console.log('task updated');
          console.log(action.payload);
          return state;
       default:
@@ -127,6 +131,24 @@ const createTask = dispatch => {
    };
 };
 
+const updateTask = dispatch => {
+   return async (seqName, taskName, columnToChange, newValue) => {
+      const res = await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlTaskUpdate(seqName, taskName, columnToChange, newValue),
+            [],
+            function (tx, res) {
+               dispatch({ type: 'update_task', payload: res });
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      });
+   };
+};
+
 const deleteTask = dispatch => {
    return async (seqName, taskName) => {
       const res = await db.transaction(function (tx) {
@@ -147,6 +169,6 @@ const deleteTask = dispatch => {
 
 export const { Context, Provider } = createDataContext(
    SequenceReducer,
-   { createSeq, createTask, deleteSeq, deleteTask, getSeq, getAllSeq },
+   { createSeq, createTask, updateTask, deleteSeq, deleteTask, getSeq, getAllSeq },
    []
 );

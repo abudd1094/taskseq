@@ -14,16 +14,6 @@ const SequenceCreateScreen = ({ navigation }) => {
       console.log("seq create screen loaded");
    }, []);
 
-   useLayoutEffect(() => {
-      navigation.setOptions({
-         headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('Sequences')}>
-               <Text style={styles.button}>Back</Text>
-            </TouchableOpacity>
-         ),
-      });
-   }, [ navigation, setCount ]);
-
    return (
       <View style={[styles.defaultMargin, styles.container]}>
          <Input
