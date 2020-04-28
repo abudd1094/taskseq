@@ -6,13 +6,17 @@ import {
    formatSqlAllSeqSelect,
    formatSqlTaskInsert,
    formatSqlTaskDelete,
-   formatSqlAllTaskSelect, formatSqlTaskUpdate,
+   formatSqlAllTaskSelect, formatSqlTaskUpdate, formatSqlSeqUpdate,
 } from '../api/sqlite';
 
 const SequenceReducer = (state, action) => {
    switch (action.type) {
       case 'create_seq':
          console.log('seq created');
+         console.log(action.payload);
+         return state;
+      case 'update_seq':
+         console.log('seq updated');
          console.log(action.payload);
          return state;
       case 'delete_seq':
@@ -24,7 +28,6 @@ const SequenceReducer = (state, action) => {
          return action.payload;
       case 'get_seq_data':
          console.log('get seq data');
-         console.log('DEBUG TESTS');
          return action.payload;
       case 'create_task':
          console.log('task created');
@@ -47,6 +50,24 @@ const createSeq = dispatch => {
             [],
             function (tx, res) {
                dispatch({ type: 'create_seq', payload: res });
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      });
+   };
+};
+
+const updateSeq = dispatch => {
+   return async (seqName, newValue) => {
+      const res = await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlSeqUpdate(seqName, newValue),
+            [],
+            function (tx, res) {
+               dispatch({ type: 'update_seq', payload: res });
             },
             (tx, err) => {
                console.log('statement error');
@@ -169,6 +190,6 @@ const deleteTask = dispatch => {
 
 export const { Context, Provider } = createDataContext(
    SequenceReducer,
-   { createSeq, createTask, updateTask, deleteSeq, deleteTask, getSeq, getAllSeq },
+   { createSeq, updateSeq, createTask, updateTask, deleteSeq, deleteTask, getSeq, getAllSeq },
    []
 );

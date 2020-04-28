@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import Input from "../atoms/Input";
 import { Context } from "../../context/SequenceContext";
+import { Colors } from "../../styles";
 
 const TaskCreateInput = ({seqName}) => {
    const [taskName, setTaskName] = useState("");
@@ -10,31 +11,39 @@ const TaskCreateInput = ({seqName}) => {
    const [taskIndex, setTaskIndex] = useState("");
    const { state, createTask } = useContext(Context);
 
+   function handleUpdate(item, field, input) {
+      switch(field) {
+         case 'name':
+            updateTask(currentSeq, item.item.TaskName, 'TaskName', input);
+            break;
+         case 'duration':
+            updateTask(currentSeq, item.item.TaskName, 'TaskDuration', input);
+            break;
+         default:
+            break;
+      }
+   };
 
    return (
-      <View style={styles.container}>
-         <Input
-            label="Task name:"
-            value={taskName}
-            onChangeText={string => setTaskName(string)}
-            style={[styles.inputName, styles.defaultMarginBottom]}
+      <View style={styles.listRow}>
+         <Text style={[styles.listIndex, styles.listText]}>{item.item.TaskIndex}</Text>
+         <TextInput
+            style={[styles.listName, styles.listText]}
+            placeholder={item.item.TaskName}
+            onChangeText={input => setLocalState(input)}
+            onEndEditing={() => handleUpdate(item, 'name', localState)}
          />
-         <Input
-            label="Task duration:"
-            value={taskDuration}
-            onChangeText={number => setTaskDuration(number)}
-            style={[styles.inputDuration, styles.defaultMarginBottom]}
+         <TextInput
+            style={[styles.listDuration, styles.listText]}
+            placeholder={item.item.TaskDuration.toString()}
+            onChangeText={input => handleUpdate(item, 'duration', input)}
          />
-         <Input
-            label="Task index:"
-            value={taskIndex}
-            onChangeText={number => setTaskIndex(number)}
-            style={[styles.inputDuration, styles.defaultMarginBottom]}
-         />
-         <Button
-            title="Add Task"
-            onPress={() => createTask(seqName, taskName, taskDuration, taskIndex)}
-         />
+         <TouchableOpacity
+            style={styles.listRowButton}
+            onPress={() => deleteTask(currentSeq, item.item.TaskName)}
+         >
+            <Text style={styles.delete}>DELETE</Text>
+         </TouchableOpacity>
       </View>
    )
 };
@@ -43,7 +52,28 @@ const styles = EStyleSheet.create({
    container: {
       borderColor: 'grey',
       borderWidth: 1
-   }
+   },
+   listRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 10,
+   },
+   listRowButton: {
+      flex: 1,
+   },
+   listText: {
+      fontSize: 15,
+      ...Colors.blue,
+   },
+   listName: {
+      flex: 2,
+   },
+   listDuration: {
+      flex: 1,
+   },
+   listIndex: {
+      flex: 1,
+   },
 });
 
 export default TaskCreateInput;

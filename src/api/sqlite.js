@@ -7,6 +7,13 @@ export const formatSqlSeqCreate = (seqName) => {
    return `CREATE TABLE ${seqName} (TaskName varchar(255), TaskDuration int, TaskIndex int)`;
 };
 
+// UPDATE SEQUENCE TABLE
+export const formatSqlSeqUpdate = (seqName, newValue) => {
+   console.log("EXEC sp_rename '" + seqName + "', '" + newValue + "'")
+   return "SELECT db_name()";
+
+};
+
 // DROP SEQUENCE TABLE
 export const formatSqlSeqDelete = (seqName) => {
    return `DROP TABLE ${seqName}`;

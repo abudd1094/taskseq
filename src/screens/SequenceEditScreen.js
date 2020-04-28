@@ -1,12 +1,13 @@
-import React, {useEffect, useContext} from 'react';
-import { FlatList, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Colors, Spacing, Typography } from "../styles";
+import { Colors, Typography } from "../styles";
 import { Context } from "../context/SequenceContext";
 
 const SequenceEditScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
-   const { state, getSeq, deleteSeq, updateTask, deleteTask } = useContext(Context);
+   const { state, getSeq, updateSeq, deleteSeq, updateTask, deleteTask } = useContext(Context);
+   const [localState, setLocalState] = useState(state);
 
    useEffect(() => {
       getSeq(currentSeq);
@@ -18,9 +19,27 @@ const SequenceEditScreen = ({ route, navigation }) => {
       return unsubscribe;
    }, [navigation]);
 
+   function handleUpdate(item, field, input) {
+      switch(field) {
+         case 'name':
+            updateTask(currentSeq, item.item.TaskName, 'TaskName', input);
+            break;
+         case 'duration':
+            updateTask(currentSeq, item.item.TaskName, 'TaskDuration', input);
+            break;
+         default:
+            break;
+      }
+   }
+
    return (
      <View style={styles.container}>
-         <Text style={styles.title}>{currentSeq}</Text>
+         <TextInput
+            placeholder={currentSeq}
+            style={styles.title}
+            onChangeText={input => setLocalState(input)}
+            onEndEditing={() => updateSeq(currentSeq, localState)}
+         />
         <FlatList
            data={state}
            keyExtractor={(item) => item.TaskName}
@@ -28,17 +47,18 @@ const SequenceEditScreen = ({ route, navigation }) => {
            renderItem={item => {
               return(
                  <View style={styles.listRow}>
+                    <Text style={[styles.listIndex, styles.listText]}>{item.item.TaskIndex}</Text>
                     <TextInput
                        style={[styles.listName, styles.listText]}
-                       value={item.item.TaskName}
-                       onChangeText={input => updateTask(currentSeq, item.item.TaskName, 'TaskName', input)}
+                       placeholder={item.item.TaskName}
+                       onChangeText={input => setLocalState(input)}
+                       onEndEditing={() => handleUpdate(item, 'name', localState)}
                     />
                     <TextInput
                        style={[styles.listDuration, styles.listText]}
-                       value={item.item.TaskDuration.toString()}
-                       onChangeText={input => handleTaskUpdate(item, 'duration', input)}
+                       placeholder={item.item.TaskDuration.toString()}
+                       onChangeText={input => handleUpdate(item, 'duration', input)}
                     />
-                    <Text style={[styles.listIndex, styles.listText]}>{item.item.TaskIndex}</Text>
                     <TouchableOpacity
                        style={styles.listRowButton}
                        onPress={() => deleteTask(currentSeq, item.item.TaskName)}
