@@ -7,11 +7,7 @@ import { Context } from '../context/SequenceContext';
 
 const SequenceListScreen = ({ navigation }) => {
    const [ count, setCount ] = React.useState(0);
-   const { state, getAllSeq, deleteSeq } = useContext(Context);
-
-   useEffect(() => {
-
-   }, []);
+   const { state, getAllSeq } = useContext(Context);
 
    useEffect(() => {
       getAllSeq()

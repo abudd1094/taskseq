@@ -9,8 +9,7 @@ export const formatSqlSeqCreate = (seqName) => {
 
 // UPDATE SEQUENCE TABLE
 export const formatSqlSeqUpdate = (seqName, newValue) => {
-   console.log("EXEC sp_rename '" + seqName + "', '" + newValue + "'")
-   return "SELECT db_name()";
+   return `ALTER TABLE ${seqName} RENAME TO ${newValue}`;
 
 };
 

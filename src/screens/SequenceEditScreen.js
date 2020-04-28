@@ -5,7 +5,7 @@ import { Colors, Typography } from "../styles";
 import { Context } from "../context/SequenceContext";
 
 const SequenceEditScreen = ({ route, navigation }) => {
-   const {currentSeq} = route.params;
+   let {currentSeq} = route.params;
    const { state, getSeq, updateSeq, deleteSeq, updateTask, deleteTask } = useContext(Context);
    const [localState, setLocalState] = useState(state);
 
@@ -38,7 +38,10 @@ const SequenceEditScreen = ({ route, navigation }) => {
             placeholder={currentSeq}
             style={styles.title}
             onChangeText={input => setLocalState(input)}
-            onEndEditing={() => updateSeq(currentSeq, localState)}
+            onEndEditing={() => {
+               updateSeq(currentSeq, localState);
+               currentSeq = localState;
+            }}
          />
         <FlatList
            data={state}

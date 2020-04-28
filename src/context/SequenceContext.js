@@ -28,6 +28,7 @@ const SequenceReducer = (state, action) => {
          return action.payload;
       case 'get_seq_data':
          console.log('get seq data');
+         console.log(action.payload);
          return action.payload;
       case 'create_task':
          console.log('task created');
@@ -115,7 +116,7 @@ const getAllSeq = dispatch => {
    };
 };
 
-const getSeq = dispatch => {
+export const getSeq = dispatch => {
    return async (seqName) => {
       await db.transaction(function (tx) {
          tx.executeSql(
