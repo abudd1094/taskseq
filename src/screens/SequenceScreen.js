@@ -1,20 +1,37 @@
-import React, { useContext, useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Spacing, Typography } from '../styles';
-import { Context } from "../api/dataFunctions";
-
+import { db, formatSqlAllTaskSelect } from "../api/sqlite";
 
 const SequenceScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
 
-   const [ count, setCount ] = React.useState(0);
-   const { state, getSeq } = useContext(Context);
+   const [ count, setCount ] = useState(0);
+   const [ state, setState ] = useState();
+   const [ loading, setLoading ] = useState(true);
+
+   const loadData = async () => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlAllTaskSelect(currentSeq),
+            [],
+            function (tx, res) {
+               setState(res.rows._array);
+               setLoading(false);
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      })
+   };
 
    useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit', {currentSeq: currentSeq})}>
+            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit', {currentSeq: currentSeq, seqData: state})}>
                <Text style={styles.button}>Edit</Text>
             </TouchableOpacity>
          ),
@@ -22,10 +39,10 @@ const SequenceScreen = ({ route, navigation }) => {
    }, [ navigation, setCount ]);
 
    useEffect(() => {
-      getSeq(currentSeq);
+      loadData();
 
       const unsubscribe = navigation.addListener('focus', () => {
-         getSeq(currentSeq);
+         loadData();
       });
 
       return unsubscribe;

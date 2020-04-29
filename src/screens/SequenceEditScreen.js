@@ -1,36 +1,44 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
-import { Context } from "../api/dataFunctions";
+import { db, formatSqlSeqUpdate, formatSqlTaskUpdate } from "../api/sqlite";
 
 const SequenceEditScreen = ({ route, navigation }) => {
-   let {currentSeq} = route.params;
-   const { state, getSeq, updateSeq, deleteSeq, updateTask, deleteTask } = useContext(Context);
-   const [localState, setLocalState] = useState(state);
+   const {currentSeq, seqData} = route.params;
+   const [state, setState] = useState(seqData);
 
-   useEffect(() => {
-      getSeq(currentSeq);
-
-      const unsubscribe = navigation.addListener('focus', () => {
-         getSeq(currentSeq);
+   const updateTask = async (taskName, columnToChange, newValue) => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlTaskUpdate(currentSeq, taskName, columnToChange, newValue),
+            [],
+            function (tx, res) {
+               dispatch({ type: 'update_task', payload: res });
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
       });
+   };
 
-      return unsubscribe;
-   }, [navigation]);
-
-   function handleUpdate(item, field, input) {
-      switch(field) {
-         case 'name':
-            updateTask(currentSeq, item.item.TaskName, 'TaskName', input);
-            break;
-         case 'duration':
-            updateTask(currentSeq, item.item.TaskName, 'TaskDuration', input);
-            break;
-         default:
-            break;
-      }
-   }
+   const updateSequence = async (newSeqName) => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlSeqUpdate(currentSeq, newSeqName),
+            [],
+            function (tx, res) {
+               dispatch({ type: 'update_seq', payload: res });
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      });
+   };
 
    return (
      <View style={styles.container}>

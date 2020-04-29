@@ -9,14 +9,14 @@ const SequenceListScreen = ({ navigation }) => {
    const [ state, setState ] = useState();
    const [ loading, setLoading ] = useState(true);
 
-   function loadData() {
-      db.transaction(function (tx) {
+   const loadData = async () => {
+      await db.transaction(function (tx) {
          tx.executeSql(
             formatSqlAllSeqSelect(),
             [],
             function (tx, res) {
-               setState(res.rows._array)
-               setLoading(false)
+               setState(res.rows._array);
+               setLoading(false);
             },
             (tx, err) => {
                console.log('statement error');
