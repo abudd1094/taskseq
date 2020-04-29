@@ -3,7 +3,7 @@ import { Button, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Spacing } from "../styles";
 import Input from '../components/atoms/Input';
-import { Context } from "../context/SequenceContext";
+import { Context } from "../api/dataFunctions";
 
 const SequenceCreateScreen = ({ navigation }) => {
    const [ count, setCount ] = React.useState(0);

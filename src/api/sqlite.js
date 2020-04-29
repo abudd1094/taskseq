@@ -10,7 +10,6 @@ export const formatSqlSeqCreate = (seqName) => {
 // UPDATE SEQUENCE TABLE
 export const formatSqlSeqUpdate = (seqName, newValue) => {
    return `ALTER TABLE ${seqName} RENAME TO ${newValue}`;
-
 };
 
 // DROP SEQUENCE TABLE

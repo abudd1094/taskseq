@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import Input from "../atoms/Input";
-import { Context } from "../../context/SequenceContext";
+import { Context } from "../../api/dataFunctions";
 import { Colors } from "../../styles";
 
 const TaskCreateInput = ({seqName}) => {

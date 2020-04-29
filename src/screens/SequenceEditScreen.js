@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
-import { Context } from "../context/SequenceContext";
+import { Context } from "../api/dataFunctions";
 
 const SequenceEditScreen = ({ route, navigation }) => {
    let {currentSeq} = route.params;

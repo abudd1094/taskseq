@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useLayoutEffect } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Context } from "../context/SequenceContext";
+import { Context } from "../api/dataFunctions";
 import TaskCreateInput from "../components/molecules/TaskCreateInput";
 
 const TaskCreateScreen = ({ route, navigation }) => {

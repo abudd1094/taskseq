@@ -1,49 +1,16 @@
-import createDataContext from "./createDataContext";
 import {
    db,
+   formatSqlAllSeqSelect,
+   formatSqlAllTaskSelect,
    formatSqlSeqCreate,
    formatSqlSeqDelete,
-   formatSqlAllSeqSelect,
-   formatSqlTaskInsert,
+   formatSqlSeqUpdate,
    formatSqlTaskDelete,
-   formatSqlAllTaskSelect, formatSqlTaskUpdate, formatSqlSeqUpdate,
-} from '../api/sqlite';
+   formatSqlTaskInsert,
+   formatSqlTaskUpdate,
+} from './sqlite';
 
-const SequenceReducer = (state, action) => {
-   switch (action.type) {
-      case 'create_seq':
-         console.log('seq created');
-         console.log(action.payload);
-         return state;
-      case 'update_seq':
-         console.log('seq updated');
-         console.log(action.payload);
-         return state;
-      case 'delete_seq':
-         console.log('seq deleted');
-         break;
-      case 'get_all_seq':
-         console.log('GET ALL SEQUENCES')
-         console.log(action.payload)
-         return action.payload;
-      case 'get_seq_data':
-         console.log('get seq data');
-         console.log(action.payload);
-         return action.payload;
-      case 'create_task':
-         console.log('task created');
-         console.log(action.payload);
-         return state;
-      case 'update_task':
-         console.log('task updated');
-         console.log(action.payload);
-         return state;
-      default:
-         return;
-   }
-};
-
-const createSeq = dispatch => {
+export const createSeq = dispatch => {
    return async (seqName) => {
       await db.transaction(function (tx) {
          tx.executeSql(
@@ -61,7 +28,7 @@ const createSeq = dispatch => {
    };
 };
 
-const updateSeq = dispatch => {
+export const updateSeq = dispatch => {
    return async (seqName, newValue) => {
       const res = await db.transaction(function (tx) {
          tx.executeSql(
@@ -97,15 +64,14 @@ const deleteSeq = dispatch => {
    };
 };
 
-const getAllSeq = dispatch => {
+export const getAllSeq = () => {
    return async () => {
-      await db.transaction(function (tx) {
+      db.transaction(function (tx) {
          tx.executeSql(
             formatSqlAllSeqSelect(),
             [],
             function (tx, res) {
-               const formattedRes = res.rows._array;
-               dispatch({ type: 'get_all_seq', payload: formattedRes })
+               return res.rows._array;
             },
             (tx, err) => {
                console.log('statement error');
@@ -113,7 +79,7 @@ const getAllSeq = dispatch => {
             }
          );
       })
-   };
+   }
 };
 
 export const getSeq = dispatch => {
@@ -135,7 +101,7 @@ export const getSeq = dispatch => {
    };
 };
 
-const createTask = dispatch => {
+export const createTask = dispatch => {
    return async (seqName, taskName, taskDuration, taskIndex) => {
       const res = await db.transaction(function (tx) {
          tx.executeSql(
@@ -153,7 +119,7 @@ const createTask = dispatch => {
    };
 };
 
-const updateTask = dispatch => {
+export const updateTask = dispatch => {
    return async (seqName, taskName, columnToChange, newValue) => {
       const res = await db.transaction(function (tx) {
          tx.executeSql(
@@ -171,7 +137,7 @@ const updateTask = dispatch => {
    };
 };
 
-const deleteTask = dispatch => {
+export const deleteTask = dispatch => {
    return async (seqName, taskName) => {
       const res = await db.transaction(function (tx) {
          tx.executeSql(
@@ -188,9 +154,3 @@ const deleteTask = dispatch => {
       });
    };
 };
-
-export const { Context, Provider } = createDataContext(
-   SequenceReducer,
-   { createSeq, updateSeq, createTask, updateTask, deleteSeq, deleteTask, getSeq, getAllSeq },
-   []
-);

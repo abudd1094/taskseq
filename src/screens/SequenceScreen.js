@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useLayoutEffect } from 'react';
 import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Spacing, Typography } from '../styles';
-import { Context } from "../context/SequenceContext";
+import { Context } from "../api/dataFunctions";
 
 
 const SequenceScreen = ({ route, navigation }) => {

@@ -1,19 +1,36 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, Spacing } from "../styles";
-import { db } from "../api/sqlite";
-import { Context } from '../context/SequenceContext';
+import { db, formatSqlAllSeqSelect } from "../api/sqlite";
 
 const SequenceListScreen = ({ navigation }) => {
-   const [ count, setCount ] = React.useState(0);
-   const { state, getAllSeq } = useContext(Context);
+   const [ count, setCount ] = useState(0);
+   const [ state, setState ] = useState();
+   const [ loading, setLoading ] = useState(true);
 
-   useEffect(() => {
-      getAllSeq()
+   function loadData() {
+      db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlAllSeqSelect(),
+            [],
+            function (tx, res) {
+               setState(res.rows._array)
+               setLoading(false)
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      })
+   };
+
+   useEffect( () => {
+      loadData();
 
       const unsubscribe = navigation.addListener('focus', () => {
-         getAllSeq()
+         loadData();
       });
 
       return unsubscribe;
@@ -31,16 +48,18 @@ const SequenceListScreen = ({ navigation }) => {
 
    return (
       <View style={styles.container}>
-            <FlatList
-               data={state}
-               keyExtractor={(item) => item.name}
-               style={styles.marginTop}
-               renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item.name})}><Text style={styles.listText}>{item.name}</Text></TouchableOpacity>}
-            />
-            <Button
-               title="log state"
-               onPress={() => console.log(state)}
-            />
+         {!loading &&
+         <FlatList
+            data={state}
+            keyExtractor={(item) => item.name}
+            style={styles.marginTop}
+            renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item.name})}><Text style={styles.listText}>{item.name}</Text></TouchableOpacity>}
+         />
+         }
+         <Button
+            title="log state"
+            onPress={() => console.log(state)}
+         />
       </View>
    )
 };
