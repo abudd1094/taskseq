@@ -1,12 +1,37 @@
-import React, { useState } from 'react';
-import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
-import { db, formatSqlSeqUpdate, formatSqlTaskUpdate } from "../api/sqlite";
+import {
+   db,
+   formatSqlAllSeqSelect,
+   formatSqlAllTaskSelect,
+   formatSqlSeqUpdate,
+   formatSqlTaskUpdate
+} from "../api/sqlite";
 
 const SequenceEditScreen = ({ route, navigation }) => {
-   const {currentSeq, seqData} = route.params;
-   const [state, setState] = useState(seqData);
+   const {currentSeq} = route.params;
+   const [seq, setSeq] = useState(currentSeq);
+   const [tasks, setTasks] = useState([]);
+   const [ loading, setLoading ] = useState(true);
+
+   const loadData = async () => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlAllTaskSelect(currentSeq),
+            [],
+            function (tx, res) {
+               setTasks(res.rows._array);
+               setLoading(false);
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      })
+   };
 
    const updateTask = async (taskName, columnToChange, newValue) => {
       await db.transaction(function (tx) {
@@ -40,39 +65,41 @@ const SequenceEditScreen = ({ route, navigation }) => {
       });
    };
 
+   useEffect( () => {
+      loadData();
+
+      const unsubscribe = navigation.addListener('focus', () => {
+         loadData();
+      });
+
+      return unsubscribe;
+   }, [navigation]);
+
    return (
      <View style={styles.container}>
          <TextInput
-            placeholder={currentSeq}
+            value={seq}
             style={styles.title}
-            onChangeText={input => setLocalState(input)}
-            onEndEditing={() => {
-               updateSeq(currentSeq, localState);
-               currentSeq = localState;
-            }}
+            onChangeText={input => setSeq(input)}
          />
         <FlatList
-           data={state}
-           keyExtractor={(item) => item.TaskName}
+           data={tasks}
            style={styles.list}
-           renderItem={item => {
+           renderItem={({item, index}) => {
               return(
                  <View style={styles.listRow}>
-                    <Text style={[styles.listIndex, styles.listText]}>{item.item.TaskIndex}</Text>
+                    <Text style={[styles.listIndex, styles.listText]}>{item.TaskIndex}</Text>
                     <TextInput
                        style={[styles.listName, styles.listText]}
-                       placeholder={item.item.TaskName}
-                       onChangeText={input => setLocalState(input)}
-                       onEndEditing={() => handleUpdate(item, 'name', localState)}
-                    />
-                    <TextInput
-                       style={[styles.listDuration, styles.listText]}
-                       placeholder={item.item.TaskDuration.toString()}
-                       onChangeText={input => handleUpdate(item, 'duration', input)}
+                       placeholder={item.TaskName}
+                       onChangeText={(input) => {
+                          tasks.splice(index, 1, input);
+                          setTasks([...tasks]);
+                       }}
                     />
                     <TouchableOpacity
                        style={styles.listRowButton}
-                       onPress={() => deleteTask(currentSeq, item.item.TaskName)}
+                       onPress={() => deleteTask(currentSeq, item.TaskName)}
                     >
                        <Text style={styles.delete}>DELETE</Text>
                     </TouchableOpacity>
@@ -89,6 +116,10 @@ const SequenceEditScreen = ({ route, navigation }) => {
         >
            <Text style={styles.delete}>DELETE SEQUENCE</Text>
         </TouchableOpacity>
+        <Button
+           title="log state"
+           onPress={() => console.log(tasks)}
+        />
      </View>
    );
 };
