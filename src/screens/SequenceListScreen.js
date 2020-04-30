@@ -2,7 +2,13 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, Spacing } from "../styles";
-import { db, formatSqlAllSeqSelect } from "../api/sqlite";
+import {
+   db,
+   formatSqlAllSeqSelect,
+   formatSqlAllTaskSelect,
+   formatSqlSeqCreate, formatSqlTaskInsert,
+   formatSqlTaskUpdate
+} from "../api/sqlite";
 
 const SequenceListScreen = ({ navigation }) => {
    const [ count, setCount ] = useState(0);
@@ -17,6 +23,38 @@ const SequenceListScreen = ({ navigation }) => {
             function (tx, res) {
                setState(res.rows._array);
                setLoading(false);
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      })
+   };
+
+   const createDummySeq = async () => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlSeqCreate('TestSeq'),
+            [],
+            function (tx, res) {
+               console.log('SEQ CREATED')
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      })
+   };
+
+   const populateDummySeq = async () => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlTaskInsert('TestSeq', 'Dance', '16', '2'),
+            [],
+            function (tx, res) {
+               console.log('SEQ CREATED')
             },
             (tx, err) => {
                console.log('statement error');
@@ -59,6 +97,14 @@ const SequenceListScreen = ({ navigation }) => {
          <Button
             title="log state"
             onPress={() => console.log(state)}
+         />
+         <Button
+            title="create dummy Seq"
+            onPress={() => createDummySeq()}
+         />
+         <Button
+            title="populate dummy Seq"
+            onPress={() => populateDummySeq()}
          />
       </View>
    )

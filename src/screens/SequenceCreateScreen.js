@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { Button, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Button, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Spacing } from "../styles";
 import Input from '../components/atoms/Input';
-import { Context } from "../api/dataFunctions";
 
 const SequenceCreateScreen = ({ navigation }) => {
-   const [ count, setCount ] = React.useState(0);
-   const [seqName, setSeqName] = useState("");
-   const { state, createSeq } = useContext(Context);
+   const [ count, setCount ] = useState(0);
+   const [seq, setSeq] = useState("");
+   const [tasks, setTasks] = useState([]);
+   const [ loading, setLoading ] = useState(true);
 
    useEffect(() => {
       console.log("seq create screen loaded");

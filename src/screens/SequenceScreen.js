@@ -31,12 +31,12 @@ const SequenceScreen = ({ route, navigation }) => {
    useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit', {currentSeq: currentSeq, seqData: state})}>
+            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit', {currentSeq: currentSeq})}>
                <Text style={styles.button}>Edit</Text>
             </TouchableOpacity>
          ),
       });
-   }, [ navigation, setCount ]);
+   }, [ navigation, setCount, currentSeq ]);
 
    useEffect(() => {
       loadData();
@@ -46,14 +46,14 @@ const SequenceScreen = ({ route, navigation }) => {
       });
 
       return unsubscribe;
-   }, [navigation]);
+   }, [navigation, currentSeq]);
 
    return (
       <View style={styles.container}>
          <Text style={[styles.title, styles.defaultMarginTop]}>{currentSeq}</Text>
          <FlatList
             data={state}
-            keyExtractor={(item) => item.TaskName}
+            keyExtractor={(item) => item.TaskID.toString()}
             style={styles.marginTop}
             renderItem={item => <Text>{item.item.TaskName}</Text>}
          />

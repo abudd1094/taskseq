@@ -5,10 +5,11 @@ import { Colors, Typography } from "../styles";
 import {
    db,
    formatSqlAllSeqSelect,
-   formatSqlAllTaskSelect,
+   formatSqlAllTaskSelect, formatSqlSeqDelete,
    formatSqlSeqUpdate,
    formatSqlTaskUpdate
 } from "../api/sqlite";
+import { windowWidth } from "../styles/spacing";
 
 const SequenceEditScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
@@ -22,24 +23,54 @@ const SequenceEditScreen = ({ route, navigation }) => {
             formatSqlAllTaskSelect(currentSeq),
             [],
             function (tx, res) {
+               console.log('SEQ EDIT RES')
+               console.log(res.rows._array);
                setTasks(res.rows._array);
-               setLoading(false);
             },
             (tx, err) => {
                console.log('statement error');
                console.log(err);
             }
          );
-      })
+      });
+
+      setLoading(false);
    };
 
-   const updateTask = async (taskName, columnToChange, newValue) => {
+   const addRow = () => {
+      const newTask = {
+        "TaskDuration": 10,
+         "TaskIndex": tasks.length + 1,
+         "TaskName": "New Task",
+      };
+
+     setTasks(prevState => [...prevState, newTask])
+   };
+
+   const updateSequence = async (newSeqName) => {
       await db.transaction(function (tx) {
          tx.executeSql(
-            formatSqlTaskUpdate(currentSeq, taskName, columnToChange, newValue),
+            formatSqlSeqUpdate(currentSeq, newSeqName),
             [],
             function (tx, res) {
-               dispatch({ type: 'update_task', payload: res });
+               console.log('Seq Name Updated')
+            },
+            (tx, err) => {
+
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      });
+   };
+
+   const updateTask = async (taskID, columnToChange, newValue) => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlTaskUpdate(currentSeq, taskID, columnToChange, newValue),
+            [],
+            function (tx, res) {
+               console.log('TASK UPDATED')
             },
             (tx, err) => {
                console.log('statement error');
@@ -49,16 +80,34 @@ const SequenceEditScreen = ({ route, navigation }) => {
       });
    };
 
-   const updateSequence = async (newSeqName) => {
+   const updateTasks = () => {
+      tasks.map(task => {
+         updateTask(task.TaskIndex, 'TaskName', task.TaskName )
+      })
+   };
+
+   deleteTask = (seq, id) => {
+      console.log('DELETE TASK W ID ' + id)
+   };
+
+   const saveAllChanges = () => {
+      updateSequence(seq);
+      updateTask('2', 'TaskName', 'Changerini')
+
+      navigation.navigate('ViewSequence', {currentSeq: seq})
+   };
+
+   const deleteSequence = async (seqName) => {
       await db.transaction(function (tx) {
          tx.executeSql(
-            formatSqlSeqUpdate(currentSeq, newSeqName),
+            formatSqlSeqDelete(seqName),
             [],
             function (tx, res) {
-               dispatch({ type: 'update_seq', payload: res });
+               console.log('SUCCESSFULLY DELETED')
             },
             (tx, err) => {
                console.log('statement error');
+               console.log(formatSqlSeqDelete(seqName))
                console.log(err);
             }
          );
@@ -82,54 +131,92 @@ const SequenceEditScreen = ({ route, navigation }) => {
             style={styles.title}
             onChangeText={input => setSeq(input)}
          />
-        <FlatList
-           data={tasks}
-           style={styles.list}
-           renderItem={({item, index}) => {
-              return(
-                 <View style={styles.listRow}>
-                    <Text style={[styles.listIndex, styles.listText]}>{item.TaskIndex}</Text>
-                    <TextInput
-                       style={[styles.listName, styles.listText]}
-                       placeholder={item.TaskName}
-                       onChangeText={(input) => {
-                          tasks.splice(index, 1, input);
-                          setTasks([...tasks]);
-                       }}
-                    />
-                    <TouchableOpacity
-                       style={styles.listRowButton}
-                       onPress={() => deleteTask(currentSeq, item.TaskName)}
-                    >
-                       <Text style={styles.delete}>DELETE</Text>
-                    </TouchableOpacity>
-                 </View>
-              )
-           }}
-        />
-        <TouchableOpacity
-           onPress={() => {
-              deleteSeq(currentSeq);
-              navigation.navigate('Sequences');
-           }}
-           style={styles.buttonBottom}
-        >
-           <Text style={styles.delete}>DELETE SEQUENCE</Text>
-        </TouchableOpacity>
-        <Button
-           title="log state"
-           onPress={() => console.log(tasks)}
-        />
+         <View>
+            <FlatList
+               data={tasks}
+               keyExtractor={item => item.TaskID.toString()}
+               style={styles.list}
+               renderItem={({item, index}) => {
+                  return(
+                     <View style={styles.listRow}>
+                        <Text style={[styles.listIndex, styles.listText]}>{item.TaskIndex}</Text>
+                        <TextInput
+                           style={[styles.listName, styles.listText]}
+                           value={tasks[index].TaskName}
+                           onChangeText={(input) => {
+                              let mutatedTasks = tasks.slice();
+                              mutatedTasks[index].TaskName = input;
+                              setTasks(mutatedTasks);
+                           }}
+                        />
+                        <TextInput
+                           style={[styles.listName, styles.listText]}
+                           value={tasks[index].TaskDuration.toString()}
+                           onChangeText={(input) => {
+                              let mutatedTasks = tasks.slice();
+                              mutatedTasks[index].TaskDuration = input.toString();
+                              setTasks(mutatedTasks)
+                           }}
+                        />
+                        <TouchableOpacity
+                           style={styles.listRowButton}
+                           onPress={() => deleteTask(currentSeq, item.TaskID)}
+                        >
+                           <Text style={styles.delete}>DELETE</Text>
+                        </TouchableOpacity>
+                     </View>
+                  )
+               }}
+            />
+            <TouchableOpacity
+               style={styles.buttonAdd}
+               onPress={addRow}
+            >
+               <Text>ADD TASK</Text>
+            </TouchableOpacity>
+         </View>
+
+        <View style={styles.bottom}>
+           <TouchableOpacity
+              onPress={() => {
+                 deleteSequence(currentSeq);
+                 navigation.navigate('Sequences');
+              }}
+              style={styles.buttonBottom}
+           >
+              <Text style={styles.delete}>DELETE SEQUENCE</Text>
+           </TouchableOpacity>
+           <Button
+              title="save changes"
+              onPress={() => saveAllChanges()}
+           />
+           <Button
+              title="log state"
+              onPress={() => console.log(tasks)}
+           />
+        </View>
+
      </View>
    );
 };
 
 const styles = EStyleSheet.create({
+   bottom: {
+      position: 'absolute',
+      bottom: 10,
+      width: windowWidth,
+   },
+   buttonAdd: {
+      alignSelf: 'center',
+      position: 'absolute',
+      bottom: -30,
+   },
    buttonBottom: {
       alignSelf: 'center',
    },
    container: {
      flexDirection: 'column',
+      justifyContent: 'flex-start',
       height: '100%',
       padding: 20,
    },
@@ -137,10 +224,10 @@ const styles = EStyleSheet.create({
      color: 'red',
    },
    list: {
+      backgroundColor: 'lime'
    },
    listRow: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       marginTop: 10,
    },
    listRowButton: {

@@ -4,7 +4,7 @@ export const db = SQLite.openDatabase("TaskSeqDB.db");
 
 // CREATE SEQUENCE TABLE
 export const formatSqlSeqCreate = (seqName) => {
-   return `CREATE TABLE ${seqName} (TaskName varchar(255), TaskDuration int, TaskIndex int)`;
+   return `CREATE TABLE ${seqName} (TaskID INTEGER PRIMARY KEY AUTOINCREMENT, TaskName varchar(255), TaskDuration int, TaskIndex int)`;
 };
 
 // UPDATE SEQUENCE TABLE
@@ -33,8 +33,8 @@ export const formatSqlTaskInsert = (seqName, taskName, taskDuration, taskIndex) 
 };
 
 // UPDATE TASK ROW
-export const formatSqlTaskUpdate = (seqName, taskName, columnToChange, newValue) => {
-   return "UPDATE " + seqName + " SET " + columnToChange + " = '" + newValue + "'" + " WHERE TaskName = " + "'" + taskName + "'"
+export const formatSqlTaskUpdate = (seqName, taskID, columnToChange, newValue) => {
+   return "UPDATE " + seqName + " SET " + columnToChange + " = '" + newValue + "'" + " WHERE TaskID = " + "'" + taskID + "'"
 };
 
 // DELETE TASK ROW
