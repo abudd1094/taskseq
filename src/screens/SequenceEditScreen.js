@@ -6,7 +6,7 @@ import {
    db,
    formatSqlAllSeqSelect,
    formatSqlAllTaskSelect, formatSqlSeqDelete,
-   formatSqlSeqUpdate,
+   formatSqlSeqUpdate, formatSqlTaskInsert,
    formatSqlTaskUpdate
 } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
@@ -42,6 +42,8 @@ const SequenceEditScreen = ({ route, navigation }) => {
         "TaskDuration": 10,
          "TaskIndex": tasks.length + 1,
          "TaskName": "New Task",
+         "TaskID": tasks[tasks.length - 1].TaskID + 1,
+         new: true
       };
 
      setTasks(prevState => [...prevState, newTask])
@@ -81,20 +83,40 @@ const SequenceEditScreen = ({ route, navigation }) => {
    };
 
    const updateTasks = () => {
-      tasks.map(task => {
-         updateTask(task.TaskIndex, 'TaskName', task.TaskName )
+      tasks.filter(task => !task.new).map(task => {
+         updateTask(task.TaskID.toString(), 'TaskName', task.TaskName )
+         updateTask(task.TaskID.toString(), 'TaskDuration', task.TaskDuration )
       })
    };
 
-   deleteTask = (seq, id) => {
+   const deleteTask = (seq, id) => {
       console.log('DELETE TASK W ID ' + id)
    };
 
-   const saveAllChanges = () => {
-      updateSequence(seq);
-      updateTask('2', 'TaskName', 'Changerini')
+   const createTask = async (taskName, taskDuration, taskIndex) => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlTaskInsert(seq, taskName, taskDuration, taskIndex),
+            [],
+            function (tx, res) {
+               console.log('SUCCESSFULLY CREATED')
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      });
+   };
 
-      navigation.navigate('ViewSequence', {currentSeq: seq})
+   const createTasks = () => {
+      tasks.filter(task => task.new).map(task => createTask(task.TaskName, task.TaskDuration.toString(), task.TaskIndex.toString()));
+   };
+
+   const saveAllChanges = () => {
+      updateTasks();
+      updateSequence(seq);
+      createTasks();
    };
 
    const deleteSequence = async (seqName) => {
@@ -107,7 +129,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
             },
             (tx, err) => {
                console.log('statement error');
-               console.log(formatSqlSeqDelete(seqName))
                console.log(err);
             }
          );
@@ -188,7 +209,10 @@ const SequenceEditScreen = ({ route, navigation }) => {
            </TouchableOpacity>
            <Button
               title="save changes"
-              onPress={() => saveAllChanges()}
+              onPress={async () => {
+                 await saveAllChanges();
+                 navigation.navigate('ViewSequence', {currentSeq: seq});
+              }}
            />
            <Button
               title="log state"
