@@ -42,7 +42,7 @@ const SequenceEditScreen = ({ route, navigation }) => {
         "TaskDuration": 10,
          "TaskIndex": tasks.length + 1,
          "TaskName": "New Task",
-         "TaskID": tasks[tasks.length - 1].TaskID + 1,
+         "TaskID": tasks[tasks.length - 1] ? tasks[tasks.length - 1].TaskID + 1 : 1,
          new: true
       };
 
@@ -89,8 +89,20 @@ const SequenceEditScreen = ({ route, navigation }) => {
       })
    };
 
-   const deleteTask = (seq, id) => {
-      console.log('DELETE TASK W ID ' + id)
+   const deleteTask = async (seq, id) => {
+      await db.transaction(function (tx) {
+         tx.executeSql(
+            formatSqlTaskDelete(seqName, taskID),
+            [],
+            function (tx, res) {
+               console.log('TASK DELETED')
+            },
+            (tx, err) => {
+               console.log('statement error');
+               console.log(err);
+            }
+         );
+      });
    };
 
    const createTask = async (taskName, taskDuration, taskIndex) => {
@@ -155,7 +167,7 @@ const SequenceEditScreen = ({ route, navigation }) => {
          <View>
             <FlatList
                data={tasks}
-               keyExtractor={item => item.TaskID.toString()}
+               keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
                style={styles.list}
                renderItem={({item, index}) => {
                   return(
