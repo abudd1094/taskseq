@@ -61,7 +61,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
                console.log('Seq Name Updated')
             },
             (tx, err) => {
-
                console.log('statement error');
                console.log(err);
             }
@@ -86,9 +85,15 @@ const SequenceEditScreen = ({ route, navigation }) => {
    };
 
    const updateTasks = () => {
-      tasks.filter(task => !task.new).map(task => {
+      //tasks.filter(task => !task.new).map(task => {
+      //   updateTask(task.TaskID.toString(), 'TaskName', task.TaskName )
+      //   updateTask(task.TaskID.toString(), 'TaskDuration', task.TaskDuration )
+      //})
+
+      tasks.map(task => {
          updateTask(task.TaskID.toString(), 'TaskName', task.TaskName )
          updateTask(task.TaskID.toString(), 'TaskDuration', task.TaskDuration )
+         updateTask(task.TaskID.toString(), 'TaskIndex', task.TaskIndex )
       })
    };
 
@@ -132,7 +137,17 @@ const SequenceEditScreen = ({ route, navigation }) => {
       tasks.filter(task => task.new).map(task => createTask(task.TaskName, task.TaskDuration.toString(), task.TaskIndex.toString()));
    };
 
+   const updateIndexes = () => {
+      let mutatedTasks = tasks.slice();
+      for (let i = 0; i < tasks.length; i++) {
+         mutatedTasks[i].TaskIndex = i + 1;
+         updateTask(tasks[i].TaskID.toString(), 'TaskIndex', i + 1 )
+      }
+      setTasks(mutatedTasks);
+   };
+
    const saveAllChanges = () => {
+      updateIndexes();
       updateTasks();
       updateSequence(seq);
       deleteTasks();
@@ -180,7 +195,16 @@ const SequenceEditScreen = ({ route, navigation }) => {
                renderItem={({item, index}) => {
                   return(
                      <View style={styles.listRow}>
-                        <Text style={[styles.listIndex, styles.listText]}>{item.TaskIndex}</Text>
+                        <View style={styles.incrementer}>
+                           <Text style={styles.incrementerText} onPress={() => {
+                              let mutatedTasks = tasks.slice();
+                              let tasksToUpdate = mutatedTasks.splice(index, 2);
+                              mutatedTasks.splice(index, 0, tasksToUpdate[1], tasksToUpdate[0]);
+                              setTasks(mutatedTasks);
+                           }}>▲</Text>
+                           <Text style={styles.incrementerText}>▼</Text>
+                        </View>
+                        <Text style={[styles.listIndex, styles.listText]}>{index + 1}</Text>
                         <TextInput
                            style={[styles.listName, styles.listText]}
                            value={tasks[index].TaskName}
@@ -248,6 +272,13 @@ const SequenceEditScreen = ({ route, navigation }) => {
                  console.log(toDelete)
               }}
            />
+           <Button
+              title="log indexes"
+              onPress={() => {
+                 console.log('INDEXES')
+                  updateIndexes();
+              }}
+           />
         </View>
 
      </View>
@@ -277,10 +308,18 @@ const styles = EStyleSheet.create({
    delete: {
      color: 'red',
    },
+   incrementer: {
+      marginRight: 10,
+   },
+   incrementerText: {
+      color: 'grey',
+      fontSize: 20,
+   },
    list: {
       backgroundColor: 'lime'
    },
    listRow: {
+      alignItems: 'center',
       flexDirection: 'row',
       marginTop: 10,
    },

@@ -79,22 +79,6 @@ const SequenceCreateScreen = ({ route, navigation }) => {
       createTasks();
    };
 
-   const deleteSequence = async (seqName) => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlSeqDelete(seqName),
-            [],
-            function (tx, res) {
-               console.log('SUCCESSFULLY DELETED')
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
-   };
-
    return (
       <View style={styles.container}>
          <TextInput
@@ -154,25 +138,12 @@ const SequenceCreateScreen = ({ route, navigation }) => {
          </View>
 
          <View style={styles.bottom}>
-            <TouchableOpacity
-               onPress={() => {
-                  deleteSequence(currentSeq);
-                  navigation.navigate('Sequences');
-               }}
-               style={styles.buttonBottom}
-            >
-               <Text style={styles.delete}>DELETE SEQUENCE</Text>
-            </TouchableOpacity>
             <Button
                title="save changes"
                onPress={async () => {
                   await saveAllChanges();
                   navigation.navigate('Sequences');
                }}
-            />
-            <Button
-               title="log state"
-               onPress={() => console.log(tasks)}
             />
          </View>
 
