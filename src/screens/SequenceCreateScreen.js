@@ -1,40 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
-import {
-   db,
-   formatSqlAllSeqSelect,
-   formatSqlAllTaskSelect, formatSqlSeqCreate, formatSqlSeqDelete,
-   formatSqlSeqUpdate, formatSqlTaskInsert,
-   formatSqlTaskUpdate
-} from "../api/sqlite";
+import { db, formatSqlSeqCreate, formatSqlSeqDelete, formatSqlTaskInsert, formatSqlTaskDelete } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
 
 const SequenceCreateScreen = ({ route, navigation }) => {
    const [seq, setSeq] = useState('');
    const [tasks, setTasks] = useState([]);
-   const [ loading, setLoading ] = useState(true);
-
-   const loadData = async () => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlAllTaskSelect(currentSeq),
-            [],
-            function (tx, res) {
-               console.log('SEQ EDIT RES')
-               console.log(res.rows._array);
-               setTasks(res.rows._array);
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
-
-      setLoading(false);
-   };
+   const [toDelete, setToDelete] = useState([]);
 
    const addRow = () => {
       const newTask = {
@@ -64,33 +38,10 @@ const SequenceCreateScreen = ({ route, navigation }) => {
       });
    };
 
-   const updateTask = async (taskID, columnToChange, newValue) => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlTaskUpdate(currentSeq, taskID, columnToChange, newValue),
-            [],
-            function (tx, res) {
-               console.log('TASK UPDATED')
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
-   };
-
-   const updateTasks = () => {
-      tasks.filter(task => !task.new).map(task => {
-         updateTask(task.TaskID.toString(), 'TaskName', task.TaskName )
-         updateTask(task.TaskID.toString(), 'TaskDuration', task.TaskDuration )
-      })
-   };
-
    const deleteTask = async (seq, id) => {
       await db.transaction(function (tx) {
          tx.executeSql(
-            formatSqlTaskDelete(seqName, taskID),
+            formatSqlTaskDelete(seq, id),
             [],
             function (tx, res) {
                console.log('TASK DELETED')
@@ -120,11 +71,12 @@ const SequenceCreateScreen = ({ route, navigation }) => {
    };
 
    const createTasks = () => {
-      tasks.map(task => createTask(task.TaskName, task.TaskDuration.toString(), task.TaskIndex.toString()));
+      tasks.filter(task => task.new).map(task => createTask(task.TaskName, task.TaskDuration.toString(), task.TaskIndex.toString()));
    };
 
    const saveAllChanges = () => {
       createSequence(seq);
+      createTasks();
    };
 
    const deleteSequence = async (seqName) => {
@@ -180,7 +132,12 @@ const SequenceCreateScreen = ({ route, navigation }) => {
                         />
                         <TouchableOpacity
                            style={styles.listRowButton}
-                           onPress={() => deleteTask(currentSeq, item.TaskID)}
+                           onPress={() => {
+                              let mutatedTasks = tasks.slice();
+                              setToDelete(prevState => [...prevState, item.TaskID]);
+                              mutatedTasks.splice(index, 1);
+                              setTasks(mutatedTasks);
+                           }}
                         >
                            <Text style={styles.delete}>DELETE</Text>
                         </TouchableOpacity>

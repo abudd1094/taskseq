@@ -38,8 +38,8 @@ export const formatSqlTaskUpdate = (seqName, taskID, columnToChange, newValue) =
 };
 
 // DELETE TASK ROW
-export const formatSqlTaskDelete = (seqName, taskName) => {
-   return "DELETE FROM " + seqName + " WHERE TaskName=" + "'" + taskName.toString() + "'";
+export const formatSqlTaskDelete = (seqName, taskID) => {
+   return "DELETE FROM " + seqName + " WHERE TaskID=" + "'" + taskID.toString() + "'";
 };
 
 // RETURN SINGLE SEQ TASK ROW

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
 import {
    db,
-   formatSqlAllSeqSelect,
-   formatSqlAllTaskSelect, formatSqlSeqDelete,
-   formatSqlSeqUpdate, formatSqlTaskInsert,
+   formatSqlAllTaskSelect,
+   formatSqlSeqDelete,
+   formatSqlSeqUpdate,
+   formatSqlTaskDelete,
+   formatSqlTaskInsert,
    formatSqlTaskUpdate
 } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
@@ -15,6 +17,7 @@ const SequenceEditScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
    const [seq, setSeq] = useState(currentSeq);
    const [tasks, setTasks] = useState([]);
+   const [toDelete, setToDelete] = useState([]);
    const [ loading, setLoading ] = useState(true);
 
    const loadData = async () => {
@@ -92,7 +95,7 @@ const SequenceEditScreen = ({ route, navigation }) => {
    const deleteTask = async (seq, id) => {
       await db.transaction(function (tx) {
          tx.executeSql(
-            formatSqlTaskDelete(seqName, taskID),
+            formatSqlTaskDelete(seq, id),
             [],
             function (tx, res) {
                console.log('TASK DELETED')
@@ -103,6 +106,10 @@ const SequenceEditScreen = ({ route, navigation }) => {
             }
          );
       });
+   };
+
+   const deleteTasks = () => {
+      toDelete.map(id => deleteTask(seq, id));
    };
 
    const createTask = async (taskName, taskDuration, taskIndex) => {
@@ -128,6 +135,7 @@ const SequenceEditScreen = ({ route, navigation }) => {
    const saveAllChanges = () => {
       updateTasks();
       updateSequence(seq);
+      deleteTasks();
       createTasks();
    };
 
@@ -193,7 +201,12 @@ const SequenceEditScreen = ({ route, navigation }) => {
                         />
                         <TouchableOpacity
                            style={styles.listRowButton}
-                           onPress={() => deleteTask(currentSeq, item.TaskID)}
+                           onPress={() => {
+                              let mutatedTasks = tasks.slice();
+                              setToDelete(prevState => [...prevState, item.TaskID]);
+                              mutatedTasks.splice(index, 1);
+                              setTasks(mutatedTasks);
+                           }}
                         >
                            <Text style={styles.delete}>DELETE</Text>
                         </TouchableOpacity>
@@ -228,7 +241,12 @@ const SequenceEditScreen = ({ route, navigation }) => {
            />
            <Button
               title="log state"
-              onPress={() => console.log(tasks)}
+              onPress={() => {
+                 console.log('TASKS')
+                 console.log(tasks)
+                 console.log('TO DELETE')
+                 console.log(toDelete)
+              }}
            />
         </View>
 
