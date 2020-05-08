@@ -12,6 +12,7 @@ import {
    formatSqlTaskUpdate
 } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
+import { updateSequence } from "../api/dataFunctions";
 
 const SequenceEditScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
@@ -26,8 +27,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
             formatSqlAllTaskSelect(currentSeq),
             [],
             function (tx, res) {
-               console.log('SEQ EDIT RES')
-               console.log(res.rows._array);
                setTasks(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex));
             },
             (tx, err) => {
@@ -52,21 +51,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
      setTasks(prevState => [...prevState, newTask])
    };
 
-   const updateSequence = async (newSeqName) => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlSeqUpdate(currentSeq, newSeqName),
-            [],
-            function (tx, res) {
-               console.log('Seq Name Updated')
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
-   };
 
    const updateTask = async (taskID, columnToChange, newValue) => {
       await db.transaction(function (tx) {
@@ -146,7 +130,7 @@ const SequenceEditScreen = ({ route, navigation }) => {
    const saveAllChanges = () => {
       updateIndexes();
       updateTasks();
-      updateSequence(seq);
+      updateSequence(currentSeq, seq);
       deleteTasks();
       createTasks();
    };

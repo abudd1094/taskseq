@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { Button, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 const NavigationButton = () => {
