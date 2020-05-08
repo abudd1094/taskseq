@@ -28,7 +28,7 @@ const SequenceEditScreen = ({ route, navigation }) => {
             function (tx, res) {
                console.log('SEQ EDIT RES')
                console.log(res.rows._array);
-               setTasks(res.rows._array);
+               setTasks(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex));
             },
             (tx, err) => {
                console.log('statement error');
@@ -85,15 +85,10 @@ const SequenceEditScreen = ({ route, navigation }) => {
    };
 
    const updateTasks = () => {
-      //tasks.filter(task => !task.new).map(task => {
-      //   updateTask(task.TaskID.toString(), 'TaskName', task.TaskName )
-      //   updateTask(task.TaskID.toString(), 'TaskDuration', task.TaskDuration )
-      //})
-
       tasks.map(task => {
-         updateTask(task.TaskID.toString(), 'TaskName', task.TaskName )
-         updateTask(task.TaskID.toString(), 'TaskDuration', task.TaskDuration )
-         updateTask(task.TaskID.toString(), 'TaskIndex', task.TaskIndex )
+         updateTask(task.TaskID.toString(), 'TaskName', task.TaskName );
+         updateTask(task.TaskID.toString(), 'TaskDuration', task.TaskDuration );
+         updateTask(task.TaskID.toString(), 'TaskIndex', task.TaskIndex );
       })
    };
 
@@ -139,10 +134,12 @@ const SequenceEditScreen = ({ route, navigation }) => {
 
    const updateIndexes = () => {
       let mutatedTasks = tasks.slice();
+
       for (let i = 0; i < tasks.length; i++) {
          mutatedTasks[i].TaskIndex = i + 1;
          updateTask(tasks[i].TaskID.toString(), 'TaskIndex', i + 1 )
       }
+
       setTasks(mutatedTasks);
    };
 
@@ -197,6 +194,7 @@ const SequenceEditScreen = ({ route, navigation }) => {
                      <View style={styles.listRow}>
                         <View style={styles.incrementer}>
                            <Text style={styles.incrementerText} onPress={() => {
+                              console.log('PRESSED DEBUG')
                               let mutatedTasks = tasks.slice();
                               let tasksToUpdate = mutatedTasks.splice(index, 2);
                               mutatedTasks.splice(index, 0, tasksToUpdate[1], tasksToUpdate[0]);
@@ -275,8 +273,17 @@ const SequenceEditScreen = ({ route, navigation }) => {
            <Button
               title="log indexes"
               onPress={() => {
-                 console.log('INDEXES')
                   updateIndexes();
+              }}
+           />
+           <Button
+              title="Sort Tasks"
+              onPress={() => {
+                 console.log('TASKS')
+                 console.log(tasks)
+                 setTasks(tasks.sort((a, b) => a.TaskIndex - b.TaskIndex));
+                 console.log('SORTED')
+                 console.log(tasks)
               }}
            />
         </View>

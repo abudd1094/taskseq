@@ -17,7 +17,7 @@ const SequenceScreen = ({ route, navigation }) => {
             formatSqlAllTaskSelect(currentSeq),
             [],
             function (tx, res) {
-               setState(res.rows._array);
+               setState(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex));
                setLoading(false);
             },
             (tx, err) => {
