@@ -2,17 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
-import {
-   db,
-   formatSqlAllTaskSelect,
-   formatSqlSeqDelete,
-   formatSqlSeqUpdate,
-   formatSqlTaskDelete,
-   formatSqlTaskInsert,
-   formatSqlTaskUpdate
-} from "../api/sqlite";
+import { db, formatSqlAllTaskSelect, formatSqlSeqDelete, formatSqlTaskDelete } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
-import { updateSequence } from "../api/dataFunctions";
+import { createTasks, deleteSequence, updateSequence, updateTask, updateTasks } from "../api/dataFunctions";
 
 const SequenceEditScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
@@ -51,31 +43,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
      setTasks(prevState => [...prevState, newTask])
    };
 
-
-   const updateTask = async (taskID, columnToChange, newValue) => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlTaskUpdate(currentSeq, taskID, columnToChange, newValue),
-            [],
-            function (tx, res) {
-               console.log('TASK UPDATED')
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
-   };
-
-   const updateTasks = () => {
-      tasks.map(task => {
-         updateTask(task.TaskID.toString(), 'TaskName', task.TaskName );
-         updateTask(task.TaskID.toString(), 'TaskDuration', task.TaskDuration );
-         updateTask(task.TaskID.toString(), 'TaskIndex', task.TaskIndex );
-      })
-   };
-
    const deleteTask = async (seq, id) => {
       await db.transaction(function (tx) {
          tx.executeSql(
@@ -96,32 +63,12 @@ const SequenceEditScreen = ({ route, navigation }) => {
       toDelete.map(id => deleteTask(seq, id));
    };
 
-   const createTask = async (taskName, taskDuration, taskIndex) => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlTaskInsert(seq, taskName, taskDuration, taskIndex),
-            [],
-            function (tx, res) {
-               console.log('SUCCESSFULLY CREATED')
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
-   };
-
-   const createTasks = () => {
-      tasks.filter(task => task.new).map(task => createTask(task.TaskName, task.TaskDuration.toString(), task.TaskIndex.toString()));
-   };
-
    const updateIndexes = () => {
       let mutatedTasks = tasks.slice();
 
       for (let i = 0; i < tasks.length; i++) {
          mutatedTasks[i].TaskIndex = i + 1;
-         updateTask(tasks[i].TaskID.toString(), 'TaskIndex', i + 1 )
+         updateTask(currentSeq, tasks[i].TaskID.toString(), 'TaskIndex', i + 1 )
       }
 
       setTasks(mutatedTasks);
@@ -129,26 +76,10 @@ const SequenceEditScreen = ({ route, navigation }) => {
 
    const saveAllChanges = () => {
       updateIndexes();
-      updateTasks();
+      updateTasks(currentSeq, tasks);
       updateSequence(currentSeq, seq);
       deleteTasks();
-      createTasks();
-   };
-
-   const deleteSequence = async (seqName) => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlSeqDelete(seqName),
-            [],
-            function (tx, res) {
-               console.log('SUCCESSFULLY DELETED')
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
+      createTasks(seq, tasks);
    };
 
    useEffect( () => {
@@ -243,31 +174,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
               onPress={async () => {
                  await saveAllChanges();
                  navigation.navigate('ViewSequence', {currentSeq: seq});
-              }}
-           />
-           <Button
-              title="log state"
-              onPress={() => {
-                 console.log('TASKS')
-                 console.log(tasks)
-                 console.log('TO DELETE')
-                 console.log(toDelete)
-              }}
-           />
-           <Button
-              title="log indexes"
-              onPress={() => {
-                  updateIndexes();
-              }}
-           />
-           <Button
-              title="Sort Tasks"
-              onPress={() => {
-                 console.log('TASKS')
-                 console.log(tasks)
-                 setTasks(tasks.sort((a, b) => a.TaskIndex - b.TaskIndex));
-                 console.log('SORTED')
-                 console.log(tasks)
               }}
            />
         </View>
