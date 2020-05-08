@@ -1,7 +1,6 @@
 import { db, formatSqlSeqDelete, formatSqlSeqUpdate, formatSqlTaskInsert, formatSqlTaskUpdate } from "./sqlite";
 
 // SEQUENCE LEVEL //
-
 export const updateSequence = async (currentSeq, newSeqName) => {
    await db.transaction(function (tx) {
       tx.executeSql(
@@ -35,7 +34,6 @@ export const deleteSequence = async (seqName) => {
 };
 
 // TASK LEVEL //
-
 export const updateTask = async (currentSeq, taskID, columnToChange, newValue) => {
    await db.transaction(function (tx) {
       tx.executeSql(

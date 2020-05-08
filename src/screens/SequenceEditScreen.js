@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, FlatList, Text, TextInput, TouchableOpacity, View, Alert} from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
 import { db, formatSqlAllTaskSelect, formatSqlSeqDelete, formatSqlTaskDelete } from "../api/sqlite";
@@ -108,14 +108,25 @@ const SequenceEditScreen = ({ route, navigation }) => {
                   return(
                      <View style={styles.listRow}>
                         <View style={styles.incrementer}>
-                           <Text style={styles.incrementerText} onPress={() => {
-                              console.log('PRESSED DEBUG')
-                              let mutatedTasks = tasks.slice();
-                              let tasksToUpdate = mutatedTasks.splice(index, 2);
-                              mutatedTasks.splice(index, 0, tasksToUpdate[1], tasksToUpdate[0]);
-                              setTasks(mutatedTasks);
-                           }}>▲</Text>
-                           <Text style={styles.incrementerText}>▼</Text>
+                           {index > 0 &&
+                              <Text style={styles.incrementerText} onPress={() => {
+                                 let mutatedTasks = tasks.slice();
+                                 let tasksToUpdate = mutatedTasks.splice(index - 1, 2);
+
+                                 mutatedTasks.splice(index - 1, 0, tasksToUpdate[1], tasksToUpdate[0]);
+                                 setTasks(mutatedTasks);
+                              }}>▲</Text>
+                           }
+
+                           {index < tasks.length - 1 &&
+                              <Text style={styles.incrementerText} onPress={() => {
+                                 let mutatedTasks = tasks.slice();
+                                 let tasksToUpdate = mutatedTasks.splice(index, 2);
+
+                                 mutatedTasks.splice(index, 0, tasksToUpdate[1], tasksToUpdate[0]);
+                                 setTasks(mutatedTasks);
+                              }}>▼</Text>
+                           }
                         </View>
                         <Text style={[styles.listIndex, styles.listText]}>{index + 1}</Text>
                         <TextInput

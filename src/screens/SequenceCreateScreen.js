@@ -4,6 +4,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
 import { db, formatSqlSeqCreate, formatSqlSeqDelete, formatSqlTaskInsert, formatSqlTaskDelete } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
+import { createTasks } from "../api/dataFunctions";
 
 const SequenceCreateScreen = ({ route, navigation }) => {
    const [seq, setSeq] = useState('');
@@ -25,7 +26,7 @@ const SequenceCreateScreen = ({ route, navigation }) => {
    const createSequence = async () => {
       await db.transaction(function (tx) {
          tx.executeSql(
-            formatSqlSeqCreate(seq),
+            formatSqlSeqCreate(seq.toString()),
             [],
             function (tx, res) {
                console.log('SEQUENCE CREATED')
@@ -54,29 +55,9 @@ const SequenceCreateScreen = ({ route, navigation }) => {
       });
    };
 
-   const createTask = async (taskName, taskDuration, taskIndex) => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlTaskInsert(seq, taskName, taskDuration, taskIndex),
-            [],
-            function (tx, res) {
-               console.log('SUCCESSFULLY CREATED')
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
-   };
-
-   const createTasks = () => {
-      tasks.filter(task => task.new).map(task => createTask(task.TaskName, task.TaskDuration.toString(), task.TaskIndex.toString()));
-   };
-
    const saveAllChanges = () => {
-      createSequence(seq);
-      createTasks();
+      createSequence(seq.toString());
+      createTasks(seq, tasks);
    };
 
    return (
