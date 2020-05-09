@@ -2,13 +2,8 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Colors, Spacing } from "../styles";
-import {
-   db,
-   formatSqlAllSeqSelect,
-   formatSqlAllTaskSelect,
-   formatSqlSeqCreate, formatSqlTaskInsert,
-   formatSqlTaskUpdate
-} from "../api/sqlite";
+import { db, formatSqlAllSeqSelect, formatSqlSeqCreate, formatSqlTaskInsert } from "../api/sqlite";
+import {FileSystem} from "expo/build/removed.web";
 
 const SequenceListScreen = ({ navigation }) => {
    const [ count, setCount ] = useState(0);
@@ -33,12 +28,14 @@ const SequenceListScreen = ({ navigation }) => {
    };
 
    const createDummySeq = async () => {
+      FileSystem.getInfoAsync('SQLite/<dbfilename>')
       await db.transaction(function (tx) {
          tx.executeSql(
-            formatSqlSeqCreate('TestSeq'),
+            'CREATE DATABASE TestDB;',
             [],
             function (tx, res) {
-               console.log('SEQ CREATED')
+               console.log('DB ACTION')
+               console.log(res)
             },
             (tx, err) => {
                console.log('statement error');
@@ -101,10 +98,6 @@ const SequenceListScreen = ({ navigation }) => {
          <Button
             title="create dummy Seq"
             onPress={() => createDummySeq()}
-         />
-         <Button
-            title="populate dummy Seq"
-            onPress={() => populateDummySeq()}
          />
       </View>
    )

@@ -103,7 +103,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
             <FlatList
                data={tasks}
                keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
-               style={styles.list}
                renderItem={({item, index}) => {
                   return(
                      <View style={styles.listRow}>
@@ -202,7 +201,7 @@ const styles = EStyleSheet.create({
    buttonAdd: {
       alignSelf: 'center',
       position: 'absolute',
-      bottom: -30,
+      bottom: -50,
    },
    buttonBottom: {
       alignSelf: 'center',
@@ -222,9 +221,6 @@ const styles = EStyleSheet.create({
    incrementerText: {
       color: 'grey',
       fontSize: 20,
-   },
-   list: {
-      backgroundColor: 'lime'
    },
    listRow: {
       alignItems: 'center',

@@ -3,6 +3,7 @@ import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Spacing, Typography } from '../styles';
 import { db, formatSqlAllTaskSelect } from "../api/sqlite";
+import Timer from "../components/atoms/Timer";
 
 const SequenceScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
