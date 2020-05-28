@@ -4,21 +4,20 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { Typography } from "../../styles";
 
 const Timer = ({ duration, callback }) => {
-   const [ time, setTime ] = useState(50);
+   const [ time, setTime ] = useState(0);
    const [ timerOn, setTimer ] = useState(false);
 
-   function decrementTime() {
+   const decrementTime = async () => {
       if (timerOn && time === 0) {
          setTimer(false);
-         console.log('TIME FOR A CALLBACK w CURRENT');
-         callback();
+         await callback()
       }
       if (timerOn && time > 0) {
          setTimeout(() => {
             setTime(time - 1)
          }, 1000)
       }
-   }
+   };
 
    function setTimeToDuration() {
       setTime(duration)

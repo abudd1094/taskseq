@@ -10,6 +10,7 @@ const SequenceScreen = ({ route, navigation }) => {
 
    const [ count, setCount ] = useState(0);
    const [ state, setState ] = useState();
+   const [ autoStartTimer, setAutoStartTimer ] = useState(true);
    const [ loading, setLoading ] = useState(true);
    const [ currentTask, setCurrentTask ] = useState(0);
 
@@ -31,7 +32,16 @@ const SequenceScreen = ({ route, navigation }) => {
    };
 
    const nextTask = () => {
-      setCurrentTask(currentTask + 1)
+      console.log('Current Task:')
+      console.log(currentTask)
+
+      if (currentTask > state.length - 2) {
+         setAutoStartTimer(false);
+         console.log('DONE')
+      } else {
+         setCurrentTask(currentTask + 1);
+         return true;
+      }
    };
 
    useLayoutEffect(() => {
@@ -65,30 +75,30 @@ const SequenceScreen = ({ route, navigation }) => {
                <Text style={[styles.title, styles.defaultMarginTop]}>{currentSeq}</Text>
                <Text style={[styles.defaultMarginTop]}>{state.length} tasks</Text>
             </View>
-
+            <Timer
+               callback={nextTask}
+               duration={state[currentTask].TaskDuration}
+               autoStartTimer={true}
+            />
             <View>
+               <Button
+                  title={'log state'}
+                  onPress={() => {
+                     console.log(state)
+                     console.log('CURRENT')
+                     console.log(currentTask)
+                     console.log(autoStartTimer)
+                  }}
+               />
                <Text style={styles.label}>Current:</Text>
                <Text>{state[currentTask].TaskName}</Text>
-               <Timer
-                  callback={nextTask}
-                  duration={state[currentTask].TaskDuration}
+               <FlatList
+                  data={state.filter(task => task.TaskIndex !== currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
+                  keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
+                  style={[styles.defaultMarginTop, styles.list]}
+                  renderItem={item => <Text>{item.item.TaskName}</Text>}
                />
             </View>
-
-            <FlatList
-               data={state.filter(task => task.TaskIndex !== currentTask + 1)}
-               keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
-               style={[styles.defaultMarginTop, styles.list]}
-               renderItem={item => <Text>{item.item.TaskName}</Text>}
-            />
-            <Button
-               title={'log state'}
-               onPress={() => {
-                  console.log(state)
-                  console.log('CURRENT')
-                  console.log(currentTask)
-               }}
-            />
          </View>
       )
    }
@@ -100,6 +110,7 @@ const styles = EStyleSheet.create({
    },
    button: {
       fontSize: 17,
+      marginRight: 10,
    },
    container: {
       alignItems: 'center',
@@ -125,7 +136,7 @@ const styles = EStyleSheet.create({
       ...Typography.primaryFont,
    },
    top: {
-      flex: 0.25,
+
    }
 });
 

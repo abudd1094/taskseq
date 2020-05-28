@@ -170,6 +170,13 @@ const SequenceEditScreen = ({ route, navigation }) => {
          </View>
 
         <View style={styles.bottom}>
+           <Button
+              title="save changes"
+              onPress={async () => {
+                 await saveAllChanges();
+                 navigation.navigate('ViewSequence', {currentSeq: seq});
+              }}
+           />
            <TouchableOpacity
               onPress={() => {
                  deleteSequence(currentSeq);
@@ -179,13 +186,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
            >
               <Text style={styles.delete}>DELETE SEQUENCE</Text>
            </TouchableOpacity>
-           <Button
-              title="save changes"
-              onPress={async () => {
-                 await saveAllChanges();
-                 navigation.navigate('ViewSequence', {currentSeq: seq});
-              }}
-           />
         </View>
 
      </View>
@@ -205,6 +205,7 @@ const styles = EStyleSheet.create({
    },
    buttonBottom: {
       alignSelf: 'center',
+      marginTop: 20,
    },
    container: {
      flexDirection: 'column',
