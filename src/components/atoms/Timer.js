@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Typography } from "../../styles";
+import { Colors, Typography } from "../../styles";
 
 const Timer = ({ callback, duration, startTimer }) => {
    const [ minutes, setMinutes ] = useState(0);
@@ -51,12 +51,15 @@ const Timer = ({ callback, duration, startTimer }) => {
 
    return (
       <View>
-         <Text style={styles.timer}>{minutes > 0 && minutes + ':'}{seconds < 10 && 0}{seconds}</Text>
+         <Text style={[styles.timer, !timerOn && styles.inactive]}>{minutes > 0 && minutes + ':'}{seconds < 10 && 0}{seconds}</Text>
       </View>
    )
 };
 
 const styles = EStyleSheet.create({
+   inactive: {
+      ...Colors.lightGrey,
+   },
    timer: {
       ...Typography.primaryFont,
       fontSize: 60,

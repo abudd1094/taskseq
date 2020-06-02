@@ -70,7 +70,8 @@ const SequenceScreen = ({ route, navigation }) => {
          <View style={styles.container}>
             <View style={styles.top}>
                <Text style={[styles.title, styles.defaultMarginTop]}>{currentSeq}</Text>
-               <Text style={[styles.defaultMarginTop]}>{tasks.length} Tasks</Text>
+               <Text style={{textAlign: 'center'}}>{tasks.length} Tasks</Text>
+               <Text style={styles.defaultMarginTop}>{tasks[currentTask].TaskName}</Text>
             </View>
             <Timer
                callback={nextTask}
@@ -83,12 +84,10 @@ const SequenceScreen = ({ route, navigation }) => {
                   onPress={() => {
                      startTimer ? setStartTimer(false) : setStartTimer(true);
                   }}
+                  style={styles.buttonDefault}
                />
-               <Text style={styles.label}>Current:</Text>
-               <Text>{tasks[currentTask].TaskName}</Text>
-               <Text>{complete ? 'Complete!' : 'In progress...'}</Text>
                <FlatList
-                  data={tasks.filter(task => task.TaskIndex !== currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
+                  data={tasks.filter(task => task.TaskIndex > currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
                   keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
                   style={[styles.defaultMarginTop, styles.list]}
                   renderItem={item => <Text>{item.item.TaskName}</Text>}
@@ -107,6 +106,9 @@ const styles = EStyleSheet.create({
       fontSize: 17,
       marginRight: 10,
    },
+   buttonDefault: {
+      backgroundColor: 'red',
+   },
    container: {
       alignItems: 'center',
       backgroundColor: 'white',
@@ -115,6 +117,9 @@ const styles = EStyleSheet.create({
    },
    defaultMarginTop: {
       ...Spacing.defaultMarginTop
+   },
+   inactive: {
+     ...Colors.lightGrey,
    },
    label: {
      color: 'red',

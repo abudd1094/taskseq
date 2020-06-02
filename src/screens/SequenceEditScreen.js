@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, FlatList, Text, TextInput, TouchableOpacity, View, Alert} from 'react-native';
+import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
-import { db, formatSqlAllTaskSelect, formatSqlSeqDelete, formatSqlTaskDelete } from "../api/sqlite";
+import { db, formatSqlAllTaskSelect, formatSqlTaskDelete } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
 import { createTasks, deleteSequence, updateSequence, updateTask, updateTasks } from "../api/dataFunctions";
 

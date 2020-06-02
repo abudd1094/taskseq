@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../styles";
-import { db, formatSqlSeqCreate, formatSqlSeqDelete, formatSqlTaskInsert, formatSqlTaskDelete } from "../api/sqlite";
+import { db, formatSqlSeqCreate, formatSqlTaskDelete } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
 import { createTasks } from "../api/dataFunctions";
 

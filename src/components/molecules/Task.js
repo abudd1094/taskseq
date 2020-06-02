@@ -1,9 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import Timer from '../atoms/Timer';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Spacing, Typography } from "../../styles";
-import { defaultMarginTop } from "../../styles/spacing";
+import { Spacing } from "../../styles";
 
 const Task = ({name, duration}) => {
    return (
