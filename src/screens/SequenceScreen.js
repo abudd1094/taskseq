@@ -9,8 +9,9 @@ const SequenceScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
 
    const [ count, setCount ] = useState(0);
-   const [ state, setState ] = useState();
-   const [ autoStartTimer, setAutoStartTimer ] = useState(true);
+   const [ tasks, setTasks ] = useState();
+   const [ complete, setComplete ] = useState(false);
+   const [ startTimer, setStartTimer ] = useState(false);
    const [ loading, setLoading ] = useState(true);
    const [ currentTask, setCurrentTask ] = useState(0);
 
@@ -20,11 +21,11 @@ const SequenceScreen = ({ route, navigation }) => {
             formatSqlAllTaskSelect(currentSeq),
             [],
             function (tx, res) {
-               setState(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex))
+               setTasks(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex))
                setLoading(false);
             },
             (tx, err) => {
-               console.log('statement error');
+               console.log('tasksment error');
                console.log(err);
             }
          );
@@ -32,16 +33,12 @@ const SequenceScreen = ({ route, navigation }) => {
    };
 
    const nextTask = () => {
-      console.log('Current Task:')
-      console.log(currentTask)
-
-      if (currentTask > state.length - 2) {
-         setAutoStartTimer(false);
-         console.log('DONE')
-      } else {
+      if (currentTask < tasks.length - 1) {
          setCurrentTask(currentTask + 1);
-         return true;
+      } else {
+         setComplete(true);
       }
+
    };
 
    useLayoutEffect(() => {
@@ -73,27 +70,25 @@ const SequenceScreen = ({ route, navigation }) => {
          <View style={styles.container}>
             <View style={styles.top}>
                <Text style={[styles.title, styles.defaultMarginTop]}>{currentSeq}</Text>
-               <Text style={[styles.defaultMarginTop]}>{state.length} tasks</Text>
+               <Text style={[styles.defaultMarginTop]}>{tasks.length} Tasks</Text>
             </View>
             <Timer
                callback={nextTask}
-               duration={state[currentTask].TaskDuration}
-               autoStartTimer={true}
+               duration={currentTask < tasks.length ? tasks[currentTask].TaskDuration : 0}
+               startTimer={startTimer}
             />
             <View>
                <Button
-                  title={'log state'}
+                  title={startTimer ? 'STOP' : 'START'}
                   onPress={() => {
-                     console.log(state)
-                     console.log('CURRENT')
-                     console.log(currentTask)
-                     console.log(autoStartTimer)
+                     startTimer ? setStartTimer(false) : setStartTimer(true);
                   }}
                />
                <Text style={styles.label}>Current:</Text>
-               <Text>{state[currentTask].TaskName}</Text>
+               <Text>{tasks[currentTask].TaskName}</Text>
+               <Text>{complete ? 'Complete!' : 'In progress...'}</Text>
                <FlatList
-                  data={state.filter(task => task.TaskIndex !== currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
+                  data={tasks.filter(task => task.TaskIndex !== currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
                   keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
                   style={[styles.defaultMarginTop, styles.list]}
                   renderItem={item => <Text>{item.item.TaskName}</Text>}
