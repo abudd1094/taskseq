@@ -73,7 +73,8 @@ const SequenceScreen = ({ route, navigation }) => {
                <Text style={[styles.title, styles.defaultMarginTop]}>{currentSeq}</Text>
                <Text style={{textAlign: 'center'}}>{tasks.length} Tasks</Text>
                <Timer
-                  callback={nextTask}
+                  callback={() => {}}
+                  color='black'
                   duration={currentTask < tasks.length ? tasks.map(task => task.TaskDuration).reduce((total, n) => total + n) : 0}
                   fontSize={60}
                   startTimer={startTimer}
@@ -86,12 +87,24 @@ const SequenceScreen = ({ route, navigation }) => {
                   style={styles.buttonDefault}
                />
             </View>
-            <Task name={tasks[currentTask].TaskName} callback={nextTask} duration={tasks[currentTask].TaskDuration} startTimer={startTimer}/>
+            <Task
+               current
+               name={tasks[currentTask].TaskName}
+               callback={nextTask}
+               duration={tasks[currentTask].TaskDuration}
+               index={tasks[currentTask].TaskIndex}
+               startTimer={startTimer}
+            />
             <FlatList
                data={tasks.filter(task => task.TaskIndex > currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
                keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
-               style={[styles.defaultMarginTop, styles.list]}
-               renderItem={item => <Task name={item.item.TaskName} duration={item.item.TaskDuration}/>}
+               style={[styles.list]}
+               renderItem={item => <Task index={item.item.TaskIndex} name={item.item.TaskName} duration={item.item.TaskDuration}/>}
+            />
+            <Button
+               title={'RESET'}
+               onPress={() => navigation.navigate('ViewSequence', {currentSeq: currentSeq})}
+               style={styles.buttonDefault}
             />
             <Button
                title={'LOG'}
