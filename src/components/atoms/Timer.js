@@ -3,7 +3,7 @@ import { Button, Text, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../../styles";
 
-const Timer = ({ callback, duration, startTimer }) => {
+const Timer = ({ callback, duration, startTimer, fontSize, basic }) => {
    const [ minutes, setMinutes ] = useState(0);
    const [ seconds, setSeconds ] = useState(0);
    const [ timerOn, setTimer ] = useState(startTimer);
@@ -49,11 +49,19 @@ const Timer = ({ callback, duration, startTimer }) => {
       setTimer(startTimer)
    }, [startTimer, minutes, duration]);
 
-   return (
-      <View>
-         <Text style={[styles.timer, !timerOn && styles.inactive]}>{minutes > 0 && minutes + ':'}{seconds < 10 && 0}{seconds}</Text>
-      </View>
-   )
+   if (basic) {
+      return (
+         <View>
+            <Text style={[{fontSize: fontSize}, styles.timerBasic, !timerOn && styles.inactive]}>{minutes > 0 && minutes + ':'}{seconds < 10 && 0}{seconds}</Text>
+         </View>
+      )
+   } else {
+      return (
+         <View>
+            <Text style={[{fontSize: fontSize}, styles.timer, !timerOn && styles.inactive]}>{minutes > 0 && minutes + ':'}{seconds < 10 && 0}{seconds}</Text>
+         </View>
+      )
+   }
 };
 
 const styles = EStyleSheet.create({
@@ -62,7 +70,9 @@ const styles = EStyleSheet.create({
    },
    timer: {
       ...Typography.primaryFont,
-      fontSize: 60,
+      textAlign: 'center',
+   },
+   timerBasic: {
       textAlign: 'center',
    }
 });

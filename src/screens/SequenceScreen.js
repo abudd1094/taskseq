@@ -4,6 +4,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Spacing, Typography } from '../styles';
 import { db, formatSqlAllTaskSelect } from "../api/sqlite";
 import Timer from "../components/atoms/Timer";
+import Task from '../components/molecules/Task';
 
 const SequenceScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
@@ -71,14 +72,12 @@ const SequenceScreen = ({ route, navigation }) => {
             <View style={styles.top}>
                <Text style={[styles.title, styles.defaultMarginTop]}>{currentSeq}</Text>
                <Text style={{textAlign: 'center'}}>{tasks.length} Tasks</Text>
-               <Text style={styles.defaultMarginTop}>{tasks[currentTask].TaskName}</Text>
-            </View>
-            <Timer
-               callback={nextTask}
-               duration={currentTask < tasks.length ? tasks[currentTask].TaskDuration : 0}
-               startTimer={startTimer}
-            />
-            <View>
+               <Timer
+                  callback={nextTask}
+                  duration={currentTask < tasks.length ? tasks.map(task => task.TaskDuration).reduce((total, n) => total + n) : 0}
+                  fontSize={60}
+                  startTimer={startTimer}
+               />
                <Button
                   title={startTimer ? 'STOP' : 'START'}
                   onPress={() => {
@@ -86,13 +85,18 @@ const SequenceScreen = ({ route, navigation }) => {
                   }}
                   style={styles.buttonDefault}
                />
-               <FlatList
-                  data={tasks.filter(task => task.TaskIndex > currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
-                  keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
-                  style={[styles.defaultMarginTop, styles.list]}
-                  renderItem={item => <Text>{item.item.TaskName}</Text>}
-               />
             </View>
+            <Task name={tasks[currentTask].TaskName} callback={nextTask} duration={tasks[currentTask].TaskDuration} startTimer={startTimer}/>
+            <FlatList
+               data={tasks.filter(task => task.TaskIndex > currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
+               keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
+               style={[styles.defaultMarginTop, styles.list]}
+               renderItem={item => <Task name={item.item.TaskName} duration={item.item.TaskDuration}/>}
+            />
+            <Button
+               title={'LOG'}
+               onPress={() => console.log(tasks.map(task => task.TaskDuration).reduce((total, n) => total + n))}
+            />
          </View>
       )
    }
@@ -110,7 +114,7 @@ const styles = EStyleSheet.create({
       backgroundColor: 'red',
    },
    container: {
-      alignItems: 'center',
+      alignItems: 'flex-start',
       backgroundColor: 'white',
       justifyContent: 'flex-start',
       height: '100%'
@@ -136,7 +140,7 @@ const styles = EStyleSheet.create({
       ...Typography.primaryFont,
    },
    top: {
-
+      alignSelf: 'center',
    }
 });
 
