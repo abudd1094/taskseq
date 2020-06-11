@@ -100,6 +100,12 @@ const SequenceEditScreen = ({ route, navigation }) => {
             onChangeText={input => setSeq(input)}
          />
          <View>
+            <View style={styles.listRow}>
+               <Text style={styles.label}>Index</Text>
+               <Text style={styles.label}>Name</Text>
+               <Text style={styles.label}>Duration</Text>
+               <Text style={styles.label}></Text>
+            </View>
             <FlatList
                data={tasks}
                keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
@@ -223,6 +229,9 @@ const styles = EStyleSheet.create({
       color: 'grey',
       fontSize: 20,
    },
+   label: {
+     flex: 1,
+   },
    listRow: {
       alignItems: 'center',
       flexDirection: 'row',
@@ -233,7 +242,6 @@ const styles = EStyleSheet.create({
    },
    listText: {
       fontSize: 15,
-      ...Colors.blue,
    },
    listName: {
       flex: 2,

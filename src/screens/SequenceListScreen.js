@@ -72,10 +72,8 @@ const styles = EStyleSheet.create({
          justifyContent: 'center',
       },
       link: {
-         ...Colors.blue
       },
       button: {
-         ...Colors.blue,
          fontSize: '1.5rem',
          marginRight: '1rem'
       },
@@ -87,7 +85,6 @@ const styles = EStyleSheet.create({
       },
       listText: {
          fontSize: 15,
-            ...Colors.blue
       }
    })
 ;

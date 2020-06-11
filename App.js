@@ -9,7 +9,6 @@ import * as Font from 'expo-font';
 import HomeScreen from './src/screens/HomeScreen';
 import SequenceListScreen from './src/screens/SequenceListScreen';
 import SequenceCreateScreen from './src/screens/SequenceCreateScreen';
-import TaskCreateScreen from './src/screens/TaskCreateScreen';
 import SequenceEditScreen from './src/screens/SequenceEditScreen';
 import SequenceScreen from './src/screens/SequenceScreen';
 
@@ -65,11 +64,6 @@ export default function App(props) {
                      options={{ title: 'New Sequence' }}
                   />
                   <Stack.Screen
-                     name="TaskCreate"
-                     component={TaskCreateScreen}
-                     options={{ title: 'Add Tasks' }}
-                  />
-                  <Stack.Screen
                      name="SequenceEdit"
                      component={SequenceEditScreen}
                      options={{ title: 'Edit Sequence' }}
@@ -90,6 +84,5 @@ const styles = EStyleSheet.create({
       ...Spacing.container
    },
    link: {
-      ...Colors.blue
    }
 });

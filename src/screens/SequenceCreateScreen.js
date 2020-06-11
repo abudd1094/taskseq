@@ -167,7 +167,6 @@ const styles = EStyleSheet.create({
    },
    listText: {
       fontSize: 15,
-      ...Colors.blue,
    },
    listName: {
       flex: 2,

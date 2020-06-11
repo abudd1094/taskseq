@@ -5,6 +5,7 @@ import { Colors, Spacing, Typography } from '../styles';
 import { db, formatSqlAllTaskSelect } from "../api/sqlite";
 import Timer from "../components/atoms/Timer";
 import Task from '../components/molecules/Task';
+import { lightGrey } from "../styles/colors";
 
 const SequenceScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
@@ -26,7 +27,7 @@ const SequenceScreen = ({ route, navigation }) => {
                setLoading(false);
             },
             (tx, err) => {
-               console.log('tasksment error');
+               console.log('tasks error');
                console.log(err);
             }
          );
@@ -39,7 +40,12 @@ const SequenceScreen = ({ route, navigation }) => {
       } else {
          setComplete(true);
       }
+   };
 
+   const resetSeq = () => {
+      setLoading(true);
+      setCurrentTask(0);
+      setTimeout(() => setLoading(false), 500)
    };
 
    useLayoutEffect(() => {
@@ -103,12 +109,12 @@ const SequenceScreen = ({ route, navigation }) => {
             />
             <Button
                title={'RESET'}
-               onPress={() => navigation.navigate('ViewSequence', {currentSeq: currentSeq})}
+               onPress={() => resetSeq()}
                style={styles.buttonDefault}
             />
             <Button
                title={'LOG'}
-               onPress={() => console.log(tasks.map(task => task.TaskDuration).reduce((total, n) => total + n))}
+               onPress={() => console.log(tasks)}
             />
          </View>
       )
@@ -136,7 +142,7 @@ const styles = EStyleSheet.create({
       ...Spacing.defaultMarginTop
    },
    inactive: {
-     ...Colors.lightGrey,
+     color: lightGrey,
    },
    label: {
      color: 'red',
@@ -146,7 +152,6 @@ const styles = EStyleSheet.create({
    },
    listText: {
       fontSize: 15,
-      ...Colors.blue
    },
    title: {
       fontSize: 20,

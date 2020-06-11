@@ -30,7 +30,6 @@ const styles = EStyleSheet.create({
       alignItems: 'center',
    },
    link: {
-      ...Colors.blue
    },
    title: {
       ...Typography.primaryFont,

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Typography } from "../../styles";
+import { lightGrey } from "../../styles/colors";
 
-const Timer = ({ callback, color, duration, startTimer, fontSize, basic }) => {
+const Timer = ({ callback, color, duration, startTimer, fontSize, basic, reset }) => {
    const [ minutes, setMinutes ] = useState(0);
    const [ seconds, setSeconds ] = useState(0);
    const [ timerOn, setTimer ] = useState(startTimer);
@@ -39,7 +40,7 @@ const Timer = ({ callback, color, duration, startTimer, fontSize, basic }) => {
 
    useEffect(() => {
       setTimeToDuration()
-   }, [ duration ]);
+   }, [ duration, reset ]);
 
    useEffect(() => {
       decrementTime()
@@ -69,7 +70,7 @@ const styles = EStyleSheet.create({
 
    },
    inactive: {
-      ...Colors.lightGrey,
+      color: lightGrey,
    },
    timer: {
       ...Typography.primaryFont,
