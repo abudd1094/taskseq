@@ -12,7 +12,7 @@ const Task = ({index, name, current, callback, duration, startTimer}) => {
             <Text style={[styles.index]}>{index}</Text>
             <Text style={[styles.name, current && styles.white]}>{name}</Text>
          </View>
-         <Timer color={current ? 'white' : 'black'} callback={callback} duration={duration} fontSize={16} basic startTimer={startTimer}/>
+         <Timer color={current ? 'white' : 'black'} callback={callback} duration={duration} fontSize={16} startTimer={startTimer}/>
       </View>
    )
 };
