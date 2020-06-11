@@ -43,6 +43,8 @@ const SequenceScreen = ({ route, navigation }) => {
    };
 
    const resetSeq = () => {
+      setStartTimer(false);
+      setComplete(false);
       setLoading(true);
       setCurrentTask(0);
       setTimeout(() => setLoading(false), 500)
