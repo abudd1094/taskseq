@@ -8,7 +8,7 @@ import { createTasks, deleteSequence, updateSequence, updateTask, updateTasks } 
 
 const SequenceEditScreen = ({ route, navigation }) => {
    const {currentSeq} = route.params;
-   const [seq, setSeq] = useState(currentSeq);
+   const [seq, setSeq] = useState(state.currentSeq);
    const [tasks, setTasks] = useState([]);
    const [toDelete, setToDelete] = useState([]);
    const [ loading, setLoading ] = useState(true);

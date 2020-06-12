@@ -1,75 +1,35 @@
-import React, { useEffect, useLayoutEffect, useState, useContext } from 'react';
-import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { Button, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Colors, Spacing, Typography } from '../styles';
-import { db, formatSqlAllTaskSelect } from "../api/sqlite";
-import Timer from "../components/atoms/Timer";
-import Task from '../components/molecules/Task';
+import { Spacing, Typography } from '../styles';
 import { lightGrey } from "../styles/colors";
 import { Context } from "../context/SequenceContext";
 
 const SequenceScreen = ({ route, navigation }) => {
-   const { state, loading, currentSeq, currentTask, currentTasks, setCurrentSeq, setCurrentTask, setCurrentTasks, setLoading } = useContext(Context);
+   const { state, loadCurrentTasks, setLoading } = useContext(Context);
    const [ count, setCount ] = useState(0);
-   const [ tasks, setTasks ] = useState();
-   const [ complete, setComplete ] = useState(false);
-   const [ startTimer, setStartTimer ] = useState(false);
-
-   const loadData = async () => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlAllTaskSelect(currentSeq),
-            [],
-            function (tx, res) {
-               setCurrentTasks(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex));
-               setCurrentSeq(currentSeqParam);
-               setLoading(false);
-            },
-            (tx, err) => {
-               console.log('tasks error');
-               console.log(err);
-            }
-         );
-      })
-   };
-
-   const nextTask = () => {
-      if (currentTask < tasks.length - 1) {
-         setCurrentTask(currentTask + 1);
-      } else {
-         setComplete(true);
-      }
-   };
-
-   const resetSeq = () => {
-      setStartTimer(false);
-      setComplete(false);
-      setLoading(true);
-      setCurrentTask(0);
-      setTimeout(() => setLoading(false), 500)
-   };
 
    useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit', {currentSeq: currentSeq})}>
+            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit', {currentSeq: state.currentSeq})}>
                <Text style={styles.button}>Edit</Text>
             </TouchableOpacity>
          ),
       });
-   }, [ navigation, setCount, currentSeq ]);
+   }, [ navigation, setCount, state.currentSeq ]);
 
    useEffect(() => {
-      loadData();
+      loadCurrentTasks(state.currentSeq);
 
       const unsubscribe = navigation.addListener('focus', () => {
-         loadData();
+         loadCurrentTasks(state.currentSeq);
       });
 
       return unsubscribe;
-   }, [navigation, currentSeq]);
+   }, [navigation, state.currentSeq]);
 
-   if (loading) {
+   if (state.loading) {
       return(
          <Text>Loading...</Text>
       )
@@ -77,45 +37,12 @@ const SequenceScreen = ({ route, navigation }) => {
       return (
          <View style={styles.container}>
             <View style={styles.top}>
-               <Text style={[styles.title, styles.defaultMarginTop]}>{currentSeq}</Text>
-               <Text style={{textAlign: 'center'}}>{tasks.length} Tasks</Text>
-               <Timer
-                  callback={() => {}}
-                  color='black'
-                  duration={currentTask < tasks.length ? tasks.map(task => task.TaskDuration).reduce((total, n) => total + n) : 0}
-                  fontSize={60}
-                  startTimer={startTimer}
-               />
-               <Button
-                  title={startTimer ? 'STOP' : 'START'}
-                  onPress={() => {
-                     startTimer ? setStartTimer(false) : setStartTimer(true);
-                  }}
-                  style={styles.buttonDefault}
-               />
+               <Text style={[styles.title, styles.defaultMarginTop]}>{state.currentSeq}</Text>
+               <Text style={{textAlign: 'center'}}>{state.currentTasks.length} Tasks</Text>
             </View>
-            <Task
-               current
-               name={tasks[currentTask].TaskName}
-               callback={nextTask}
-               duration={tasks[currentTask].TaskDuration}
-               index={tasks[currentTask].TaskIndex}
-               startTimer={startTimer}
-            />
-            <FlatList
-               data={tasks.filter(task => task.TaskIndex > currentTask + 1).sort((a, b) => a.TaskIndex - b.TaskIndex)}
-               keyExtractor={(item) => item.TaskID ? item.TaskID.toString() : item.TaskName}
-               style={[styles.list]}
-               renderItem={item => <Task index={item.item.TaskIndex} name={item.item.TaskName} duration={item.item.TaskDuration}/>}
-            />
-            <Button
-               title={'RESET'}
-               onPress={() => resetSeq()}
-               style={styles.buttonDefault}
-            />
             <Button
                title={'LOG'}
-               onPress={() => console.log(tasks)}
+               onPress={() => console.log(state)}
             />
          </View>
       )
