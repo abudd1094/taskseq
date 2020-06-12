@@ -1,35 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Colors, Typography } from "../styles";
-import { db, formatSqlAllTaskSelect, formatSqlTaskDelete } from "../api/sqlite";
+import { Typography } from "../styles";
+import { db, formatSqlTaskDelete } from "../api/sqlite";
 import { windowWidth } from "../styles/spacing";
 import { createTasks, deleteSequence, updateSequence, updateTask, updateTasks } from "../api/dataFunctions";
+import { Context } from "../context/SequenceContext";
 
-const SequenceEditScreen = ({ route, navigation }) => {
-   const {currentSeq} = route.params;
-   const [seq, setSeq] = useState(state.currentSeq);
-   const [tasks, setTasks] = useState([]);
+const SequenceEditScreen = ({ navigation }) => {
+   const { state } = useContext(Context);
+   const {currentSeq} = state;
+   const [seq, setSeq] = useState(currentSeq);
+   const [tasks, setTasks] = useState(state.currentTasks);
    const [toDelete, setToDelete] = useState([]);
-   const [ loading, setLoading ] = useState(true);
-
-   const loadData = async () => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlAllTaskSelect(currentSeq),
-            [],
-            function (tx, res) {
-               setTasks(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex));
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      });
-
-      setLoading(false);
-   };
 
    const addRow = () => {
       const newTask = {
@@ -81,16 +64,6 @@ const SequenceEditScreen = ({ route, navigation }) => {
       deleteTasks();
       createTasks(seq, tasks);
    };
-
-   useEffect( () => {
-      loadData();
-
-      const unsubscribe = navigation.addListener('focus', () => {
-         loadData();
-      });
-
-      return unsubscribe;
-   }, [navigation]);
 
    return (
      <View style={styles.container}>

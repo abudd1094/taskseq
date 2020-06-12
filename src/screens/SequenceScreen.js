@@ -12,7 +12,7 @@ const SequenceScreen = ({ route, navigation }) => {
    useLayoutEffect(() => {
       navigation.setOptions({
          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit', {currentSeq: state.currentSeq})}>
+            <TouchableOpacity onPress={() => navigation.navigate('SequenceEdit')}>
                <Text style={styles.button}>Edit</Text>
             </TouchableOpacity>
          ),
@@ -61,7 +61,7 @@ const styles = EStyleSheet.create({
       backgroundColor: 'red',
    },
    container: {
-      alignItems: 'flex-start',
+      alignItems: 'center',
       backgroundColor: 'white',
       justifyContent: 'flex-start',
       height: '100%'
