@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, Spacing, Typography } from "../styles";
+import { Spacing, Typography } from "../styles";
 
 const HomeScreen = ({ navigation }) => {
    return (

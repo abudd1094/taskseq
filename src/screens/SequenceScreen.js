@@ -4,9 +4,10 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { Spacing, Typography } from '../styles';
 import { lightGrey } from "../styles/colors";
 import { Context } from "../context/SequenceContext";
+import Timer from "../components/atoms/Timer";
 
-const SequenceScreen = ({ route, navigation }) => {
-   const { state, loadCurrentTasks, setLoading } = useContext(Context);
+const SequenceScreen = ({ navigation }) => {
+   const { state, loadCurrentTasks, setTimer } = useContext(Context);
    const [ count, setCount ] = useState(0);
 
    useLayoutEffect(() => {
@@ -40,9 +41,14 @@ const SequenceScreen = ({ route, navigation }) => {
                <Text style={[styles.title, styles.defaultMarginTop]}>{state.currentSeq}</Text>
                <Text style={{textAlign: 'center'}}>{state.currentTasks.length} Tasks</Text>
             </View>
+            <Timer/>
             <Button
                title={'LOG'}
                onPress={() => console.log(state)}
+            />
+            <Button
+               title={"START"}
+               onPress={() => setTimer(true)}
             />
          </View>
       )
