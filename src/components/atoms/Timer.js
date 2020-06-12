@@ -11,10 +11,9 @@ const Timer = ({ callback, color, duration, startTimer, fontSize, basic, reset }
 
    const decrementTime = async () => {
       if (timerOn) {
-         if (seconds > 0) {
-            setTimeout(() => {
-               setSeconds(seconds - 1)
-            }, 1000)
+      if (minutes === 0 && seconds === 0) {
+            setTimer(false);
+            await callback();
          }
          else if (minutes >= 0 && seconds === 0) {
             setTimeout(() => {
@@ -22,9 +21,10 @@ const Timer = ({ callback, color, duration, startTimer, fontSize, basic, reset }
                setSeconds(59);
             }, 1000)
          }
-         else if (minutes === 0 && seconds === 0) {
-            setTimer(false);
-            await callback();
+         else if (seconds > 0) {
+            setTimeout(() => {
+               setSeconds(seconds - 1)
+            }, 1000)
          }
       }
    };

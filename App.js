@@ -5,6 +5,7 @@ import { Colors, Spacing } from './src/styles';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Font from 'expo-font';
+import { Provider } from './src/context/SequenceContext';
 
 import HomeScreen from './src/screens/HomeScreen';
 import SequenceListScreen from './src/screens/SequenceListScreen';
@@ -24,7 +25,6 @@ export default function App(props) {
             await Font.loadAsync({
                'chicago': require('./assets/fonts/Chicago.ttf'),
             });
-
          } catch (e) {
             // We might want to provide this error information to an error reporting service
             console.warn(e);
@@ -32,7 +32,6 @@ export default function App(props) {
             setLoadingComplete(true);
          }
       }
-
       loadResourcesAndDataAsync();
    }, []);
 
@@ -45,6 +44,7 @@ export default function App(props) {
       return null;
    } else {
       return (
+         <Provider>
             <NavigationContainer>
                <Stack.Navigator>
                   <Stack.Screen
@@ -75,6 +75,7 @@ export default function App(props) {
                   />
                </Stack.Navigator>
             </NavigationContainer>
+         </Provider>
       );
    }
 }
@@ -83,6 +84,4 @@ const styles = EStyleSheet.create({
    container: {
       ...Spacing.container
    },
-   link: {
-   }
 });
