@@ -153,7 +153,7 @@ const SequenceEditScreen = ({ navigation }) => {
               title="save changes"
               onPress={async () => {
                  await saveAllChanges();
-                 navigation.navigate('ViewSequence', {currentSeq: seq});
+                 navigation.navigate('ViewSequence');
               }}
            />
            <TouchableOpacity
@@ -166,7 +166,6 @@ const SequenceEditScreen = ({ navigation }) => {
               <Text style={styles.delete}>DELETE SEQUENCE</Text>
            </TouchableOpacity>
         </View>
-
      </View>
    );
 };
