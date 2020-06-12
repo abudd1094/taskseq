@@ -1,36 +1,23 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { Button, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, Spacing } from "../styles";
-import { db, formatSqlAllSeqSelect } from "../api/sqlite";
+import { Spacing } from "../styles";
+import { Context } from "../context/SequenceContext";
 
 const SequenceListScreen = ({ navigation }) => {
+   const { state, loadSequences, setCurrentSeq } = useContext(Context);
    const [ count, setCount ] = useState(0);
-   const [ state, setState ] = useState();
-   const [ loading, setLoading ] = useState(true);
 
-   const loadData = async () => {
-      await db.transaction(function (tx) {
-         tx.executeSql(
-            formatSqlAllSeqSelect(),
-            [],
-            function (tx, res) {
-               setState(res.rows._array);
-               setLoading(false);
-            },
-            (tx, err) => {
-               console.log('statement error');
-               console.log(err);
-            }
-         );
-      })
+   const enterSequence = item => {
+      setCurrentSeq(item.name);
+      navigation.navigate('ViewSequence');
    };
 
    useEffect( () => {
-      loadData();
+      loadSequences();
 
       const unsubscribe = navigation.addListener('focus', () => {
-         loadData();
+         loadSequences();
       });
 
       return unsubscribe;
@@ -46,22 +33,23 @@ const SequenceListScreen = ({ navigation }) => {
       });
    }, [ navigation, setCount ]);
 
-   return (
-      <View style={styles.container}>
-         {!loading &&
-         <FlatList
-            data={state.filter(seq => seq.name !== "sqlite_sequence")}
-            keyExtractor={(item) => item.name}
-            style={styles.marginTop}
-            renderItem={({item}) => <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ViewSequence', {currentSeq: item.name})}><Text style={styles.listText}>{item.name}</Text></TouchableOpacity>}
-         />
-         }
-         <Button
-            title="log state"
-            onPress={() => console.log(state)}
-         />
-      </View>
-   )
+   if (state.loading) {
+      return <Text>Loading...</Text>
+   } else {
+      return (
+         <View style={styles.container}>
+            {state.sequences.map(item =>
+               <TouchableOpacity style={styles.listItem} onPress={() => enterSequence(item)}>
+                  <Text style={styles.listText}>{item.name}</Text>
+               </TouchableOpacity>
+            )}
+            <Button
+               title="LOG APP STATE"
+               onPress={() => console.log(state)}
+            />
+         </View>
+      )
+   }
 };
 
 const styles = EStyleSheet.create({

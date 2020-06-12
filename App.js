@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Colors, Spacing } from './src/styles';
+import { Spacing } from './src/styles';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Font from 'expo-font';

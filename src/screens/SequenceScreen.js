@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useContext } from 'react';
 import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Colors, Spacing, Typography } from '../styles';
@@ -6,16 +6,14 @@ import { db, formatSqlAllTaskSelect } from "../api/sqlite";
 import Timer from "../components/atoms/Timer";
 import Task from '../components/molecules/Task';
 import { lightGrey } from "../styles/colors";
+import { Context } from "../context/SequenceContext";
 
 const SequenceScreen = ({ route, navigation }) => {
-   const {currentSeq} = route.params;
-
+   const { state, loading, currentSeq, currentTask, currentTasks, setCurrentSeq, setCurrentTask, setCurrentTasks, setLoading } = useContext(Context);
    const [ count, setCount ] = useState(0);
    const [ tasks, setTasks ] = useState();
    const [ complete, setComplete ] = useState(false);
    const [ startTimer, setStartTimer ] = useState(false);
-   const [ loading, setLoading ] = useState(true);
-   const [ currentTask, setCurrentTask ] = useState(0);
 
    const loadData = async () => {
       await db.transaction(function (tx) {
@@ -23,7 +21,8 @@ const SequenceScreen = ({ route, navigation }) => {
             formatSqlAllTaskSelect(currentSeq),
             [],
             function (tx, res) {
-               setTasks(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex))
+               setCurrentTasks(res.rows._array.sort((a, b) => a.TaskIndex - b.TaskIndex));
+               setCurrentSeq(currentSeqParam);
                setLoading(false);
             },
             (tx, err) => {
