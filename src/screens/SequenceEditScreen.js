@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Typography } from "../styles";
@@ -8,11 +8,16 @@ import { createTasks, deleteSequence, updateSequence, updateTask, updateTasks } 
 import { Context } from "../context/SequenceContext";
 
 const SequenceEditScreen = ({ navigation }) => {
-   const { state } = useContext(Context);
+   const { state, setTimer, loadCurrentTasks } = useContext(Context);
    const {currentSeq} = state;
    const [seq, setSeq] = useState(currentSeq);
    const [tasks, setTasks] = useState(state.currentTasks);
    const [toDelete, setToDelete] = useState([]);
+
+   useEffect(() => {
+      setTimer(false);
+      loadCurrentTasks(state.currentSeq);
+   }, []);
 
    const addRow = () => {
       const newTask = {

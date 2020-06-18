@@ -5,11 +5,12 @@ import { Spacing } from "../styles";
 import { Context } from "../context/SequenceContext";
 
 const SequenceListScreen = ({ navigation }) => {
-   const { state, loadSequences, setCurrentSeq } = useContext(Context);
+   const { state, loadSequences, setCurrentSeq, setLoading } = useContext(Context);
    const [ count, setCount ] = useState(0);
 
    const enterSequence = item => {
       setCurrentSeq(item.name);
+      setLoading(true);
       navigation.navigate('ViewSequence');
    };
 
@@ -38,8 +39,8 @@ const SequenceListScreen = ({ navigation }) => {
    } else {
       return (
          <View style={styles.container}>
-            {state.sequences.map(item =>
-               <TouchableOpacity style={styles.listItem} onPress={() => enterSequence(item)}>
+            {state.sequences.map((item, index) =>
+               <TouchableOpacity style={styles.listItem} onPress={() => enterSequence(item)} key={index}>
                   <Text style={styles.listText}>{item.name}</Text>
                </TouchableOpacity>
             )}

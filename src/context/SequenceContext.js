@@ -8,11 +8,11 @@ const seqReducer = (state, action) => {
       case 'set_current_task':
          return { ...state, currentTask: action.payload };
       case 'set_current_tasks':
-         return { ...state, currentTasks: action.payload, loading: false };
+         return { ...state, currentTasks: action.payload, currentTask: action.payload[0], loading: false, timerOn: false };
       case 'set_loading':
          return { ...state, loading: action.payload };
       case 'set_sequences':
-         return { ...state, sequences: action.payload, loading: false };
+         return { ...state, sequences: action.payload, loading: false, timerOn: false };
       case 'set_timer':
          return { ...state, timerOn: action.payload };
       default:

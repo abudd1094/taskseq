@@ -1,14 +1,19 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { Button, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import Button from "../components/atoms/Button";
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Spacing, Typography } from '../styles';
-import { lightGrey } from "../styles/colors";
+import { cadetBlue, lightGrey, pastelGreen } from "../styles/colors";
 import { Context } from "../context/SequenceContext";
 import Timer from "../components/atoms/Timer";
+import Task from "../components/molecules/Task";
 
 const SequenceScreen = ({ navigation }) => {
-   const { state, loadCurrentTasks, setTimer } = useContext(Context);
+   const { state, loadCurrentTasks, setCurrentTask, setTimer } = useContext(Context);
+   const {timerOn} = state;
    const [ count, setCount ] = useState(0);
+   const [ reset, setReset ] = useState(false);
+   const [ complete, setComplete ] = useState(false);
 
    useLayoutEffect(() => {
       navigation.setOptions({
@@ -30,7 +35,23 @@ const SequenceScreen = ({ navigation }) => {
       return unsubscribe;
    }, [navigation, state.currentSeq]);
 
-   if (state.loading) {
+   const resetSequence = () => {
+      setReset(true);
+      setComplete(false);
+      setTimeout(() => setReset(false), 1000)
+   };
+
+   const startStop = () => {
+      timerOn
+         ? setTimer(false)
+         : setTimer(true)
+   };
+
+   const nextTask = () => {
+      setCurrentTask(state.currentTask[state.currentTask.TaskIndex + 1])
+   };
+
+   if (state.loading || reset) {
       return(
          <Text>Loading...</Text>
       )
@@ -41,15 +62,39 @@ const SequenceScreen = ({ navigation }) => {
                <Text style={[styles.title, styles.defaultMarginTop]}>{state.currentSeq}</Text>
                <Text style={{textAlign: 'center'}}>{state.currentTasks.length} Tasks</Text>
             </View>
-            <Timer/>
+            <Timer duration={3} callback={() => setComplete(true)} />
+            {!complete &&
             <Button
+               color={timerOn ? cadetBlue : pastelGreen}
+               title={timerOn ? 'STOP' : 'START'}
+               onPress={startStop}
+            />}
+            <Button
+               color={'red'}
+               title={'RESET'}
+               onPress={resetSequence}
+            />
+            <Button
+               color={'blue'}
                title={'LOG'}
                onPress={() => console.log(state)}
             />
-            <Button
-               title={"START"}
-               onPress={() => setTimer(true)}
+            <Task
+               index={state.currentTask.TaskIndex}
+               name={state.currentTask.TaskName}
+               duration={state.currentTask.TaskDuration}
+               current
+               active={true}
             />
+            {state.currentTasks.filter(task => task !== state.currentTask).map(task =>
+               <Task
+                  index={task.TaskIndex}
+                  name={task.TaskName}
+                  duration={task.TaskDuration}
+                  callback={nextTask}
+                  active={false}
+               />
+            )}
          </View>
       )
    }

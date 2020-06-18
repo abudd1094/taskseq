@@ -2,17 +2,16 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Timer from '../atoms/Timer';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Spacing } from "../../styles";
 import { windowWidth } from "../../styles/spacing";
 
-const Task = ({index, name, current, callback, duration, startTimer}) => {
+const Task = ({index, name, current, callback, duration, active}) => {
    return (
-      <View style={[styles.container, current ? styles.current : styles.default]}>
+      <View style={[styles.container, current ? styles.current : styles.default]} key={index} >
          <View style={styles.left}>
             <Text style={[styles.index]}>{index}</Text>
             <Text style={[styles.name, current && styles.white]}>{name}</Text>
          </View>
-         <Timer color={current ? 'white' : 'black'} callback={callback} duration={duration} fontSize={16} startTimer={startTimer}/>
+         <Timer active={active} color={current ? 'white' : 'black'} callback={callback} duration={duration} small />
       </View>
    )
 };
