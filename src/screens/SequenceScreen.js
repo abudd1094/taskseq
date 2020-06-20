@@ -62,7 +62,7 @@ const SequenceScreen = ({ navigation }) => {
                <Text style={[styles.title, styles.defaultMarginTop]}>{state.currentSeq}</Text>
                <Text style={{textAlign: 'center'}}>{state.currentTasks.length} Tasks</Text>
             </View>
-            <Timer duration={3} callback={() => setComplete(true)} />
+            <Timer duration={state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)} callback={() => setComplete(true)} />
             {!complete &&
             <Button
                color={timerOn ? cadetBlue : pastelGreen}
@@ -86,13 +86,14 @@ const SequenceScreen = ({ navigation }) => {
                current
                active={true}
             />
-            {state.currentTasks.filter(task => task !== state.currentTask).map(task =>
+            {state.currentTasks.filter(task => task !== state.currentTask).map((task, index) =>
                <Task
                   index={task.TaskIndex}
                   name={task.TaskName}
                   duration={task.TaskDuration}
                   callback={nextTask}
                   active={false}
+                  key={index}
                />
             )}
          </View>
