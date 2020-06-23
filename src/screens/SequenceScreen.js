@@ -37,8 +37,9 @@ const SequenceScreen = ({ navigation }) => {
 
    const resetSequence = () => {
       setReset(true);
+      setCurrentTask(state.currentTasks[0]);
       setComplete(false);
-      setTimeout(() => setReset(false), 1000)
+      setTimeout(() => setReset(false), 500)
    };
 
    const startStop = () => {
@@ -48,7 +49,12 @@ const SequenceScreen = ({ navigation }) => {
    };
 
    const nextTask = () => {
-      setCurrentTask(state.currentTask[state.currentTask.TaskIndex + 1])
+      if (state.currentTask.TaskIndex < state.currentTasks.length) {
+         setCurrentTask(state.currentTasks[state.currentTask.TaskIndex])
+      } else {
+         setTimer(false);
+         setComplete(true);
+      }
    };
 
    if (state.loading || reset) {
@@ -62,7 +68,10 @@ const SequenceScreen = ({ navigation }) => {
                <Text style={[styles.title, styles.defaultMarginTop]}>{state.currentSeq}</Text>
                <Text style={{textAlign: 'center'}}>{state.currentTasks.length} Tasks</Text>
             </View>
-            <Timer duration={state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)} callback={() => setComplete(true)} />
+            <Timer
+               duration={state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)}
+               active={state.timerOn}
+            />
             {!complete &&
             <Button
                color={timerOn ? cadetBlue : pastelGreen}
@@ -74,25 +83,14 @@ const SequenceScreen = ({ navigation }) => {
                title={'RESET'}
                onPress={resetSequence}
             />
-            <Button
-               color={'blue'}
-               title={'LOG'}
-               onPress={() => console.log(state)}
-            />
-            <Task
-               index={state.currentTask.TaskIndex}
-               name={state.currentTask.TaskName}
-               duration={state.currentTask.TaskDuration}
-               current
-               active={true}
-            />
-            {state.currentTasks.filter(task => task !== state.currentTask).map((task, index) =>
+            {state.currentTasks.map((task, index) =>
                <Task
                   index={task.TaskIndex}
                   name={task.TaskName}
                   duration={task.TaskDuration}
                   callback={nextTask}
-                  active={false}
+                  current={index + 1 === state.currentTask.TaskIndex}
+                  active={index + 1 === state.currentTask.TaskIndex}
                   key={index}
                />
             )}

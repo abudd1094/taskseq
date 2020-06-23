@@ -22,7 +22,6 @@ const Timer = ({ duration, callback, small, active }) => {
                setSeconds(59);
             }, 1000)
          } else {
-            setTimer(false);
             callback && callback();
          }
       }
