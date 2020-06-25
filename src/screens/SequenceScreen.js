@@ -72,12 +72,14 @@ const SequenceScreen = ({ navigation }) => {
                duration={state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)}
                active={state.timerOn}
             />
-            {!complete &&
-            <Button
-               color={timerOn ? cadetBlue : pastelGreen}
-               title={timerOn ? 'STOP' : 'START'}
-               onPress={startStop}
-            />}
+            {complete
+               ? <Text>Complete!</Text>
+               : <Button
+                  color={timerOn ? cadetBlue : pastelGreen}
+                  title={timerOn ? 'STOP' : 'START'}
+                  onPress={startStop}
+               />
+            }
             <Button
                color={'red'}
                title={'RESET'}
