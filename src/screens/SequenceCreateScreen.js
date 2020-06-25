@@ -43,7 +43,6 @@ const SequenceCreateScreen = ({ navigation }) => {
             onPress={async () => {
                await saveAllChanges();
                navigation.navigate('Sequences');
-               navigation.navigate('SequenceEdit');
             }}
          />
       </View>

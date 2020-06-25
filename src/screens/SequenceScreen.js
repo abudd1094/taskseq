@@ -68,10 +68,11 @@ const SequenceScreen = ({ navigation }) => {
                <Text style={[styles.title, styles.defaultMarginTop]}>{state.currentSeq}</Text>
                <Text style={{textAlign: 'center'}}>{state.currentTasks.length} Tasks</Text>
             </View>
+            {state.currentTasks.length > 0 &&
             <Timer
-               duration={state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)}
+               duration={state.currentTasks && state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)}
                active={state.timerOn}
-            />
+            />}
             {complete
                ? <Text>Complete!</Text>
                : <Button
@@ -84,6 +85,11 @@ const SequenceScreen = ({ navigation }) => {
                color={'red'}
                title={'RESET'}
                onPress={resetSequence}
+            />
+            <Button
+               color={'red'}
+               title={'LOG'}
+               onPress={console.log(state)}
             />
             {state.currentTasks.map((task, index) =>
                <Task

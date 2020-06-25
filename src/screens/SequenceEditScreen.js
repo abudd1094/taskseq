@@ -158,7 +158,7 @@ const SequenceEditScreen = ({ navigation }) => {
               title="save changes"
               onPress={async () => {
                  await saveAllChanges();
-                 navigation.navigate('ViewSequence');
+                 setTimeout(() => navigation.navigate('ViewSequence'), 1000)
               }}
            />
            <TouchableOpacity
