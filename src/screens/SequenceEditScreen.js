@@ -8,7 +8,7 @@ import { createTasks, deleteSequence, updateSequence, updateTask, updateTasks } 
 import { Context } from "../context/SequenceContext";
 
 const SequenceEditScreen = ({ navigation }) => {
-   const { state, setTimer, loadCurrentTasks } = useContext(Context);
+   const { state, setTimer, setCurrentSeq, loadCurrentTasks } = useContext(Context);
    const {currentSeq} = state;
    const [seq, setSeq] = useState(currentSeq);
    const [tasks, setTasks] = useState(state.currentTasks);
@@ -64,6 +64,7 @@ const SequenceEditScreen = ({ navigation }) => {
       updateIndexes();
       updateTasks(currentSeq, tasks);
       updateSequence(currentSeq, seq);
+      setCurrentSeq(seq);
       deleteTasks();
       createTasks(seq, tasks);
    };
@@ -156,7 +157,7 @@ const SequenceEditScreen = ({ navigation }) => {
               title="save changes"
               onPress={async () => {
                  await saveAllChanges();
-                 setTimeout(() => navigation.navigate('ViewSequence'), 1000)
+                 setTimeout(() => navigation.navigate('ViewSequence'), 0)
               }}
            />
            <TouchableOpacity
