@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
-import { Animated, Button, Text, View } from 'react-native';
+import React, { useContext, useEffect, useRef } from 'react';
+import { Animated, Text, View } from 'react-native';
 import Timer from '../atoms/Timer';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { windowWidth } from "../../styles/spacing";
@@ -7,12 +7,12 @@ import { Context } from "../../context/SequenceContext";
 
 const Task = ({index, name, current, callback, duration, active}) => {
    const {state} = useContext(Context);
-   const [progress, setProgress] = useState(new Animated.Value(0));
+   const progress = useRef(new Animated.Value(0)).current;
 
    const fillProgressBar = () => {
       Animated.timing(progress, {
          toValue: windowWidth,
-         duration: 1000 * duration
+         duration: (progress.__getValue()) * 10 > 0 ? ((duration * 1000) - (progress.__getValue()) * 10 + 0.5) : (duration * 1000),
       }).start();
    };
 

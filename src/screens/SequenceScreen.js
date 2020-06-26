@@ -37,6 +37,7 @@ const SequenceScreen = ({ navigation }) => {
    }, [navigation, state.currentSeq]);
 
    const resetSequence = () => {
+      setTimer(false);
       setReset(true);
       setCurrentTask(state.currentTasks[0]);
       setComplete(false);
@@ -47,15 +48,14 @@ const SequenceScreen = ({ navigation }) => {
       timerOn
          ? setTimer(false)
          : setTimer(true)
-
    };
 
    const nextTask = () => {
       if (state.currentTask.TaskIndex < state.currentTasks.length) {
          setCurrentTask(state.currentTasks[state.currentTask.TaskIndex])
       } else {
-         setTimer(false);
          setComplete(true);
+         setTimer(false);
       }
    };
 

@@ -53,12 +53,10 @@ const SequenceEditScreen = ({ navigation }) => {
 
    const updateIndexes = () => {
       let mutatedTasks = tasks.slice();
-
       for (let i = 0; i < tasks.length; i++) {
          mutatedTasks[i].TaskIndex = i + 1;
          updateTask(currentSeq, tasks[i].TaskID.toString(), 'TaskIndex', i + 1 )
       }
-
       setTasks(mutatedTasks);
    };
 
