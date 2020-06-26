@@ -10,7 +10,7 @@ export const updateSequence = async (currentSeq, newSeqName) => {
             console.log('Seq Name Updated')
          },
          (tx, err) => {
-            console.log('statement error');
+            console.log('Error updating sequence:');
             console.log(err);
          }
       );

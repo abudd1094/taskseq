@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Spacing, Typography } from "../styles";
 
@@ -11,7 +11,13 @@ const HomeScreen = ({ navigation }) => {
             style={[ styles.link ]}
             onPress={() => navigation.navigate('Sequences')}
          >
-            ENTER
+            SEQUENCES
+         </Text>
+         <Text
+            style={[ styles.link ]}
+            onPress={() => navigation.navigate('Settings')}
+         >
+            SETTINGS
          </Text>
       </View>
    )

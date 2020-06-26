@@ -1,4 +1,3 @@
-export const blue = 'rgb(0,122,255)';
 export const lightGrey = 'rgb(200,211,213)';
 export const babyPowder = 'rgb(252,250,250)';
 export const cadetBlue = 'rgb(164,184,196)';

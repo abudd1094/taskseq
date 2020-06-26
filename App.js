@@ -12,6 +12,7 @@ import SequenceListScreen from './src/screens/SequenceListScreen';
 import SequenceCreateScreen from './src/screens/SequenceCreateScreen';
 import SequenceEditScreen from './src/screens/SequenceEditScreen';
 import SequenceScreen from './src/screens/SequenceScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 
 export default function App(props) {
    const Stack = createStackNavigator();
@@ -53,6 +54,10 @@ export default function App(props) {
                      options={{
                         headerShown: false
                      }}
+                  />
+                  <Stack.Screen
+                     name="Settings"
+                     component={SettingsScreen}
                   />
                   <Stack.Screen
                      name="Sequences"

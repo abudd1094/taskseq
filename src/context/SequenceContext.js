@@ -1,8 +1,11 @@
 import createDataContext from "./createDataContext";
 import { db, formatSqlAllSeqSelect, formatSqlAllTaskSelect } from "../api/sqlite";
+import { colorScheme1 } from "../styles/colors";
 
 const seqReducer = (state, action) => {
    switch (action.type) {
+      case 'set_color_scheme':
+         return { ...state, colorScheme: action.payload };
       case 'set_current_seq':
          return { ...state, currentSeq: action.payload };
       case 'set_current_task':
@@ -41,6 +44,11 @@ const setCurrentSeq = dispatch => async currentSeq => {
    await dispatch({ type: 'set_current_seq', payload: currentSeq });
 };
 
+const setColorScheme = dispatch => async colorArray => {
+   await dispatch({ type: 'set_color_scheme', payload: colorArray });
+   console.log('COLOR SCHEME UPDATED')
+};
+
 const loadCurrentTasks = dispatch => async currentSeq => {
    await db.transaction(function (tx) {
       tx.executeSql(
@@ -73,6 +81,7 @@ const setTimer = dispatch => boolean => {
 export const { Provider, Context } = createDataContext(
    seqReducer,
    {
+      setColorScheme,
       loadCurrentTasks,
       loadSequences,
       setCurrentSeq,
@@ -81,6 +90,7 @@ export const { Provider, Context } = createDataContext(
       setTimer
    },
    {
+      colorScheme: colorScheme1,
       currentSeq: '',
       currentTask: '',
       currentTasks: [],

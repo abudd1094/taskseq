@@ -7,6 +7,11 @@ export const formatSqlSeqCreate = (seqName) => {
    return `CREATE TABLE ${seqName.toString()} (TaskID INTEGER PRIMARY KEY AUTOINCREMENT, TaskName varchar(255), TaskDuration int, TaskIndex int)`;
 };
 
+// CREATE SEQUENCE TABLE
+export const createStatTable = () => {
+   return `CREATE TABLE StatTable (SeqName INTEGER PRIMARY KEY AUTOINCREMENT, TaskName varchar(255), TaskDuration int, TaskIndex int)`;
+};
+
 // UPDATE SEQUENCE TABLE
 export const formatSqlSeqUpdate = (seqName, newValue) => {
    return `ALTER TABLE ${seqName} RENAME TO ${newValue}`;

@@ -84,7 +84,7 @@ const SequenceScreen = ({ navigation }) => {
                      style={styles.buttonReset}
                   />
                   {complete
-                     ? <Text style={styles.buttonStartText}>Complete!</Text>
+                     ? <View style={[styles.buttonStartText, {backgroundColor: state.colorScheme[0]}]}><Text>Complete!</Text></View>
                      : <Button
                         color={timerOn ? cadetBlue : pastelGreen}
                         title={timerOn ? 'STOP' : 'START'}
@@ -94,6 +94,7 @@ const SequenceScreen = ({ navigation }) => {
                   }
                </View>
             </View>
+            <View style={styles.tasksContainer}>
             {state.currentTasks.map((task, index) =>
                <Task
                   index={task.TaskIndex}
@@ -105,6 +106,7 @@ const SequenceScreen = ({ navigation }) => {
                   key={index}
                />
             )}
+            </View>
          </View>
       )
    }
@@ -123,8 +125,10 @@ const styles = EStyleSheet.create({
       flexDirection: 'row',
       width: windowWidth,
    },
-   buttonDefault: {
-      backgroundColor: 'red',
+   buttonTextContainer: {
+      alignSelf: 'flex-end',
+      flexDirection: 'row',
+      width: windowWidth,
    },
    buttonReset: {
      flex: 1,
@@ -134,8 +138,8 @@ const styles = EStyleSheet.create({
    },
    buttonStartText: {
       alignItems: 'center',
-      backgroundColor: 'yellow',
       flex: 4,
+      justifyContent: 'center',
       textAlign: 'center'
    },
    container: {
@@ -146,20 +150,11 @@ const styles = EStyleSheet.create({
    defaultMarginTop: {
       ...Spacing.defaultMarginTop
    },
-   inactive: {
-     color: lightGrey,
-   },
-   label: {
-     color: 'red',
-   },
-   list: {
-      flex: 3,
-   },
-   listText: {
-      fontSize: 15,
-   },
    middle: {
 
+   },
+   tasksContainer: {
+      marginTop: 10,
    },
    title: {
       fontSize: 20,
