@@ -18,6 +18,7 @@ const Task = ({index, name, current, callback, duration, active}) => {
 
    useEffect(() => {
       (active && state.timerOn) && fillProgressBar();
+      (active && !state.timerOn) && Animated.timing(progress).stop();
    }, [active, state.timerOn]);
 
    return (
@@ -64,7 +65,7 @@ const styles = EStyleSheet.create({
       paddingLeft: '1rem'
    },
    progressBar: {
-      backgroundColor: 'green',
+      backgroundColor: 'lime',
       position: 'absolute',
       height: 20,
    },

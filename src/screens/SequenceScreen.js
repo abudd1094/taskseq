@@ -7,6 +7,7 @@ import { cadetBlue, lightGrey, pastelGreen } from "../styles/colors";
 import { Context } from "../context/SequenceContext";
 import Timer from "../components/atoms/Timer";
 import Task from "../components/molecules/Task";
+import { windowWidth } from "../styles/spacing";
 
 const SequenceScreen = ({ navigation }) => {
    const { state, loadCurrentTasks, setCurrentTask, setTimer } = useContext(Context);
@@ -46,6 +47,7 @@ const SequenceScreen = ({ navigation }) => {
       timerOn
          ? setTimer(false)
          : setTimer(true)
+
    };
 
    const nextTask = () => {
@@ -68,29 +70,30 @@ const SequenceScreen = ({ navigation }) => {
                <Text style={[styles.title, styles.defaultMarginTop]}>{state.currentSeq}</Text>
                <Text style={{textAlign: 'center'}}>{state.currentTasks.length} Tasks</Text>
             </View>
-            {state.currentTasks.length > 0 &&
-            <Timer
-               duration={state.currentTasks && state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)}
-               active={state.timerOn}
-            />}
-            {complete
-               ? <Text>Complete!</Text>
-               : <Button
-                  color={timerOn ? cadetBlue : pastelGreen}
-                  title={timerOn ? 'STOP' : 'START'}
-                  onPress={startStop}
-               />
-            }
-            <Button
-               color={'red'}
-               title={'RESET'}
-               onPress={resetSequence}
-            />
-            <Button
-               color={'red'}
-               title={'LOG'}
-               onPress={console.log(state)}
-            />
+            <View style={styles.middle}>
+               {state.currentTasks.length > 0 &&
+               <Timer
+                  duration={state.currentTasks && state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)}
+                  active={state.timerOn}
+               />}
+               <View style={styles.buttonContainer}>
+                  <Button
+                     color={'red'}
+                     title={'RESET'}
+                     onPress={resetSequence}
+                     style={styles.buttonReset}
+                  />
+                  {complete
+                     ? <Text style={styles.buttonStartText}>Complete!</Text>
+                     : <Button
+                        color={timerOn ? cadetBlue : pastelGreen}
+                        title={timerOn ? 'STOP' : 'START'}
+                        onPress={startStop}
+                        style={styles.buttonStart}
+                     />
+                  }
+               </View>
+            </View>
             {state.currentTasks.map((task, index) =>
                <Task
                   index={task.TaskIndex}
@@ -115,14 +118,30 @@ const styles = EStyleSheet.create({
       fontSize: 17,
       marginRight: 10,
    },
+   buttonContainer: {
+      alignSelf: 'flex-end',
+      flexDirection: 'row',
+      width: windowWidth,
+   },
    buttonDefault: {
       backgroundColor: 'red',
+   },
+   buttonReset: {
+     flex: 1,
+   },
+   buttonStart: {
+     flex: 4,
+   },
+   buttonStartText: {
+      alignItems: 'center',
+      backgroundColor: 'yellow',
+      flex: 4,
+      textAlign: 'center'
    },
    container: {
       alignItems: 'center',
       backgroundColor: 'white',
-      justifyContent: 'flex-start',
-      height: '100%'
+      flex: 1,
    },
    defaultMarginTop: {
       ...Spacing.defaultMarginTop
@@ -138,6 +157,9 @@ const styles = EStyleSheet.create({
    },
    listText: {
       fontSize: 15,
+   },
+   middle: {
+
    },
    title: {
       fontSize: 20,

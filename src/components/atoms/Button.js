@@ -1,13 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { pastelGreen } from "../../styles/colors";
-import { Context } from "../../context/SequenceContext";
 
-const Button = ({onPress, title, color}) => {
-   const { state } = useContext(Context);
-
+const Button = ({onPress, title, color, style}) => {
    return (
-      <TouchableOpacity style={[styles.container, {backgroundColor: color}]} activeOpacity={0.5} onPress={onPress}>
+      <TouchableOpacity style={[styles.container, {backgroundColor: color}, style && style]} activeOpacity={0.5} onPress={onPress}>
          <Text style={styles.title}>{title}</Text>
       </TouchableOpacity>
    )
@@ -16,10 +12,8 @@ const Button = ({onPress, title, color}) => {
 const styles = StyleSheet.create({
    container: {
       alignItems: 'center',
-      borderRadius: 10,
+      borderRadius: 0,
       justifyContent: 'center',
-      marginVertical: 3,
-      minWidth: 80,
       paddingHorizontal: 16,
       paddingVertical: 8,
    },
