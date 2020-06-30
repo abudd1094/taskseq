@@ -51,8 +51,8 @@ const Timer = ({ duration, callback, small, style, active }) => {
 
    return (
       <View style={styles.container}>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, minutes === 0 && {opacity: 0.2}]}>{minutes + ':'}</Text>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, {opacity: 0.2}]}>{seconds < 10 && 0}</Text>
+         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, minutes === 0 && {opacity: 0.3}]}>{minutes + ':'}</Text>
+         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, {opacity: 0.3}]}>{seconds < 10 && 0}</Text>
          <Text style={[styles.timer, small ? styles.small : styles.large, style && style]}>{Math.abs(seconds).toFixed(0)}</Text>
       </View>
    )

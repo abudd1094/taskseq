@@ -167,7 +167,8 @@ const styles = EStyleSheet.create({
       ...Spacing.defaultMarginTop
    },
    statusBar: {
-     paddingVertical: 10,
+      paddingVertical: 10,
+      ...Typography.primaryFont,
    },
    title: {
       fontSize: 22,

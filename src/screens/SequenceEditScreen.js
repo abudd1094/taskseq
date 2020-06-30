@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, FlatList, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Typography } from "../styles";
 import { db, formatSqlTaskDelete } from "../api/sqlite";
@@ -8,7 +8,7 @@ import { createTasks, deleteSequence, updateSequence, updateTask, updateTasks } 
 import { Context } from "../context/SequenceContext";
 
 const SequenceEditScreen = ({ navigation }) => {
-   const { state, setTimer, setCurrentSeq, loadCurrentTasks } = useContext(Context);
+   const { state, setTimer, setCurrentSeq, loadCurrentTasks, setLoading } = useContext(Context);
    const {currentSeq} = state;
    const [seq, setSeq] = useState(currentSeq);
    const [tasks, setTasks] = useState(state.currentTasks);
@@ -61,6 +61,7 @@ const SequenceEditScreen = ({ navigation }) => {
    };
 
    const saveAllChanges = () => {
+      setLoading(true);
       updateIndexes();
       updateTasks(currentSeq, tasks);
       updateSequence(currentSeq, seq);
@@ -77,11 +78,10 @@ const SequenceEditScreen = ({ navigation }) => {
             onChangeText={input => setSeq(input)}
          />
          <View>
-            <View style={styles.listRow}>
+            <View style={styles.labelRow}>
                <Text style={styles.label}>Index</Text>
                <Text style={styles.label}>Name</Text>
                <Text style={styles.label}>Duration</Text>
-               <Text style={styles.label}></Text>
             </View>
             <FlatList
                data={tasks}
@@ -89,6 +89,7 @@ const SequenceEditScreen = ({ navigation }) => {
                renderItem={({item, index}) => {
                   return(
                      <View style={styles.listRow}>
+                        <Text style={[styles.listIndex, styles.listText]}>{index + 1}</Text>
                         <View style={styles.incrementer}>
                            {index > 0 &&
                               <Text style={styles.incrementerText} onPress={() => {
@@ -99,7 +100,6 @@ const SequenceEditScreen = ({ navigation }) => {
                                  setTasks(mutatedTasks);
                               }}>▲</Text>
                            }
-
                            {index < tasks.length - 1 &&
                               <Text style={styles.incrementerText} onPress={() => {
                                  let mutatedTasks = tasks.slice();
@@ -110,7 +110,6 @@ const SequenceEditScreen = ({ navigation }) => {
                               }}>▼</Text>
                            }
                         </View>
-                        <Text style={[styles.listIndex, styles.listText]}>{index + 1}</Text>
                         <TextInput
                            style={[styles.listName, styles.listText]}
                            value={tasks[index].TaskName}
@@ -121,7 +120,7 @@ const SequenceEditScreen = ({ navigation }) => {
                            }}
                         />
                         <TextInput
-                           style={[styles.listName, styles.listText]}
+                           style={[styles.listDuration, styles.listText]}
                            value={tasks[index].TaskDuration.toString()}
                            onChangeText={(input) => {
                               let mutatedTasks = tasks.slice();
@@ -138,7 +137,7 @@ const SequenceEditScreen = ({ navigation }) => {
                               setTasks(mutatedTasks);
                            }}
                         >
-                           <Text style={styles.delete}>DELETE</Text>
+                           <Image style={styles.delete} source={require('../../assets/icons/delete.png')}/>
                         </TouchableOpacity>
                      </View>
                   )
@@ -196,10 +195,14 @@ const styles = EStyleSheet.create({
       padding: 20,
    },
    delete: {
-     color: 'red',
+     height: 18,
+      width: 18
    },
    incrementer: {
-      marginRight: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginRight: 50,
+      width: 40,
    },
    incrementerText: {
       color: 'grey',
@@ -208,25 +211,29 @@ const styles = EStyleSheet.create({
    label: {
      flex: 1,
    },
+   labelRow: {
+      alignItems: 'center',
+      borderColor: 'grey',
+      borderBottomWidth: 2,
+      flexDirection: 'row',
+      marginTop: 10,
+   },
    listRow: {
       alignItems: 'center',
       flexDirection: 'row',
       marginTop: 10,
    },
-   listRowButton: {
-      flex: 1,
-   },
    listText: {
       fontSize: 15,
    },
    listName: {
-      flex: 2,
+      flex: 3,
    },
    listDuration: {
-      flex: 1,
+      flex: 2,
    },
    listIndex: {
-      flex: 1,
+      flex: 0.5,
    },
    title: {
       fontSize: 20,
