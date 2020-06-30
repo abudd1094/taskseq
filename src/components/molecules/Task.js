@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Animated, Text, View, Image } from 'react-native';
 import Timer from '../atoms/Timer';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { windowWidth } from "../../styles/spacing";
@@ -25,7 +25,10 @@ const Task = ({index, name, current, callback, duration, active, small}) => {
       <View style={[styles.container, {backgroundColor: current ? state.colorScheme[3] : state.colorScheme[1]}]} key={index} >
          <Animated.View style={[styles.progressBar, {width: progress, backgroundColor: state.colorScheme[4]}]} />
          <View style={styles.left}>
-            <Text style={[styles.index, current && {color: 'white'}]}>{index}</Text>
+            {state.currentTask.TaskIndex > index
+               ?  <Image style={styles.checkIcon} source={require('../../../assets/icons/check.png')}/>
+               :  <Text style={[styles.index, current && {color: 'white'}]}>{index}</Text>
+            }
             <Text style={[styles.name, current && {color: 'white'}]}>{name}</Text>
          </View>
          <Timer
@@ -40,6 +43,11 @@ const Task = ({index, name, current, callback, duration, active, small}) => {
 };
 
 const styles = EStyleSheet.create({
+   checkIcon: {
+     height: 14,
+      marginRight: -5,
+     width: 14,
+   },
    container: {
       alignItems: 'center',
       flexDirection: 'row',

@@ -39,9 +39,9 @@ const SequenceListScreen = ({ navigation }) => {
       return <Text>Loading...</Text>
    } else {
       return (
-         <View style={[styles.container, {backgroundColor: state.colorScheme[2]}]}>
+         <View style={[styles.container, {backgroundColor: state.colorScheme[1]}]}>
             {state.sequences.map((item, index) =>
-               <MenuButton bgColor={state.colorScheme[index % 2 === 0 ? 0 : 1]} textColor={state.colorScheme[3]} onPress={() => enterSequence(item)} key={index} text={item.name}/>
+               <MenuButton bgColor={state.colorScheme[index % 2 === 0 ? 0 : 2]} textColor={state.colorScheme[3]} onPress={() => enterSequence(item)} key={index} text={item.name}/>
             )}
          </View>
       )

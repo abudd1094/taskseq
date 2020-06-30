@@ -152,13 +152,6 @@ const SequenceEditScreen = ({ navigation }) => {
          </View>
 
         <View style={styles.bottom}>
-           <Button
-              title="save changes"
-              onPress={async () => {
-                 await saveAllChanges();
-                 setTimeout(() => navigation.navigate('ViewSequence'), 0)
-              }}
-           />
            <TouchableOpacity
               onPress={() => {
                  deleteSequence(currentSeq);
@@ -166,7 +159,16 @@ const SequenceEditScreen = ({ navigation }) => {
               }}
               style={styles.buttonBottom}
            >
-              <Text style={styles.delete}>DELETE SEQUENCE</Text>
+              <Text style={styles.deleteSeq}>DELETE SEQUENCE</Text>
+           </TouchableOpacity>
+           <TouchableOpacity
+              onPress={async () => {
+                 await saveAllChanges();
+                 setTimeout(() => navigation.navigate('ViewSequence'), 0)
+              }}
+              style={styles.buttonBottom}
+           >
+              <Text style={styles.saveSeq}>SAVE CHANGES</Text>
            </TouchableOpacity>
         </View>
      </View>
@@ -175,8 +177,10 @@ const SequenceEditScreen = ({ navigation }) => {
 
 const styles = EStyleSheet.create({
    bottom: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
       position: 'absolute',
-      bottom: 10,
+      bottom: 0,
       width: windowWidth,
    },
    buttonAdd: {
@@ -185,8 +189,7 @@ const styles = EStyleSheet.create({
       bottom: -50,
    },
    buttonBottom: {
-      alignSelf: 'center',
-      marginTop: 20,
+      flex: 1,
    },
    container: {
      flexDirection: 'column',
@@ -197,6 +200,18 @@ const styles = EStyleSheet.create({
    delete: {
      height: 18,
       width: 18
+   },
+   deleteSeq: {
+      backgroundColor: 'red',
+      paddingVertical: 12,
+      textAlign: 'center'
+   },
+   saveSeq: {
+      backgroundColor: 'green',
+      color: 'white',
+      paddingVertical: 12,
+      textAlign: 'center',
+      width: '100%'
    },
    incrementer: {
       flexDirection: 'row',
