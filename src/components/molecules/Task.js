@@ -12,7 +12,7 @@ const Task = ({index, name, current, callback, duration, active, small}) => {
    const fillProgressBar = () => {
       Animated.timing(progress, {
          toValue: windowWidth,
-         duration: (progress.__getValue()) * 10 > 0 ? ((duration * 1000) - (progress.__getValue()) * 10 + 0.5) : (duration * 1000),
+         duration: (progress.__getValue()) * 10 > 0 ? ((duration * 1000) -(progress.__getValue()) * 10) : (duration * 1000),
       }).start();
    };
 

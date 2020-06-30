@@ -88,6 +88,7 @@ const SequenceScreen = ({ navigation }) => {
                   style={{color: 'white'}}
                />}
             </View>
+            <Text style={styles.statusBar}>{complete ? 'Sequence Completed' : (state.currentTask.TaskIndex - 1 + ' / ' + state.currentTasks.length)}</Text>
             <View style={styles.tasksContainer}>
             {state.currentTasks.map((task, index) =>
                <Task
@@ -110,7 +111,7 @@ const SequenceScreen = ({ navigation }) => {
                   style={styles.buttonReset}
                />
                {complete
-                  ? <View style={[styles.buttonStartText, {backgroundColor: state.colorScheme[0]}]}><Text>Complete!</Text></View>
+                  ? <View style={[styles.buttonStartText, {backgroundColor: state.colorScheme[0]}]} />
                   : <Button
                      color={timerOn ? cadetBlue : pastelGreen}
                      title={timerOn ? 'STOP' : 'START'}
@@ -165,14 +166,8 @@ const styles = EStyleSheet.create({
    defaultMarginTop: {
       ...Spacing.defaultMarginTop
    },
-   middle: {
-
-   },
-   progressCircle: {
-      textAlign: 'center',
-   },
-   tasksContainer: {
-
+   statusBar: {
+     paddingVertical: 10,
    },
    title: {
       fontSize: 22,
