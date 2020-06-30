@@ -5,7 +5,7 @@ import { Typography } from "../../styles";
 import { lightGrey } from "../../styles/colors";
 import { Context } from "../../context/SequenceContext";
 
-const Timer = ({ duration, callback, small, active }) => {
+const Timer = ({ duration, callback, small, style, active }) => {
    const { state } = useContext(Context);
    const [ minutes, setMinutes ] = useState(0);
    const [ seconds, setSeconds ] = useState(0);
@@ -19,13 +19,15 @@ const Timer = ({ duration, callback, small, active }) => {
          } else if (seconds === 0 && minutes > 0) {
             setTimeout(() => {
                setMinutes(minutes - 1);
-               setSeconds(59.75);
-            }, 250)
+               setSeconds(59.25);
+            }, 750)
          } else {
             callback && callback();
-            setMinutes(0);
-            setSeconds(0);
          }
+      }
+      if (!state.timerOn) {
+         setSeconds(Math.ceil(seconds))
+         setMinutes(Math.ceil(minutes))
       }
    };
 
@@ -49,7 +51,7 @@ const Timer = ({ duration, callback, small, active }) => {
 
    return (
       <View>
-         <Text style={[styles.timer, small ? styles.small : styles.large]}>{minutes > 0 && minutes + ':'}{(seconds < 10 && minutes > 0) && 0}{Math.abs(seconds).toFixed(0)}</Text>
+         <Text style={[styles.timer, small ? styles.small : styles.large, style && style]}>{minutes > 0 && minutes + ':'}{(seconds < 10 && minutes > 0) && 0}{Math.abs(seconds).toFixed(0)}</Text>
       </View>
    )
 };

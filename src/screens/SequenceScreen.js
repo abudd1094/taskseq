@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Animated, Text, TouchableOpacity, View } from 'react-native';
 import Button from "../components/atoms/Button";
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Spacing, Typography } from '../styles';
-import { cadetBlue, lightGrey, pastelGreen } from "../styles/colors";
+import { cadetBlue, pastelGreen } from "../styles/colors";
 import { Context } from "../context/SequenceContext";
 import Timer from "../components/atoms/Timer";
 import Task from "../components/molecules/Task";
 import { windowWidth } from "../styles/spacing";
+import LoadingIcon from "../components/atoms/LoadingIcon";
 
 const SequenceScreen = ({ navigation }) => {
    const { state, loadCurrentTasks, setCurrentTask, setTimer } = useContext(Context);
@@ -15,6 +16,14 @@ const SequenceScreen = ({ navigation }) => {
    const [ count, setCount ] = useState(0);
    const [ reset, setReset ] = useState(false);
    const [ complete, setComplete ] = useState(false);
+   const opacityAnim = useRef(new Animated.Value(0)).current;
+
+   const fadeIn = () => {
+      Animated.timing(opacityAnim, {
+         toValue: 1,
+         duration: 800,
+      }).start();
+   };
 
    useLayoutEffect(() => {
       navigation.setOptions({
@@ -27,6 +36,7 @@ const SequenceScreen = ({ navigation }) => {
    }, [ navigation, setCount, state.currentSeq ]);
 
    useEffect(() => {
+      setTimeout(fadeIn, 500)
       loadCurrentTasks(state.currentSeq);
 
       const unsubscribe = navigation.addListener('focus', () => {
@@ -34,14 +44,17 @@ const SequenceScreen = ({ navigation }) => {
       });
 
       return unsubscribe;
-   }, [navigation, state.currentSeq]);
+   }, [navigation, state.currentSeq, reset]);
 
    const resetSequence = () => {
+      Animated.timing(opacityAnim).reset();
       setTimer(false);
       setReset(true);
       setCurrentTask(state.currentTasks[0]);
       setComplete(false);
-      setTimeout(() => setReset(false), 500)
+      setTimeout(() => {
+         setReset(false);
+      }, 500)
    };
 
    const startStop = () => {
@@ -61,38 +74,19 @@ const SequenceScreen = ({ navigation }) => {
 
    if (state.loading || reset) {
       return(
-         <Text>Loading...</Text>
+         <LoadingIcon/>
       )
    } else {
       return (
-         <View style={styles.container}>
+         <Animated.View style={[styles.container, {opacity: opacityAnim}]}>
             <View style={styles.top}>
-               <Text style={[styles.title, styles.defaultMarginTop]}>{state.currentSeq}</Text>
-               <Text style={{textAlign: 'center'}}>{state.currentTasks.length} Tasks</Text>
-            </View>
-            <View style={styles.middle}>
+               <Text style={[styles.title, {color: 'white'}]}>{state.currentSeq}</Text>
                {state.currentTasks.length > 0 &&
                <Timer
                   duration={state.currentTasks && state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)}
                   active={state.timerOn}
+                  style={{color: 'white'}}
                />}
-               <View style={styles.buttonContainer}>
-                  <Button
-                     color={'red'}
-                     title={'RESET'}
-                     onPress={resetSequence}
-                     style={styles.buttonReset}
-                  />
-                  {complete
-                     ? <View style={[styles.buttonStartText, {backgroundColor: state.colorScheme[0]}]}><Text>Complete!</Text></View>
-                     : <Button
-                        color={timerOn ? cadetBlue : pastelGreen}
-                        title={timerOn ? 'STOP' : 'START'}
-                        onPress={startStop}
-                        style={styles.buttonStart}
-                     />
-                  }
-               </View>
             </View>
             <View style={styles.tasksContainer}>
             {state.currentTasks.map((task, index) =>
@@ -104,10 +98,28 @@ const SequenceScreen = ({ navigation }) => {
                   current={index + 1 === state.currentTask.TaskIndex}
                   active={index + 1 === state.currentTask.TaskIndex}
                   key={index}
+                  small
                />
             )}
             </View>
-         </View>
+            <View style={styles.buttonContainer}>
+               <Button
+                  color={'red'}
+                  title={'RESET'}
+                  onPress={resetSequence}
+                  style={styles.buttonReset}
+               />
+               {complete
+                  ? <View style={[styles.buttonStartText, {backgroundColor: state.colorScheme[0]}]}><Text>Complete!</Text></View>
+                  : <Button
+                     color={timerOn ? cadetBlue : pastelGreen}
+                     title={timerOn ? 'STOP' : 'START'}
+                     onPress={startStop}
+                     style={styles.buttonStart}
+                  />
+               }
+            </View>
+         </Animated.View>
       )
    }
 };
@@ -122,19 +134,22 @@ const styles = EStyleSheet.create({
    },
    buttonContainer: {
       alignSelf: 'flex-end',
+      bottom: 0,
       flexDirection: 'row',
+      position: 'absolute',
       width: windowWidth,
    },
    buttonTextContainer: {
-      alignSelf: 'flex-end',
       flexDirection: 'row',
       width: windowWidth,
    },
    buttonReset: {
-     flex: 1,
+      flex: 1,
+      paddingVertical: 10,
    },
    buttonStart: {
-     flex: 4,
+      flex: 4,
+      paddingVertical: 20,
    },
    buttonStartText: {
       alignItems: 'center',
@@ -153,15 +168,25 @@ const styles = EStyleSheet.create({
    middle: {
 
    },
+   progressCircle: {
+      textAlign: 'center',
+   },
    tasksContainer: {
-      marginTop: 10,
+
    },
    title: {
-      fontSize: 20,
+      fontSize: 22,
       ...Typography.primaryFont,
    },
    top: {
       alignSelf: 'center',
+      alignItems: 'center',
+      backgroundColor: 'black',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      width: windowWidth
    }
 });
 

@@ -7,18 +7,20 @@ const HomeScreen = ({ navigation }) => {
    return (
       <View style={styles.container}>
          <Text style={styles.title}>Task Sequencer 1.0.0</Text>
-         <Text
-            style={[ styles.link ]}
-            onPress={() => navigation.navigate('Sequences')}
-         >
-            SEQUENCES
-         </Text>
-         <Text
-            style={[ styles.link ]}
-            onPress={() => navigation.navigate('Settings')}
-         >
-            SETTINGS
-         </Text>
+         <View style={styles.subcontainer}>
+            <Text
+               style={[ styles.link ]}
+               onPress={() => navigation.navigate('Sequences')}
+            >
+               SEQUENCES
+            </Text>
+            <Text
+               style={[ styles.link ]}
+               onPress={() => navigation.navigate('Settings')}
+            >
+               SETTINGS
+            </Text>
+         </View>
       </View>
    )
 };
@@ -31,11 +33,16 @@ HomeScreen.navigationOptions = () => {
 
 const styles = EStyleSheet.create({
    container: {
-      ...Spacing.container,
-      justifyContent: 'space-around',
       alignItems: 'center',
+      marginTop: '50%',
    },
    link: {
+      fontSize: 20,
+      marginBottom: '5%',
+      textAlign: 'center'
+   },
+   subcontainer: {
+      marginTop: '33%',
    },
    title: {
       ...Typography.primaryFont,

@@ -5,7 +5,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { windowWidth } from "../../styles/spacing";
 import { Context } from "../../context/SequenceContext";
 
-const Task = ({index, name, current, callback, duration, active}) => {
+const Task = ({index, name, current, callback, duration, active, small}) => {
    const {state} = useContext(Context);
    const progress = useRef(new Animated.Value(0)).current;
 
@@ -25,15 +25,15 @@ const Task = ({index, name, current, callback, duration, active}) => {
       <View style={[styles.container, current ? {backgroundColor: state.colorScheme[2]} : styles.default]} key={index} >
          <Animated.View style={[styles.progressBar, {width: progress, backgroundColor: state.colorScheme[4]}]} />
          <View style={styles.left}>
-            <Text style={[styles.index]}>{index}</Text>
-            <Text style={[styles.name, current && styles.white]}>{name}</Text>
+            <Text style={[styles.index, current && {color: 'white'}]}>{index}</Text>
+            <Text style={[styles.name, current && {color: 'white'}]}>{name}</Text>
          </View>
          <Timer
             active={active}
             color={current ? 'white' : 'black'}
             callback={callback}
             duration={duration}
-            small
+            small={!!small}
          />
       </View>
    )
