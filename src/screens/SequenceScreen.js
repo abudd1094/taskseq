@@ -11,7 +11,7 @@ import { windowWidth } from "../styles/spacing";
 import LoadingIcon from "../components/atoms/LoadingIcon";
 
 const SequenceScreen = ({ navigation }) => {
-   const { state, loadCurrentTasks, setCurrentTask, setTimer } = useContext(Context);
+   const { state, loadCurrentTasks, setCurrentTask, setTimer, loading } = useContext(Context);
    const {timerOn} = state;
    const [ count, setCount ] = useState(0);
    const [ reset, setReset ] = useState(false);
@@ -36,7 +36,8 @@ const SequenceScreen = ({ navigation }) => {
    }, [ navigation, setCount, state.currentSeq ]);
 
    useEffect(() => {
-      setTimeout(fadeIn, 500)
+      Animated.timing(opacityAnim).reset();
+      setTimeout(fadeIn, 500);
       loadCurrentTasks(state.currentSeq);
 
       const unsubscribe = navigation.addListener('focus', () => {
@@ -78,8 +79,8 @@ const SequenceScreen = ({ navigation }) => {
       )
    } else {
       return (
-         <Animated.View style={[styles.container, {opacity: opacityAnim}]}>
-            <View style={styles.top}>
+         <Animated.View style={[styles.container, {opacity: opacityAnim, backgroundColor: state.colorScheme[1]}]}>
+            <View style={[styles.top, {backgroundColor: state.colorScheme[3]}]}>
                <Text style={[styles.title, {color: 'white'}]}>{state.currentSeq}</Text>
                {state.currentTasks.length > 0 &&
                <Timer
@@ -88,7 +89,6 @@ const SequenceScreen = ({ navigation }) => {
                   style={{color: 'white'}}
                />}
             </View>
-            <Text style={styles.statusBar}>{complete ? 'Sequence Completed' : (state.currentTask.TaskIndex - 1 + ' / ' + state.currentTasks.length)}</Text>
             <View style={styles.tasksContainer}>
             {state.currentTasks.map((task, index) =>
                <Task
@@ -102,6 +102,9 @@ const SequenceScreen = ({ navigation }) => {
                   small
                />
             )}
+            </View>
+            <View style={[styles.statusBar, {backgroundColor: state.colorScheme[3]}]}>
+               <Text style={[styles.statusBarText, {color: 'white'}]}>{complete ? 'Sequence Completed' : (state.currentTask.TaskIndex - 1 + ' / ' + state.currentTasks.length)}</Text>
             </View>
             <View style={styles.buttonContainer}>
                <Button
@@ -146,7 +149,7 @@ const styles = EStyleSheet.create({
    },
    buttonReset: {
       flex: 1,
-      paddingVertical: 10,
+      paddingVertical: 20,
    },
    buttonStart: {
       flex: 4,
@@ -160,14 +163,20 @@ const styles = EStyleSheet.create({
    },
    container: {
       alignItems: 'center',
-      backgroundColor: 'white',
       flex: 1,
    },
    defaultMarginTop: {
       ...Spacing.defaultMarginTop
    },
    statusBar: {
+      bottom: 57,
+      flexDirection: 'row',
+      justifyContent: 'center',
       paddingVertical: 10,
+      position: 'absolute',
+      width: '100%'
+   },
+   statusBarText: {
       ...Typography.primaryFont,
    },
    title: {
@@ -177,7 +186,6 @@ const styles = EStyleSheet.create({
    top: {
       alignSelf: 'center',
       alignItems: 'center',
-      backgroundColor: 'black',
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingHorizontal: 16,

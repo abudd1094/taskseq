@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { Button, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Spacing } from "../styles";
 import { Context } from "../context/SequenceContext";
+import MenuButton from "../components/MenuButton";
 
 const SequenceListScreen = ({ navigation }) => {
    const { state, loadSequences, setCurrentSeq, setLoading } = useContext(Context);
@@ -38,16 +39,10 @@ const SequenceListScreen = ({ navigation }) => {
       return <Text>Loading...</Text>
    } else {
       return (
-         <View style={styles.container}>
+         <View style={[styles.container, {backgroundColor: state.colorScheme[2]}]}>
             {state.sequences.map((item, index) =>
-               <TouchableOpacity style={styles.listItem} onPress={() => enterSequence(item)} key={index}>
-                  <Text style={styles.listText}>{item.name}</Text>
-               </TouchableOpacity>
+               <MenuButton bgColor={state.colorScheme[index % 2 === 0 ? 0 : 1]} textColor={state.colorScheme[3]} onPress={() => enterSequence(item)} key={index} text={item.name}/>
             )}
-            <Button
-               title="LOG APP STATE"
-               onPress={() => console.log(state)}
-            />
          </View>
       )
    }

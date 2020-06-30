@@ -51,9 +51,9 @@ const Timer = ({ duration, callback, small, style, active }) => {
 
    return (
       <View style={styles.container}>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, minutes === 0 && {opacity: 0.3}]}>{minutes + ':'}</Text>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, {opacity: 0.3}]}>{seconds < 10 && 0}</Text>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style]}>{Math.abs(seconds).toFixed(0)}</Text>
+         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, minutes === 0 && {opacity: 0.3}, active && {color: 'white'}]}>{minutes + ':'}</Text>
+         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, {opacity: 0.3}, active && {color: 'white'}]}>{seconds < 9.5 && 0}</Text>
+         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, active && {color: 'white'}]}>{Math.abs(seconds).toFixed(0)}</Text>
       </View>
    )
 };
@@ -61,9 +61,6 @@ const Timer = ({ duration, callback, small, style, active }) => {
 const styles = EStyleSheet.create({
    container: {
      flexDirection: 'row'
-   },
-   inactive: {
-      color: lightGrey,
    },
    large: {
       fontSize: 30,

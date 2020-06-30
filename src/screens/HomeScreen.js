@@ -1,25 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Text, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Spacing, Typography } from "../styles";
+import MenuButton from "../components/MenuButton";
+import { windowWidth } from "../styles/spacing";
+import { Context } from "../context/SequenceContext";
 
 const HomeScreen = ({ navigation }) => {
+   const { state } = useContext(Context);
    return (
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: state.colorScheme[2]}]}>
          <Text style={styles.title}>Task Sequencer 1.0.0</Text>
          <View style={styles.subcontainer}>
-            <Text
-               style={[ styles.link ]}
-               onPress={() => navigation.navigate('Sequences')}
-            >
-               SEQUENCES
-            </Text>
-            <Text
-               style={[ styles.link ]}
-               onPress={() => navigation.navigate('Settings')}
-            >
-               SETTINGS
-            </Text>
+            <MenuButton text={'SEQUENCES'} onPress={() => navigation.navigate('Sequences')} bgColor={state.colorScheme[0]} textColor={state.colorScheme[3]} />
+            <MenuButton text={'SETTINGS'} onPress={() => navigation.navigate('Settings')} bgColor={state.colorScheme[1]} textColor={state.colorScheme[3]} />
          </View>
       </View>
    )
@@ -34,15 +28,12 @@ HomeScreen.navigationOptions = () => {
 const styles = EStyleSheet.create({
    container: {
       alignItems: 'center',
-      marginTop: '50%',
-   },
-   link: {
-      fontSize: 20,
-      marginBottom: '5%',
-      textAlign: 'center'
+      flex: 1,
+      paddingTop: '50%',
    },
    subcontainer: {
       marginTop: '33%',
+      width: windowWidth,
    },
    title: {
       ...Typography.primaryFont,

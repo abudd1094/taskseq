@@ -22,7 +22,7 @@ const Task = ({index, name, current, callback, duration, active, small}) => {
    }, [active, state.timerOn]);
 
    return (
-      <View style={[styles.container, current ? {backgroundColor: state.colorScheme[2]} : styles.default]} key={index} >
+      <View style={[styles.container, {backgroundColor: current ? state.colorScheme[3] : state.colorScheme[1]}]} key={index} >
          <Animated.View style={[styles.progressBar, {width: progress, backgroundColor: state.colorScheme[4]}]} />
          <View style={styles.left}>
             <Text style={[styles.index, current && {color: 'white'}]}>{index}</Text>
@@ -42,13 +42,11 @@ const Task = ({index, name, current, callback, duration, active, small}) => {
 const styles = EStyleSheet.create({
    container: {
       alignItems: 'center',
-     flexDirection: 'row',
+      flexDirection: 'row',
       justifyContent: 'space-between',
       paddingHorizontal: '1rem',
+      paddingVertical: 3,
       width: windowWidth,
-   },
-   default: {
-      backgroundColor: 'rgb(252,250,250)',
    },
    index: {
      color: 'rgb(110,131,135)',
@@ -62,7 +60,7 @@ const styles = EStyleSheet.create({
    },
    progressBar: {
       position: 'absolute',
-      height: 20,
+      height: 25,
    },
    white: {
       color: 'white'
