@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
-import { colorScheme1 } from "../styles/colors";
+import { colorScheme1, colorScheme2 } from "../styles/colors";
 import { Context } from "../context/SequenceContext";
 
 const SettingsScreen = () => {

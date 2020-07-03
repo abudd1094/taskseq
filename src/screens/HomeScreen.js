@@ -36,6 +36,7 @@ const styles = EStyleSheet.create({
       width: windowWidth,
    },
    title: {
+      color: 'black',
       ...Typography.primaryFont,
       ...Typography.h1
    }

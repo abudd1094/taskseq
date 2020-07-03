@@ -42,7 +42,7 @@ const SequenceCreateScreen = ({ navigation }) => {
             title="Create"
             onPress={async () => {
                await saveAllChanges();
-               navigation.navigate('Sequences');
+               navigation.navigate('SequenceEdit');
             }}
          />
       </View>
