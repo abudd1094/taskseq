@@ -11,7 +11,6 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { Spacing, Typography } from "../styles";
 import { cadetBlue, pastelGreen } from "../styles/colors";
 import { Context } from "../context/SequenceContext";
-import Timer from "../components/atoms/Timer";
 import MasterTimer from "../components/atoms/MasterTimer";
 import Task from "../components/molecules/Task";
 import { windowWidth } from "../styles/spacing";
@@ -30,7 +29,6 @@ const SequenceScreen = ({ navigation }) => {
   const [reset, setReset] = useState(false);
   const [complete, setComplete] = useState(false);
    const opacityAnim = useRef(new Animated.Value(0)).current;
-   const seqDuration = state.currentTasks.map((task) => task.TaskDuration).reduce((total, n) => total + n);
 
   const fadeIn = () => {
     Animated.timing(opacityAnim, {
@@ -49,18 +47,6 @@ const SequenceScreen = ({ navigation }) => {
     });
   }, [navigation, setCount, state.currentSeq]);
 
-  useEffect(() => {
-    Animated.timing(opacityAnim).reset();
-    setTimeout(fadeIn, 500);
-    loadCurrentTasks(state.currentSeq);
-
-    const unsubscribe = navigation.addListener("focus", () => {
-      loadCurrentTasks(state.currentSeq);
-    });
-
-    return unsubscribe;
-  }, [navigation, state.currentSeq, reset]);
-
   const resetSequence = () => {
     Animated.timing(opacityAnim).reset();
     setTimer(false);
@@ -77,17 +63,34 @@ const SequenceScreen = ({ navigation }) => {
   };
 
   const nextTask = () => {
-    if (state.currentTask.TaskIndex < state.currentTasks.length) {
+     if (state.currentTask.TaskIndex < state.currentTasks.length) {
+        console.log('next task')
       setCurrentTask(state.currentTasks[state.currentTask.TaskIndex]);
     } else {
       setComplete(true);
       setTimer(false);
     }
   };
+   
+   useEffect(() => {
+      Animated.timing(opacityAnim).reset();
+      setTimeout(fadeIn, 500);
+      loadCurrentTasks(state.currentSeq);
+
+      const unsubscribe = navigation.addListener("focus", () => {
+      loadCurrentTasks(state.currentSeq);
+      });
+
+      console.log(state)
+      return unsubscribe;
+   }, [navigation, state.currentSeq, reset]);
 
   if (state.loading || reset) {
     return <LoadingIcon />;
   } else {
+     const seqDuration = state.currentTasks
+       .map((task) => task.TaskDuration)
+       .reduce((total, n) => total + n);
     return (
       <Animated.View
         style={[
@@ -103,7 +106,9 @@ const SequenceScreen = ({ navigation }) => {
             <MasterTimer
               duration={
                 state.currentTasks &&
-                seqDuration
+                state.currentTasks
+                  .map((task) => task.TaskDuration)
+                  .reduce((total, n) => total + n)
               }
               active={state.timerOn}
               style={{ color: "white" }}
@@ -117,10 +122,16 @@ const SequenceScreen = ({ navigation }) => {
               name={task.TaskName}
               duration={task.TaskDuration}
               seqDuration={seqDuration}
+              indexedDuration={
+                state.currentTasks
+                  .filter((task) => task.TaskIndex > index).map(task => task.TaskDuration)
+                  .reduce((total, n) => total + n)
+              }
               callback={nextTask}
               current={index + 1 === state.currentTask.TaskIndex}
               active={index + 1 === state.currentTask.TaskIndex}
               key={index}
+              reset={reset}
               small
             />
           ))}

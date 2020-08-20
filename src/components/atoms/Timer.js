@@ -1,27 +1,31 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState } from "react";
 import { Text, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Typography } from "../../styles";
-import { lightGrey } from "../../styles/colors";
 import { Context } from "../../context/SequenceContext";
 
-const Timer = ({ duration, seqDuration, callback, small, style, active }) => {
+const Timer = ({ duration, seqDuration, indexedDuration, callback, small, style, active, reset }) => {
    const { state } = useContext(Context);
-   const localTimer = state.masterTimer - (seqDuration - duration);
+   const [taskComplete, setTaskComplete] = useState(false);
+   let localTimer = state.masterTimer - (indexedDuration - duration);
 
    const displayLocalTimer = () => {
-      if (state.timerOn && active && localTimer > 0) {
-         return localTimer;
-      } else if (state.timerOn && localTimer <= 0) {
+      if (taskComplete) {
          return 0;
       } else {
-         return duration;
+         if (active) {
+            if (localTimer >= 0) {
+               return localTimer;
+            } else {
+               setTaskComplete(true)
+               callback();
+               return 0;
+            }
+         } else {
+            return duration;
+         }
       }
    };
-
-   useEffect(() => {
-      localTimer === 0 ? active = false : console.log('decr.');
-   });
 
    return (
      <View style={styles.container}>

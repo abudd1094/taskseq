@@ -8,7 +8,7 @@ const seqReducer = (state, action) => {
        return { ...state, colorScheme: action.payload };
      case "set_current_seq":
        return { ...state, currentSeq: action.payload };
-     case "set_current_task":
+      case "set_current_task":
        return { ...state, currentTask: action.payload };
      case "set_current_tasks":
        return {

@@ -5,7 +5,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { windowWidth } from "../../styles/spacing";
 import { Context } from "../../context/SequenceContext";
 
-const Task = ({index, name, current, callback, duration, seqDuration, otherTasks, active, small}) => {
+const Task = ({index, name, current, callback, duration, seqDuration, indexedDuration, otherTasks, active, reset, small}) => {
    const {state} = useContext(Context);
    const progress = useRef(new Animated.Value(0)).current;
 
@@ -60,7 +60,9 @@ const Task = ({index, name, current, callback, duration, seqDuration, otherTasks
          callback={callback}
          duration={duration}
          seqDuration={seqDuration}
+         indexedDuration={indexedDuration}
          otherTasks={otherTasks}
+         reset={reset}
          small={!!small}
        />
      </View>
