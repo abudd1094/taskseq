@@ -9,6 +9,15 @@ const Timer = ({ duration, callback, small, style, active }) => {
    const { state } = useContext(Context);
    const [ minutes, setMinutes ] = useState(0);
    const [ seconds, setSeconds ] = useState(0);
+   const minuteFunction = function() {
+      let executed = false;
+      return function() {
+         if (!executed) {
+            executed = true;
+            setMinutes(minutes - 1);
+         }
+      }
+   };
 
    const decrementTime = async () => {
       if (state.timerOn && active) {
@@ -17,10 +26,11 @@ const Timer = ({ duration, callback, small, style, active }) => {
                setSeconds(seconds - 0.25)
             }, 250)
          } else if (seconds === 0 && minutes > 0) {
+            console.log('IF TRIGGERED')
             setTimeout(() => {
-               setMinutes(minutes - 1);
-               setSeconds(59.25);
-            }, 750)
+               minuteFunction();
+               setSeconds(59);
+            }, 250)
          } else {
             callback && callback();
          }
@@ -52,7 +62,7 @@ const Timer = ({ duration, callback, small, style, active }) => {
    return (
       <View style={styles.container}>
          <Text style={[styles.timer, small ? styles.small : styles.large, style && style, minutes === 0 && {opacity: 0.3}, active && {color: 'white'}]}>{minutes + ':'}</Text>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, {opacity: 0.3}, active && {color: 'white'}]}>{seconds < 9.5 && 0}</Text>
+         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, active && {color: 'white'}]}>{seconds < 9.5 && 0}</Text>
          <Text style={[styles.timer, small ? styles.small : styles.large, style && style, active && {color: 'white'}]}>{Math.abs(seconds).toFixed(0)}</Text>
       </View>
    )
