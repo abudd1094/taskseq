@@ -7,63 +7,25 @@ import { Context } from "../../context/SequenceContext";
 
 const Timer = ({ duration, callback, small, style, active }) => {
    const { state } = useContext(Context);
-   const [ minutes, setMinutes ] = useState(0);
-   const [ seconds, setSeconds ] = useState(0);
-   const minuteFunction = function() {
-      let executed = false;
-      return function() {
-         if (!executed) {
-            executed = true;
-            setMinutes(minutes - 1);
-         }
-      }
+   // const [ minutes, setMinutes ] = useState(0);
+   // const [ seconds, setSeconds ] = useState(0);
+   // const minuteFunction = function() {
+   //    let executed = false;
+   //    return function() {
+   //       if (!executed) {
+   //          executed = true;
+   //          setMinutes(minutes - 1);
+   //       }
+   //    }
+   // };
+
+   const setLocalTimer = async () => {
+
    };
-
-   const decrementTime = async () => {
-      if (state.timerOn && active) {
-         if (seconds > 0) {
-            setTimeout(() => {
-               setSeconds(seconds - 0.25)
-            }, 250)
-         } else if (seconds === 0 && minutes > 0) {
-            console.log('IF TRIGGERED')
-            setTimeout(() => {
-               minuteFunction();
-               setSeconds(59);
-            }, 250)
-         } else {
-            callback && callback();
-         }
-      }
-      if (!state.timerOn) {
-         setSeconds(Math.ceil(seconds))
-         setMinutes(Math.ceil(minutes))
-      }
-   };
-
-   const setTimerToDuration = () => {
-      if (duration >= 60) {
-         setMinutes(Math.floor(duration/60));
-         setSeconds(duration % 60);
-      } else {
-         setMinutes(0);
-         setSeconds(duration);
-      }
-   };
-
-   useEffect(() => {
-      decrementTime();
-   });
-
-   useEffect(() => {
-      setTimerToDuration(duration);
-   }, [duration]);
 
    return (
       <View style={styles.container}>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, minutes === 0 && {opacity: 0.3}, active && {color: 'white'}]}>{minutes + ':'}</Text>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, active && {color: 'white'}]}>{seconds < 9.5 && 0}</Text>
-         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, active && {color: 'white'}]}>{Math.abs(seconds).toFixed(0)}</Text>
+         <Text style={[styles.timer, small ? styles.small : styles.large, style && style, active && {color: 'white'}]}>{duration}</Text>
       </View>
    )
 };

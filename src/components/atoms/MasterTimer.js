@@ -32,7 +32,6 @@ const Timer = ({ duration, callback, small, style, active }) => {
       <Text>
         {state.masterTimer}
       </Text>
-      <Button title="start" onPress={() => setTimer(true)} />
     </View>
   );
 };
