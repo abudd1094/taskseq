@@ -4,22 +4,35 @@ import { colorScheme1 } from "../styles/colors";
 
 const seqReducer = (state, action) => {
    switch (action.type) {
-      case 'set_color_scheme':
-         return { ...state, colorScheme: action.payload };
-      case 'set_current_seq':
-         return { ...state, currentSeq: action.payload };
-      case 'set_current_task':
-         return { ...state, currentTask: action.payload };
-      case 'set_current_tasks':
-         return { ...state, currentTasks: action.payload, currentTask: action.payload[0], loading: false, timerOn: false };
-      case 'set_loading':
-         return { ...state, loading: action.payload };
-      case 'set_sequences':
-         return { ...state, sequences: action.payload, loading: false, timerOn: false };
-      case 'set_timer':
-         return { ...state, timerOn: action.payload };
-      default:
-         return state;
+     case "set_color_scheme":
+       return { ...state, colorScheme: action.payload };
+     case "set_current_seq":
+       return { ...state, currentSeq: action.payload };
+     case "set_current_task":
+       return { ...state, currentTask: action.payload };
+     case "set_current_tasks":
+       return {
+         ...state,
+         currentTasks: action.payload,
+         currentTask: action.payload[0],
+         loading: false,
+         timerOn: false,
+       };
+     case "set_loading":
+       return { ...state, loading: action.payload };
+     case "set_sequences":
+       return {
+         ...state,
+         sequences: action.payload,
+         loading: false,
+         timerOn: false,
+       };
+     case "set_timer":
+       return { ...state, timerOn: action.payload };
+     case "set_master_timer":
+       return { ...state, masterTimer: action.payload };
+     default:
+       return state;
    }
 };
 
@@ -78,6 +91,10 @@ const setTimer = dispatch => boolean => {
    dispatch({ type: 'set_timer', payload: boolean });
 };
 
+const setMasterTimer = (dispatch) => (time) => {
+  dispatch({ type: "set_master_timer", payload: time });
+};
+
 export const { Provider, Context } = createDataContext(
    seqReducer,
    {
@@ -87,14 +104,16 @@ export const { Provider, Context } = createDataContext(
       setCurrentSeq,
       setCurrentTask,
       setLoading,
-      setTimer
+      setTimer,
+      setMasterTimer,
    },
    {
       colorScheme: colorScheme1,
-      currentSeq: '',
-      currentTask: '',
+      currentSeq: "",
+      currentTask: "",
       currentTasks: [],
       loading: true,
+      masterTimer: 0,
       sequences: [],
       timerOn: false,
    }

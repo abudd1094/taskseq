@@ -1,14 +1,11 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
-import Button from "../components/atoms/Button";
+import { Animated, Text, TouchableOpacity, View, Button } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Spacing, Typography } from '../styles';
-import { cadetBlue, pastelGreen } from "../styles/colors";
 import { Context } from "../context/SequenceContext";
-import Timer from "../components/atoms/Timer";
-import Task from "../components/molecules/Task";
 import { windowWidth } from "../styles/spacing";
 import LoadingIcon from "../components/atoms/LoadingIcon";
+import MasterTimer from "../components/atoms/MasterTimer";
 
 const SequenceScreen = ({ navigation }) => {
    const { state, loadCurrentTasks, setCurrentTask, setTimer, loading } = useContext(Context);
@@ -79,52 +76,20 @@ const SequenceScreen = ({ navigation }) => {
       )
    } else {
       return (
-         <Animated.View style={[styles.container, {opacity: opacityAnim, backgroundColor: state.colorScheme[1]}]}>
-            <View style={[styles.top, {backgroundColor: state.colorScheme[3]}]}>
-               <Text style={[styles.title, {color: 'white'}]}>{state.currentSeq}</Text>
-               {state.currentTasks.length > 0 &&
-               <Timer
-                  duration={state.currentTasks && state.currentTasks.map(task => task.TaskDuration).reduce((total, n) => total + n)}
-                  active={state.timerOn}
-                  style={{color: 'white'}}
-               />}
-            </View>
-            <View style={styles.tasksContainer}>
-            {state.currentTasks.map((task, index) =>
-               <Task
-                  index={task.TaskIndex}
-                  name={task.TaskName}
-                  duration={task.TaskDuration}
-                  callback={nextTask}
-                  current={index + 1 === state.currentTask.TaskIndex}
-                  active={index + 1 === state.currentTask.TaskIndex}
-                  key={index}
-                  small
-               />
-            )}
-            </View>
-            <View style={[styles.statusBar, {backgroundColor: state.colorScheme[3]}]}>
-               <Text style={[styles.statusBarText, {color: 'white'}]}>{complete ? 'Sequence Completed' : (state.currentTask.TaskIndex - 1 + ' / ' + state.currentTasks.length)}</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-               <Button
-                  color={'red'}
-                  title={'RESET'}
-                  onPress={resetSequence}
-                  style={styles.buttonReset}
-               />
-               {complete
-                  ? <View style={[styles.buttonStartText, {backgroundColor: state.colorScheme[0]}]} />
-                  : <Button
-                     color={timerOn ? cadetBlue : pastelGreen}
-                     title={timerOn ? 'STOP' : 'START'}
-                     onPress={startStop}
-                     style={styles.buttonStart}
-                  />
-               }
-            </View>
-         </Animated.View>
-      )
+        <Animated.View
+          style={[
+            styles.container,
+            { opacity: opacityAnim, backgroundColor: state.colorScheme[1] },
+          ]}
+        >
+          <View style={[styles.top, { backgroundColor: state.colorScheme[3] }]}>
+            <MasterTimer />
+            <Text style={[styles.title, { color: "white" }]}>
+              {state.currentSeq}
+            </Text>
+          </View>
+        </Animated.View>
+      );
    }
 };
 
