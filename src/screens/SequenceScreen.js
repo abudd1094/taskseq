@@ -29,7 +29,8 @@ const SequenceScreen = ({ navigation }) => {
   const [count, setCount] = useState(0);
   const [reset, setReset] = useState(false);
   const [complete, setComplete] = useState(false);
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+   const opacityAnim = useRef(new Animated.Value(0)).current;
+   const seqDuration = state.currentTasks.map((task) => task.TaskDuration).reduce((total, n) => total + n);
 
   const fadeIn = () => {
     Animated.timing(opacityAnim, {
@@ -102,9 +103,7 @@ const SequenceScreen = ({ navigation }) => {
             <MasterTimer
               duration={
                 state.currentTasks &&
-                state.currentTasks
-                  .map((task) => task.TaskDuration)
-                  .reduce((total, n) => total + n)
+                seqDuration
               }
               active={state.timerOn}
               style={{ color: "white" }}
@@ -117,6 +116,7 @@ const SequenceScreen = ({ navigation }) => {
               index={task.TaskIndex}
               name={task.TaskName}
               duration={task.TaskDuration}
+              seqDuration={seqDuration}
               callback={nextTask}
               current={index + 1 === state.currentTask.TaskIndex}
               active={index + 1 === state.currentTask.TaskIndex}

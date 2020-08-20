@@ -5,7 +5,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import { windowWidth } from "../../styles/spacing";
 import { Context } from "../../context/SequenceContext";
 
-const Task = ({index, name, current, callback, duration, active, small}) => {
+const Task = ({index, name, current, callback, duration, seqDuration, otherTasks, active, small}) => {
    const {state} = useContext(Context);
    const progress = useRef(new Animated.Value(0)).current;
 
@@ -22,24 +22,49 @@ const Task = ({index, name, current, callback, duration, active, small}) => {
    }, [active, state.timerOn]);
 
    return (
-      <View style={[styles.container, {backgroundColor: current ? state.colorScheme[3] : state.colorScheme[1]}]} key={index} >
-         <Animated.View style={[styles.progressBar, {width: progress, backgroundColor: state.colorScheme[4]}]} />
-         <View style={styles.left}>
-            {state.currentTask.TaskIndex > index
-               ?  <Image style={styles.checkIcon} source={require('../../../assets/icons/check.png')}/>
-               :  <Text style={[styles.index, current && {color: 'white'}]}>{index}</Text>
-            }
-            <Text style={[styles.name, current && {color: 'white'}]}>{name}</Text>
-         </View>
-         <Timer
-            active={active}
-            color={current ? 'white' : 'black'}
-            callback={callback}
-            duration={duration}
-            small={!!small}
-         />
-      </View>
-   )
+     <View
+       style={[
+         styles.container,
+         {
+           backgroundColor: current
+             ? state.colorScheme[3]
+             : state.colorScheme[1],
+         },
+       ]}
+       key={index}
+     >
+       <Animated.View
+         style={[
+           styles.progressBar,
+           { width: progress, backgroundColor: state.colorScheme[4] },
+         ]}
+       />
+       <View style={styles.left}>
+         {state.currentTask.TaskIndex > index ? (
+           <Image
+             style={styles.checkIcon}
+             source={require("../../../assets/icons/check.png")}
+           />
+         ) : (
+           <Text style={[styles.index, current && { color: "white" }]}>
+             {index}
+           </Text>
+         )}
+         <Text style={[styles.name, current && { color: "white" }]}>
+           {name}
+         </Text>
+       </View>
+       <Timer
+         active={active}
+         color={current ? "white" : "black"}
+         callback={callback}
+         duration={duration}
+         seqDuration={seqDuration}
+         otherTasks={otherTasks}
+         small={!!small}
+       />
+     </View>
+   );
 };
 
 const styles = EStyleSheet.create({
