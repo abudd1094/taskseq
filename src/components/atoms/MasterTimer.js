@@ -11,8 +11,8 @@ const Timer = ({ duration, callback, small, style, active }) => {
     if (state.timerOn) {
       if (state.masterTimer > 0) {
         setTimeout(() => {
-          setMasterTimer(state.masterTimer - 0.25);
-        }, 250);
+          setMasterTimer(state.masterTimer - 0.1);
+        }, 100);
       } else {
         callback && callback();
       }
@@ -29,8 +29,8 @@ const Timer = ({ duration, callback, small, style, active }) => {
 
   return (
     <View style={styles.container}>
-      <Text>
-        {state.masterTimer}
+      <Text style={[styles.large, styles.timer]}>
+        {state.masterTimer.toFixed(1)}
       </Text>
     </View>
   );
@@ -48,6 +48,7 @@ const styles = EStyleSheet.create({
   },
   timer: {
     ...Typography.primaryFont,
+    color: "white",
     textAlign: "center",
   },
 });

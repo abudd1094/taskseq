@@ -37,7 +37,7 @@ const Timer = ({ duration, seqDuration, indexedDuration, callback, small, style,
            active && { color: "white" },
          ]}
        >
-         {displayLocalTimer()}
+         {displayLocalTimer().toFixed(1)}
        </Text>
      </View>
    );
