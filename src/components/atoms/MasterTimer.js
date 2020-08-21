@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Typography } from "../../styles";
 import { Context } from "../../context/SequenceContext";
@@ -30,7 +30,7 @@ const Timer = ({ duration, callback, small, style, active }) => {
   return (
     <View style={styles.container}>
       <Text style={[styles.large, styles.timer]}>
-        {state.masterTimer.toFixed(1)}
+        {Math.abs(state.masterTimer).toFixed(1)}
       </Text>
     </View>
   );

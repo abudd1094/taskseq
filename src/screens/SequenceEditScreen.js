@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, FlatList, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
+import { FlatList, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Typography } from "../styles";
 import { db, formatSqlTaskDelete } from "../api/sqlite";

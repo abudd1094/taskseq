@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Text, View } from 'react-native';
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Typography } from "../../styles";
@@ -26,6 +26,10 @@ const Timer = ({ duration, seqDuration, indexedDuration, callback, small, style,
          }
       }
    };
+
+   useEffect(() => {
+      setTaskComplete(false)
+   }, [])
 
    return (
      <View style={styles.container}>

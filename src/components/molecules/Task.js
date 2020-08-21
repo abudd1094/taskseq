@@ -11,8 +11,12 @@ const Task = ({index, name, current, callback, duration, seqDuration, indexedDur
 
    const fillProgressBar = () => {
       Animated.timing(progress, {
-         toValue: windowWidth,
-         duration: (progress.__getValue()) * 10 > 0 ? ((duration * 1000) -(progress.__getValue()) * 10) : (duration * 1000),
+        toValue: windowWidth,
+        //  TO DO: duration is imperfect added duratino x 300 as offset to animation, needs tweaking
+        duration:
+          progress.__getValue() * 10 > 0
+            ? duration * 100 - progress.__getValue() + duration * 300
+            : duration * 1000 + duration * 300,
       }).start();
    };
 

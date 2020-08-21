@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
          <Text style={styles.title}>Task Sequencer 1.0.0</Text>
          <View style={styles.subcontainer}>
             <MenuButton text={'SEQUENCES'} onPress={() => navigation.navigate('Sequences')} bgColor={state.colorScheme[0]} textColor={state.colorScheme[3]} />
-            <MenuButton text={'SETTINGS'} onPress={() => navigation.navigate('Settings')} bgColor={state.colorScheme[1]} textColor={state.colorScheme[3]} />
+            {/* <MenuButton text={'SETTINGS'} onPress={() => navigation.navigate('Settings')} bgColor={state.colorScheme[1]} textColor={state.colorScheme[3]} /> */}
          </View>
       </View>
    )

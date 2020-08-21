@@ -28,8 +28,8 @@ const SequenceScreen = ({ navigation }) => {
   const [count, setCount] = useState(0);
   const [reset, setReset] = useState(false);
   const [complete, setComplete] = useState(false);
-   const opacityAnim = useRef(new Animated.Value(0)).current;
-
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  
   const fadeIn = () => {
     Animated.timing(opacityAnim, {
       toValue: 1,
@@ -63,27 +63,27 @@ const SequenceScreen = ({ navigation }) => {
   };
 
   const nextTask = () => {
-     if (state.currentTask.TaskIndex < state.currentTasks.length) {
-        console.log('next task')
-      setCurrentTask(state.currentTasks[state.currentTask.TaskIndex]);
+    if (state.currentTask.TaskIndex < state.currentTasks.length) {
+       setCurrentTask(state.currentTasks[state.currentTask.TaskIndex]);
     } else {
       setComplete(true);
       setTimer(false);
     }
   };
    
-   useEffect(() => {
-      Animated.timing(opacityAnim).reset();
-      setTimeout(fadeIn, 500);
-      loadCurrentTasks(state.currentSeq);
+  useEffect(() => {
+    console.log(state)
+    Animated.timing(opacityAnim).reset();
+    setTimeout(fadeIn, 500);
+    loadCurrentTasks(state.currentSeq);
 
-      const unsubscribe = navigation.addListener("focus", () => {
-      loadCurrentTasks(state.currentSeq);
-      });
+    const unsubscribe = navigation.addListener("focus", () => {
+    loadCurrentTasks(state.currentSeq);
+    });
 
-      console.log(state)
-      return unsubscribe;
-   }, [navigation, state.currentSeq, reset]);
+    console.log(state)
+    return unsubscribe;
+  }, [navigation, state.currentSeq, reset]);
 
   if (state.loading || reset) {
     return <LoadingIcon />;
@@ -115,6 +115,11 @@ const SequenceScreen = ({ navigation }) => {
             />
           )}
         </View>
+        <View style={styles.currentTask}>
+          <Text style={styles.currentTaskText}>
+            {state.timerOn ? state.currentTask.TaskName : state.currentTasks.length + " tasks"}
+          </Text>
+        </View>
         <View style={styles.tasksContainer}>
           {state.currentTasks.map((task, index) => (
             <Task
@@ -122,11 +127,10 @@ const SequenceScreen = ({ navigation }) => {
               name={task.TaskName}
               duration={task.TaskDuration}
               seqDuration={seqDuration}
-              indexedDuration={
-                state.currentTasks
-                  .filter((task) => task.TaskIndex > index).map(task => task.TaskDuration)
-                  .reduce((total, n) => total + n)
-              }
+              indexedDuration={state.currentTasks
+                .filter((task) => task.TaskIndex > index)
+                .map((task) => task.TaskDuration)
+                .reduce((total, n) => total + n)}
               callback={nextTask}
               current={index + 1 === state.currentTask.TaskIndex}
               active={index + 1 === state.currentTask.TaskIndex}
@@ -156,12 +160,7 @@ const SequenceScreen = ({ navigation }) => {
             style={styles.buttonReset}
           />
           {complete ? (
-            <View
-              style={[
-                styles.buttonStartText,
-                { backgroundColor: state.colorScheme[0] },
-              ]}
-            />
+            null
           ) : (
             <Button
               color={timerOn ? cadetBlue : pastelGreen}
@@ -213,8 +212,20 @@ const styles = EStyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
+  currentTask: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  currentTaskText: {
+    // ...Typography.primaryFont,
+    fontSize: 25,
+  },
   defaultMarginTop: {
     ...Spacing.defaultMarginTop,
+  },
+  progressBar: {
+    position: "absolute",
+    height: 25,
   },
   statusBar: {
     bottom: 57,
@@ -226,6 +237,9 @@ const styles = EStyleSheet.create({
   },
   statusBarText: {
     ...Typography.primaryFont,
+  },
+  tasksContainer: {
+    flex: 5,
   },
   title: {
     fontSize: 22,
