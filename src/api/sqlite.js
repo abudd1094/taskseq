@@ -4,7 +4,7 @@ export const db = SQLite.openDatabase("TaskSequencerDB.db");
 
 // CREATE SEQUENCE TABLE
 export const formatSqlSeqCreate = (seqName) => {
-   return `CREATE TABLE ${seqName.toString()} (TaskID INTEGER PRIMARY KEY AUTOINCREMENT, TaskName varchar(255), TaskDuration int, TaskIndex int, Completions int)`;
+   return `CREATE TABLE ${seqName.toString()} (TaskID INTEGER PRIMARY KEY AUTOINCREMENT, TaskName varchar(255), TaskDuration int, TaskIndex int)`;
 };
 
 // UPDATE SEQUENCE TABLE

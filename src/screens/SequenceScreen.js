@@ -15,6 +15,7 @@ import MasterTimer from "../components/atoms/MasterTimer";
 import Task from "../components/molecules/Task";
 import { windowWidth } from "../styles/spacing";
 import LoadingIcon from "../components/atoms/LoadingIcon";
+import { getData, storeData } from '../api/asyncStorage';
 
 const SequenceScreen = ({ navigation }) => {
   const {
@@ -68,11 +69,38 @@ const SequenceScreen = ({ navigation }) => {
     } else {
       setComplete(true);
       setTimer(false);
+
+      // LOG COMPLETION AS DATE TO ASYNC STORAGE OBJECT
+      getData().then((res) => {
+        try {
+          const key = state.currentSeq;
+          const d = new Date();
+          
+          if (
+            res.filter((obj) => Object.keys(obj).includes(key)).length > 0
+          ) {
+            res = res.map(obj => {
+              if (Object.keys(obj).includes(key)) {
+                obj[key].push(d);
+                storeData(res);
+              }
+            });
+          } else {
+            let object = {};
+            object[key] = [d];
+
+            res.push(object);
+            storeData(res);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      );
     }
   };
    
   useEffect(() => {
-    console.log(state)
     Animated.timing(opacityAnim).reset();
     setTimeout(fadeIn, 500);
     loadCurrentTasks(state.currentSeq);
@@ -81,7 +109,6 @@ const SequenceScreen = ({ navigation }) => {
     loadCurrentTasks(state.currentSeq);
     });
 
-    console.log(state)
     return unsubscribe;
   }, [navigation, state.currentSeq, reset]);
 
