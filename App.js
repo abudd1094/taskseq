@@ -13,7 +13,7 @@ import SequenceCreateScreen from './src/screens/SequenceCreateScreen';
 import SequenceEditScreen from './src/screens/SequenceEditScreen';
 import SequenceScreen from './src/screens/SequenceScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
-
+import CompletionLogScreen from './src/screens/CompletionLogScreen';
 export default function App(props) {
    const Stack = createStackNavigator();
    const [ isLoadingComplete, setLoadingComplete ] = useState(false);
@@ -45,42 +45,37 @@ export default function App(props) {
       return null;
    } else {
       return (
-         <Provider>
-            <NavigationContainer>
-               <Stack.Navigator>
-                  <Stack.Screen
-                     name="Home"
-                     component={HomeScreen}
-                     options={{
-                        headerShown: false
-                     }}
-                  />
-                  <Stack.Screen
-                     name="Settings"
-                     component={SettingsScreen}
-                  />
-                  <Stack.Screen
-                     name="Sequences"
-                     component={SequenceListScreen}
-                  />
-                  <Stack.Screen
-                     name="SequenceCreate"
-                     component={SequenceCreateScreen}
-                     options={{ title: 'New Sequence' }}
-                  />
-                  <Stack.Screen
-                     name="SequenceEdit"
-                     component={SequenceEditScreen}
-                     options={{ title: 'Edit Sequence' }}
-                  />
-                  <Stack.Screen
-                     name="ViewSequence"
-                     component={SequenceScreen}
-                     options={{ title: '' }}
-                  />
-               </Stack.Navigator>
-            </NavigationContainer>
-         </Provider>
+        <Provider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen name="Settings" component={SettingsScreen} />
+              <Stack.Screen name="CompletionLog" component={CompletionLogScreen} />
+              <Stack.Screen name="Sequences" component={SequenceListScreen} />
+              <Stack.Screen
+                name="SequenceCreate"
+                component={SequenceCreateScreen}
+                options={{ title: "New Sequence" }}
+              />
+              <Stack.Screen
+                name="SequenceEdit"
+                component={SequenceEditScreen}
+                options={{ title: "Edit Sequence" }}
+              />
+              <Stack.Screen
+                name="ViewSequence"
+                component={SequenceScreen}
+                options={{ title: "" }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Provider>
       );
    }
 }
