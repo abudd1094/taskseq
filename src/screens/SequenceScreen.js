@@ -15,7 +15,7 @@ import MasterTimer from "../components/atoms/MasterTimer";
 import Task from "../components/molecules/Task";
 import { windowWidth } from "../styles/spacing";
 import LoadingIcon from "../components/atoms/LoadingIcon";
-import { getData, storeData } from '../api/asyncStorage';
+import { getData, storeData } from "../api/asyncStorage";
 
 const SequenceScreen = ({ navigation }) => {
   const {
@@ -30,7 +30,7 @@ const SequenceScreen = ({ navigation }) => {
   const [reset, setReset] = useState(false);
   const [complete, setComplete] = useState(false);
   const opacityAnim = useRef(new Animated.Value(0)).current;
-  
+
   const fadeIn = () => {
     Animated.timing(opacityAnim, {
       toValue: 1,
@@ -65,7 +65,7 @@ const SequenceScreen = ({ navigation }) => {
 
   const nextTask = () => {
     if (state.currentTask.TaskIndex < state.currentTasks.length) {
-       setCurrentTask(state.currentTasks[state.currentTask.TaskIndex]);
+      setCurrentTask(state.currentTasks[state.currentTask.TaskIndex]);
     } else {
       setComplete(true);
       setTimer(false);
@@ -75,11 +75,9 @@ const SequenceScreen = ({ navigation }) => {
         try {
           const key = state.currentSeq;
           const d = new Date();
-          
-          if (
-            res.filter((obj) => Object.keys(obj).includes(key)).length > 0
-          ) {
-            res = res.map(obj => {
+
+          if (res.filter((obj) => Object.keys(obj).includes(key)).length > 0) {
+            res = res.map((obj) => {
               if (Object.keys(obj).includes(key)) {
                 obj[key].push(d);
                 storeData(res);
@@ -95,18 +93,17 @@ const SequenceScreen = ({ navigation }) => {
         } catch (error) {
           console.log(error);
         }
-      }
-      );
+      });
     }
   };
-   
+
   useEffect(() => {
     Animated.timing(opacityAnim).reset();
     setTimeout(fadeIn, 500);
     loadCurrentTasks(state.currentSeq);
 
     const unsubscribe = navigation.addListener("focus", () => {
-    loadCurrentTasks(state.currentSeq);
+      loadCurrentTasks(state.currentSeq);
     });
 
     return unsubscribe;
@@ -115,9 +112,9 @@ const SequenceScreen = ({ navigation }) => {
   if (state.loading || reset) {
     return <LoadingIcon />;
   } else {
-     const seqDuration = state.currentTasks
-       .map((task) => task.TaskDuration)
-       .reduce((total, n) => total + n);
+    const seqDuration = state.currentTasks
+      .map((task) => task.TaskDuration)
+      .reduce((total, n) => total + n);
     return (
       <Animated.View
         style={[
@@ -144,7 +141,9 @@ const SequenceScreen = ({ navigation }) => {
         </View>
         <View style={styles.currentTask}>
           <Text style={styles.currentTaskText}>
-            {state.timerOn ? state.currentTask.TaskName : state.currentTasks.length + " tasks"}
+            {state.timerOn
+              ? state.currentTask.TaskName
+              : state.currentTasks.length + " tasks"}
           </Text>
         </View>
         <View style={styles.tasksContainer}>
@@ -186,9 +185,7 @@ const SequenceScreen = ({ navigation }) => {
             onPress={resetSequence}
             style={styles.buttonReset}
           />
-          {complete ? (
-            null
-          ) : (
+          {complete ? null : (
             <Button
               color={timerOn ? cadetBlue : pastelGreen}
               title={timerOn ? "STOP" : "START"}
